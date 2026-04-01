@@ -1,99 +1,81 @@
 export const vi = {
-  "cmd.description.status": "Server and session status",
-  "cmd.description.new": "Create a new session",
-  "cmd.description.abort": "Abort current action",
-  "cmd.description.stop": "Stop current action",
-  "cmd.description.sessions": "List sessions",
-  "cmd.description.last": "Show latest session message",
-  "cmd.description.tts": "Toggle TTS replies",
-  "cmd.description.projects": "List projects",
-  "cmd.description.task": "Create a scheduled task",
-  "cmd.description.tasklist": "List scheduled tasks",
-  "cmd.description.commands": "Custom commands",
-  "cmd.description.model": "Select model",
-  "cmd.description.agent": "Select agent mode",
-  "cmd.description.cleanup": "Close stale topic threads",
-  "cmd.description.opencode_start": "Start OpenCode server",
-  "cmd.description.opencode_stop": "Stop OpenCode server",
-  "cmd.description.help": "Help",
+  "cmd.description.status": "Trạng thái máy chủ và phiên",
+  "cmd.description.new": "Tạo phiên mới",
+  "cmd.description.abort": "Hủy hành động hiện tại",
+  "cmd.description.stop": "Dừng hành động hiện tại",
+  "cmd.description.sessions": "Danh sách phiên",
+  "cmd.description.last": "Hiển thị tin nhắn phiên mới nhất",
+  "cmd.description.tts": "Bật/tắt trả lời TTS",
+  "cmd.description.projects": "Danh sách dự án",
+  "cmd.description.task": "Tạo tác vụ định kỳ",
+  "cmd.description.tasklist": "Danh sách tác vụ định kỳ",
+  "cmd.description.commands": "Lệnh tùy chỉnh",
+  "cmd.description.model": "Chọn mô hình",
+  "cmd.description.agent": "Chọn chế độ agent",
+  "cmd.description.cleanup": "Đóng các luồng cũ",
+  "cmd.description.opencode_start": "Khởi động máy chủ OpenCode",
+  "cmd.description.opencode_stop": "Dừng máy chủ OpenCode",
+  "cmd.description.help": "Trợ giúp",
+  "cmd.description.rename": "Đổi tên phiên hiện tại",
 
-  "callback.unknown_command": "Unknown command",
-  "callback.processing_error": "Processing error",
+  "callback.unknown_command": "Lệnh không xác định",
+  "callback.processing_error": "Lỗi xử lý",
 
-  "error.load_agents": "❌ Failed to load agents list",
-  "error.load_models": "❌ Failed to load models list",
-  "error.load_variants": "❌ Failed to load variants list",
-  "error.context_button": "❌ Failed to process context button",
-  "error.generic": "🔴 Something went wrong.",
+  "error.load_agents": "❌ Không tải được danh sách agents",
+  "error.load_models": "❌ Không tải được danh sách mô hình",
+  "error.load_variants": "❌ Không tải được danh sách variants",
+  "error.context_button": "❌ Không xử lý được nút context",
+  "error.generic": "🔴 Đã xảy ra lỗi.",
 
-  "interaction.blocked.expired": "⚠️ This interaction has expired. Please start it again.",
-  "interaction.blocked.expected_callback":
-    "⚠️ Please use the inline buttons for this step or tap Cancel.",
-  "interaction.blocked.expected_text": "⚠️ Please send a text message for this step.",
-  "interaction.blocked.expected_command": "⚠️ Please send a command for this step.",
-  "interaction.blocked.command_not_allowed":
-    "⚠️ This command is not available in the current step.",
-  "interaction.blocked.finish_current":
-    "⚠️ Finish the current interaction first (answer or cancel), then open another menu.",
+  "interaction.blocked.expired": "⚠️ Tương tác này đã hết hạn. Vui lòng bắt đầu lại.",
+  "interaction.blocked.expected_callback": "⚠️ Vui lòng sử dụng các nút inline cho bước này hoặc nhấn Cancel.",
+  "interaction.blocked.expected_text": "⚠️ Vui lòng gửi tin nhắn văn bản cho bước này.",
+  "interaction.blocked.expected_command": "⚠️ Vui lòng gửi lệnh cho bước này.",
+  "interaction.blocked.command_not_allowed": "⚠️ Lệnh này không khả dụng ở bước hiện tại.",
+  "interaction.blocked.finish_current": "⚠️ Hoàn thành tương tác hiện tại trước (trả lời hoặc hủy), sau đó mở menu khác.",
 
-  "inline.blocked.expected_choice": "⚠️ Choose an option using the inline buttons or tap Cancel.",
-  "inline.blocked.command_not_allowed":
-    "⚠️ This command is not available while inline menu is active.",
+  "inline.blocked.expected_choice": "⚠️ Chọn tùy chọn bằng các nút inline hoặc nhấn Cancel.",
+  "inline.blocked.command_not_allowed": "⚠️ Lệnh này không khả dụng khi menu inline đang hoạt động.",
 
-  "question.blocked.expected_answer":
-    "⚠️ Answer the current question using buttons, Custom answer, or Cancel.",
-  "question.blocked.command_not_allowed":
-    "⚠️ This command is not available until current question flow is completed.",
+  "question.blocked.expected_answer": "⚠️ Trả lời câu hỏi hiện tại bằng nút, Custom answer, hoặc Cancel.",
+  "question.blocked.command_not_allowed": "⚠️ Lệnh này không khả dụng cho đến khi hoàn thành luồng câu hỏi hiện tại.",
 
-  "inline.button.cancel": "❌ Cancel",
-  "inline.inactive_callback": "This menu is inactive",
-  "inline.cancelled_callback": "Cancelled",
+  "inline.button.cancel": "❌ Hủy",
+  "inline.inactive_callback": "Menu này không hoạt động",
+  "inline.cancelled_callback": "Đã hủy",
 
-  "common.unknown": "unknown",
-  "common.unknown_error": "unknown error",
+  "common.unknown": "không xác định",
+  "common.unknown_error": "lỗi không xác định",
 
-  "start.welcome":
-    "👋 Welcome to OpenCode Telegram Group Topics Bot!\n\nUse commands:\n/projects — select project\n/sessions — session list\n/new — new session\n/status — status\n/help — help\n\nUse the bottom buttons to select agent mode, model, and variant.",
-  "start.welcome_dm":
-    "👋 DM mode is limited to bot/server status and control commands.\n\nUse a group topic thread for project/session work.",
-  "help.keyboard_hint":
-    "💡 Use the bottom keyboard buttons for agent mode, model, variant, and context actions.",
-  "help.text":
-    "📖 **Help**\n\n/status - Check server status\n/sessions - Session list\n/new - Create new session\n/help - Help",
+  "start.welcome": "👋 Chào mừng đến với OpenCode Telegram Group Topics Bot!\n\nSử dụng lệnh:\n/projects — chọn dự án\n/sessions — danh sách phiên\n/new — phiên mới\n/status — trạng thái\n/help — trợ giúp\n\nSử dụng các nút dưới để chọn chế độ agent, mô hình và variant.",
+  "start.welcome_dm": "👋 Chế độ DM giới hạn ở trạng thái bot/máy chủ và lệnh điều khiển.\n\nSử dụng luồng topic trong nhóm để làm việc với dự án/phiên.",
+  "help.keyboard_hint": "💡 Sử dụng các nút bàn phím dưới cùng cho chế độ agent, mô hình, variant và các hành động context.",
+  "help.text": "📖 **Trợ giúp**\n\n/status - Kiểm tra trạng thái máy chủ\n/sessions - Danh sách phiên\n/new - Tạo phiên mới\n/help - Trợ giúp",
 
-  "bot.thinking": "💭 Thinking...",
-  "bot.project_not_selected":
-    "🏗 Project is not selected.\n\nFirst select a project with /projects.",
-  "bot.creating_session": "🔄 Creating a new session...",
-  "bot.create_session_error":
-    "🔴 Failed to create session. Try /new or check server status with /status.",
-  "bot.session_created": "✅ Session created: {title}",
-  "bot.session_busy":
-    "⏳ Your last request is still running, so this new one was not started.\n\nWhy this happened: OpenCode accepts one active run per session.\nWhat to do: wait for the current reply, or use /abort if it seems stuck, then send your message again.",
-  "bot.session_queued":
-    "📝 Your message was queued for this session.\n\nQueue position: {position}\nWhat happens next: it will start automatically after the current run finishes.",
-  "bot.session_queue_started":
-    "▶️ Starting the next queued message for this session.\n\nQueued message:\n{preview}",
-  "bot.session_reset_project_mismatch":
-    "⚠️ Active session does not match the selected project, so it was reset. Use /sessions to pick one or /new to create a new session.",
-  "bot.prompt_send_error":
-    "⚠️ I could not deliver this message to OpenCode.\n\nLikely cause: a temporary connection hiccup between the bot and OpenCode server.\nWhat to do: send the message again. If it keeps happening, run /status and check that OpenCode is reachable.",
-  "bot.prompt_send_error_session_not_found":
-    "⚠️ I could not deliver this message because the active session is no longer available.\n\nWhy this happened: the session may have been reset, changed, or removed.\nWhat to do: choose a session with /sessions or create a new one with /new, then resend your message.",
-  "bot.session_error": "🔴 OpenCode returned an error: {message}",
-  "bot.session_retry":
-    "🔁 {message}\n\nProvider keeps returning the same error on repeated retries. Use /abort to abort.",
-  "bot.unknown_command": "⚠️ Unknown command: {command}. Use /help to see available commands.",
-  "bot.photo_downloading": "⏳ Downloading photo...",
-  "bot.photo_too_large": "⚠️ Photo is too large (max {maxSizeMb}MB)",
-  "bot.photo_model_no_image": "⚠️ Current model doesn't support image input. Sending text only.",
-  "bot.photo_download_error": "🔴 Failed to download photo",
-  "bot.photo_no_caption": "💡 Tip: Add a caption to describe what you want to do with this photo.",
-  "bot.file_downloading": "⏳ Downloading file...",
-  "bot.file_too_large": "⚠️ File is too large (max {maxSizeMb}MB)",
-  "bot.file_download_error": "🔴 Failed to download file",
-  "bot.model_no_pdf": "⚠️ Current model doesn't support PDF input. Sending text only.",
-  "bot.text_file_too_large": "⚠️ Text file is too large (max {maxSizeKb}KB)",
+  "bot.thinking": "💭 Đang suy nghĩ...",
+  "bot.project_not_selected": "🏗 Chưa chọn dự án.\n\nTrước tiên chọn dự án với /projects.",
+  "bot.creating_session": "🔄 Đang tạo phiên mới...",
+  "bot.create_session_error": "🔴 Không tạo được phiên. Thử /new hoặc kiểm tra trạng thái máy chủ với /status.",
+  "bot.session_created": "✅ Đã tạo phiên: {title}",
+  "bot.session_busy": "⏳ Yêu cầu trước đó vẫn đang chạy, nên yêu cầu mới này không được bắt đầu.\n\nTại sao: OpenCode chỉ chấp nhận một hoạt động active mỗi phiên.\nCần làm gì: đợi câu trả lời hiện tại, hoặc dùng /abort nếu có vẻ bị kẹt, sau đó gửi lại tin nhắn.",
+  "bot.session_queued": "📝 Tin nhắn của bạn đã được xếp hàng cho phiên này.\n\nVị trí trong hàng: {position}\nĐiều gì sẽ xảy ra tiếp: nó sẽ tự động bắt đầu sau khi hoạt động hiện tại kết thúc.",
+  "bot.session_queue_started": "▶️ Bắt đầu tin nhắn xếp hàng tiếp theo cho phiên này.\n\nTin nhắn xếp hàng:\n{preview}",
+  "bot.session_reset_project_mismatch": "⚠️ Phiên đang hoạt động không khớp với dự án đã chọn, nên nó đã được đặt lại. Sử dụng /sessions để chọn hoặc /new để tạo phiên mới.",
+  "bot.prompt_send_error": "⚠️ Không thể gửi tin nhắn này đến OpenCode.\n\nNguyên nhân có thể: sự cố kết nối tạm thời giữa bot và máy chủ OpenCode.\nCần làm gì: gửi lại tin nhắn. Nếu tiếp tục, chạy /status và kiểm tra OpenCode có thể truy cập được không.",
+  "bot.prompt_send_error_session_not_found": "⚠️ Không thể gửi tin nhắn vì phiên đang hoạt động không còn khả dụng.\n\nTại sao: phiên có thể đã được đặt lại, thay đổi hoặc xóa.\nCần làm gì: chọn phiên với /sessions hoặc tạo phiên mới với /new, sau đó gửi lại tin nhắn.",
+  "bot.session_error": "🔴 OpenCode trả về lỗi: {message}",
+  "bot.session_retry": "🔁 {message}\n\nProvider tiếp tục trả về cùng một lỗi khi thử lại. Sử dụng /abort để hủy.",
+  "bot.unknown_command": "⚠️ Lệnh không xác định: {command}. Sử dụng /help để xem các lệnh khả dụng.",
+  "bot.photo_downloading": "⏳ Đang tải ảnh...",
+  "bot.photo_too_large": "⚠️ Ảnh quá lớn (tối đa {maxSizeMb}MB)",
+  "bot.photo_model_no_image": "⚠️ Mô hình hiện tại không hỗ trợ đầu vào hình ảnh. Chỉ gửi văn bản.",
+  "bot.photo_download_error": "🔴 Không tải được ảnh",
+  "bot.photo_no_caption": "💡 Gợi ý: Thêm mô tả để cho biết bạn muốn làm gì với ảnh này.",
+  "bot.file_downloading": "⏳ Đang tải file...",
+  "bot.file_too_large": "⚠️ File quá lớn (tối đa {maxSizeMb}MB)",
+  "bot.file_download_error": "🔴 Không tải được file",
+  "bot.model_no_pdf": "⚠️ Mô hình hiện tại không hỗ trợ đầu vào PDF. Chỉ gửi văn bản.",
+  "bot.text_file_too_large": "⚠️ File văn bản quá lớn (tối đa {maxSizeKb}KB)",
 
   "status.header_running": "🟢 OpenCode Server is running",
   "status.health.healthy": "Healthy",
@@ -477,8 +459,6 @@ export const vi = {
   "commands.executing": "⚡ Starting OpenCode command\n{command}",
   "commands.arguments_empty": "⚠️ Arguments cannot be empty. Send text or tap Execute.",
   "commands.execute_error": "🔴 Failed to execute OpenCode command.",
-
-  "cmd.description.rename": "Rename current session",
 
   "cli.usage":
     "Usage:\n  opencode-telegram-group-topics-bot [start] [--mode sources|installed]\n  opencode-telegram-group-topics-bot status\n  opencode-telegram-group-topics-bot stop\n  opencode-telegram-group-topics-bot config [--mode sources|installed]\n\nNotes:\n  - No command defaults to `start`\n  - `config` defaults to installed mode unless `--mode sources` is provided",
