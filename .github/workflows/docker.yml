@@ -1,20 +1,28 @@
-name: Build and Push Docker Image
+name: Build and Release Docker Image
 
 on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: false
+        type: string
 
 jobs:
-  build-and-push:
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -35,14 +43,53 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=sha
+            type=sha,prefix=
 
-      - name: Build and push
+      - name: Build and push amd64
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}-amd64
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=amd64
+          cache-to: type=gha,mode=max,scope=amd64
+
+      - name: Build and push arm64
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}-arm64
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=arm64
+          cache-to: type=gha,mode=max,scope=arm64
+
+      - name: Create and push multi-arch manifest
+        run: |
+          # Get version tag
+          VERSION=$(echo "${{ steps.meta.outputs.tags }}" | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          if [ -z "$VERSION" ]; then
+            VERSION="${{ github.sha }}"
+          fi
+          
+          # Create manifest
+          docker manifest create ghcr.io/${{ github.repository }}:${VERSION}-amd64 ghcr.io/${{ github.repository }}:${VERSION}-amd64 ghcr.io/${{ github.repository }}:${VERSION}-arm64
+          docker manifest push ghcr.io/${{ github.repository }}:${VERSION}-amd64
+          
+          # Also tag as latest
+          docker manifest create ghcr.io/${{ github.repository }}:latest ghcr.io/${{ github.repository }}:${VERSION}-amd64 ghcr.io/${{ github.repository }}:${VERSION}-arm64
+          docker manifest push ghcr.io/${{ github.repository }}:latest
+
+      - name: Create Release
+        if: github.event_name == 'release'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
