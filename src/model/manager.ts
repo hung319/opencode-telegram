@@ -324,6 +324,43 @@ export function selectModel(modelInfo: ModelInfo, scopeKey: string = "global"): 
  * ALWAYS returns a model - fallback to config if not found
  * @returns Current model info
  */
+export interface ModelCatalog {
+  providers: Array<{
+    id: string;
+    name: string;
+    models: Record<string, unknown>;
+  }>;
+}
+
+let cachedModelCatalog: ModelCatalog | null = null;
+let fullModelCatalogCacheExpiresAt = 0;
+
+export async function getFullModelCatalog(): Promise<ModelCatalog | null> {
+  if (cachedModelCatalog && Date.now() < fullModelCatalogCacheExpiresAt) {
+    return cachedModelCatalog;
+  }
+
+  try {
+    const response = await opencodeClient.config.providers();
+    if (response.error || !response.data) {
+      logger.warn("[ModelManager] Failed to fetch full model catalog:", response.error);
+      return cachedModelCatalog;
+    }
+
+    cachedModelCatalog = response.data;
+    fullModelCatalogCacheExpiresAt = Date.now() + MODEL_CATALOG_CACHE_TTL_MS;
+
+    logger.debug(
+      `[ModelManager] Full model catalog fetched: providers=${response.data.providers.length}`,
+    );
+
+    return cachedModelCatalog;
+  } catch (err) {
+    logger.warn("[ModelManager] Error fetching full model catalog:", err);
+    return cachedModelCatalog;
+  }
+}
+
 export function getStoredModel(scopeKey: string = "global"): ModelInfo {
   const storedModel = getCurrentModel(scopeKey);
 

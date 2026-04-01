@@ -1,5 +1,5 @@
 import { Context, InlineKeyboard } from "grammy";
-import { selectModel, fetchCurrentModel, getModelSelectionLists } from "../../model/manager.js";
+import { selectModel, fetchCurrentModel, getModelSelectionLists, getFullModelCatalog } from "../../model/manager.js";
 import { formatModelForDisplay } from "../../model/types.js";
 import type { FavoriteModel, ModelInfo, ModelSelectionLists } from "../../model/types.js";
 import { formatVariantForButton } from "../../variant/manager.js";
@@ -22,17 +22,24 @@ import {
   getThreadSendOptions,
 } from "../scope.js";
 
-function buildModelSelectionMenuText(modelLists: ModelSelectionLists): string {
-  const lines = [t("model.menu.select"), t("model.menu.favorites_title")];
+function buildModelSelectionMenuText(modelLists: ModelSelectionLists, hasCatalog: boolean): string {
+  const lines = [t("model.menu.select"), ""];
 
-  if (modelLists.favorites.length === 0) {
+  if (modelLists.favorites.length > 0) {
+    lines.push(t("model.menu.favorites_title"));
+  } else {
     lines.push(t("model.menu.favorites_empty"));
   }
 
-  lines.push(t("model.menu.recent_title"));
-
-  if (modelLists.recent.length === 0) {
+  if (modelLists.recent.length > 0) {
+    lines.push(t("model.menu.recent_title"));
+  } else if (modelLists.favorites.length > 0) {
     lines.push(t("model.menu.recent_empty"));
+  }
+
+  if (hasCatalog) {
+    lines.push("");
+    lines.push("📋 All Models from OpenCode Server");
   }
 
   return lines.join("\n");
@@ -141,7 +148,7 @@ export async function handleModelSelect(ctx: Context): Promise<boolean> {
 }
 
 /**
- * Build inline keyboard with favorite and recent models
+ * Build inline keyboard with favorite, recent, and ALL models from catalog
  * @param currentModel Current model for highlighting
  * @returns InlineKeyboard with model selection buttons
  */
@@ -154,26 +161,50 @@ export async function buildModelSelectionMenu(
   const favorites = lists.favorites;
   const recent = lists.recent;
 
-  if (favorites.length === 0 && recent.length === 0) {
-    logger.warn("[ModelHandler] No model choices found in favorites/recent");
-    return keyboard;
-  }
-
   const addButton = (model: FavoriteModel, prefix: string): void => {
     const isActive =
       currentModel &&
       model.providerID === currentModel.providerID &&
       model.modelID === currentModel.modelID;
 
-    // Inline buttons use full model ID without truncation
     const label = `${prefix} ${model.providerID}/${model.modelID}`;
     const labelWithCheck = isActive ? `✅ ${label}` : label;
 
     keyboard.text(labelWithCheck, `model:${model.providerID}:${model.modelID}`).row();
   };
 
-  favorites.forEach((model) => addButton(model, "⭐"));
-  recent.forEach((model) => addButton(model, "🕘"));
+  if (favorites.length > 0) {
+    keyboard.text("⭐ --- Favorites ---").row();
+    favorites.forEach((model) => addButton(model, "⭐"));
+  }
+
+  if (recent.length > 0) {
+    keyboard.text("🕘 --- Recent ---").row();
+    recent.forEach((model) => addButton(model, "🕘"));
+  }
+
+  const catalog = await getFullModelCatalog();
+  if (catalog && catalog.providers.length > 0) {
+    keyboard.text("📋 --- All Models ---").row();
+    
+    const existingKeys = new Set<string>();
+    [...favorites, ...recent].forEach(m => existingKeys.add(`${m.providerID}/${m.modelID}`));
+
+    for (const provider of catalog.providers) {
+      const modelIDs = Object.keys(provider.models);
+      for (const modelID of modelIDs) {
+        const key = `${provider.id}/${modelID}`;
+        if (!existingKeys.has(key)) {
+          const model: FavoriteModel = { providerID: provider.id, modelID };
+          addButton(model, "📎");
+        }
+      }
+    }
+  }
+
+  if (favorites.length === 0 && recent.length === 0 && !catalog) {
+    logger.warn("[ModelHandler] No model choices found and catalog unavailable");
+  }
 
   return keyboard;
 }
@@ -188,6 +219,7 @@ export async function showModelSelectionMenu(ctx: Context): Promise<void> {
     const scopeKey = getScopeKeyFromContext(ctx);
     const currentModel = fetchCurrentModel(scopeKey);
     const modelLists = await getModelSelectionLists();
+    const catalog = await getFullModelCatalog();
     const keyboard = await buildModelSelectionMenu(currentModel, modelLists);
 
     if (keyboard.inline_keyboard.length === 0) {
@@ -195,7 +227,7 @@ export async function showModelSelectionMenu(ctx: Context): Promise<void> {
       return;
     }
 
-    const text = buildModelSelectionMenuText(modelLists);
+    const text = buildModelSelectionMenuText(modelLists, !!catalog);
 
     await replyWithInlineMenu(ctx, {
       menuKind: "model",

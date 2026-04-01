@@ -4,6 +4,7 @@ import { es } from "./es.js";
 import { fr } from "./fr.js";
 import { ru } from "./ru.js";
 import { zh } from "./zh.js";
+import { vi } from "./vi.js";
 
 interface LocaleDefinition {
   code: string;
@@ -48,6 +49,12 @@ const LOCALE_DEFINITIONS = [
     label: "简体中文",
     dateLocale: "zh-CN",
     dictionary: zh,
+  },
+  {
+    code: "vi",
+    label: "Tiếng Việt",
+    dateLocale: "vi-VN",
+    dictionary: vi,
   },
 ] as const satisfies readonly LocaleDefinition[];
 
