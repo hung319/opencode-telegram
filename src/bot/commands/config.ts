@@ -4,6 +4,7 @@ import { getCurrentSession } from "../../session/manager.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
+import { splitLongMessage } from "../utils/message-splitter.js";
 
 export async function configCommand(ctx: CommandContext<Context>): Promise<void> {
   try {
@@ -25,19 +26,19 @@ export async function configCommand(ctx: CommandContext<Context>): Promise<void>
     }
 
     const configText = JSON.stringify(config, null, 2);
-    const truncatedConfig = configText.length > 4000
-      ? `${configText.slice(0, 3997)}...`
-      : configText;
+    const fullText = t("config.current", { config: configText });
+    const chunks = splitLongMessage(fullText);
 
-    await ctx.reply(
-      t("config.current", { config: truncatedConfig }),
-      {
-        parse_mode: "HTML",
-        ...getThreadSendOptions(scope?.threadId ?? null),
-      },
-    );
+    const sendOptions = {
+      parse_mode: "HTML" as const,
+      ...getThreadSendOptions(scope?.threadId ?? null),
+    };
 
-    logger.info(`[ConfigCommand] Config displayed for project: ${directory || "global"}`);
+    for (const chunk of chunks) {
+      await ctx.reply(chunk, sendOptions);
+    }
+
+    logger.info(`[ConfigCommand] Config displayed for project: ${directory || "global"} (${chunks.length} chunks)`);
   } catch (error) {
     logger.error("[ConfigCommand] Error:", error);
     await ctx.reply(

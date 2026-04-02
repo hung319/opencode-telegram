@@ -6,6 +6,7 @@ import { INTERACTION_CLEAR_REASON } from "../../interaction/constants.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
+import { splitLongMessage } from "../utils/message-splitter.js";
 
 const MANAGE_CALLBACK_PREFIX = "manage:";
 
@@ -582,9 +583,14 @@ async function showConfig(
   }
 
   const configText = JSON.stringify(config, null, 2);
-  const truncated = configText.length > 4000 ? `${configText.slice(0, 3997)}...` : configText;
+  const fullText = `Config:\n\n${configText}`;
+  const chunks = splitLongMessage(fullText);
 
-  await ctx.editMessageText(`Config:\n\n${truncated}`, {
+  await ctx.editMessageText(chunks[0], {
     reply_markup: new InlineKeyboard().text("Back", `${MANAGE_CALLBACK_PREFIX}back`),
   });
+
+  for (let i = 1; i < chunks.length; i++) {
+    await ctx.reply(chunks[i]);
+  }
 }

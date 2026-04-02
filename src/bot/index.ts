@@ -37,6 +37,10 @@ import { messagesCommand, handleMessagesCallback } from "./commands/messages.js"
 import { newprojectCommand, addprojectCommand } from "./commands/newproject.js";
 import { manageCommand, handleManageCallback, handleManageTextAnswer } from "./commands/manage.js";
 import {
+  debouncePrompt,
+  getPromptDebounceKey,
+} from "./utils/prompt-buffer.js";
+import {
   commandsCommand,
   handleCommandsCallback,
   handleCommandTextArguments,
@@ -1555,7 +1559,15 @@ export function createBot(): Bot<Context> {
       return;
     }
 
-    await processUserPrompt(ctx, text, promptDeps);
+    const scope = getScopeFromContext(ctx);
+    const chatId = ctx.chat!.id;
+    const userId = ctx.from?.id ?? 0;
+    const threadId = scope?.threadId ?? null;
+    const debounceKey = getPromptDebounceKey(chatId, userId, threadId);
+
+    const combinedText = await debouncePrompt(debounceKey, text);
+
+    await processUserPrompt(ctx, combinedText, promptDeps);
 
     logger.debug("[Bot] message:text handler completed (prompt sent in background)");
   });

@@ -5,6 +5,7 @@ import { interactionManager } from "../../interaction/manager.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
+import { splitLongMessage } from "../utils/message-splitter.js";
 
 const FILES_CALLBACK_PREFIX = "files:";
 const FILES_PAGE_SIZE = 10;
@@ -180,17 +181,15 @@ export async function handleFilesCallback(ctx: Context): Promise<boolean> {
       }
 
       const contentStr = typeof content === "string" ? content : JSON.stringify(content);
-      const truncatedContent = contentStr.length > 4000
-        ? `${contentStr.slice(0, 3997)}...`
-        : contentStr;
+      const fullContent = t("files.file_content", { path: filePath, content: contentStr });
+      const chunks = splitLongMessage(fullContent);
 
-      await ctx.reply(
-        t("files.file_content", { path: filePath, content: truncatedContent }),
-        {
+      for (const chunk of chunks) {
+        await ctx.reply(chunk, {
           parse_mode: "HTML",
           ...getThreadSendOptions(getScopeFromContext(ctx)?.threadId ?? null),
-        },
-      );
+        });
+      }
     } else if (action === "page") {
       const subPath = decodeURIComponent(parts[1]);
       const page = parseInt(parts[2] || "0", 10);
