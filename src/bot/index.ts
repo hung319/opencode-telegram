@@ -25,6 +25,15 @@ import { abortCommand } from "./commands/abort.js";
 import { opencodeStartCommand } from "./commands/opencode-start.js";
 import { opencodeStopCommand } from "./commands/opencode-stop.js";
 import { renameCommand, handleRenameCancel, handleRenameTextAnswer } from "./commands/rename.js";
+import { deleteCommand, handleDeleteCallback } from "./commands/delete.js";
+import { shareCommand, handleShareCallback } from "./commands/share.js";
+import { configCommand } from "./commands/config.js";
+import { forkCommand } from "./commands/fork.js";
+import { todoCommand } from "./commands/todo.js";
+import { filesCommand, handleFilesCallback } from "./commands/files.js";
+import { mcpCommand, handleMcpCallback, handleMcpTextAnswer } from "./commands/mcp.js";
+import { revertCommand } from "./commands/revert.js";
+import { messagesCommand, handleMessagesCallback } from "./commands/messages.js";
 import {
   commandsCommand,
   handleCommandsCallback,
@@ -1185,6 +1194,15 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.ABORT, abortCommand);
   bot.command(BOT_COMMAND.RENAME, renameCommand);
   bot.command(BOT_COMMAND.COMMANDS, commandsCommand);
+  bot.command(BOT_COMMAND.DELETE, deleteCommand);
+  bot.command(BOT_COMMAND.SHARE, shareCommand);
+  bot.command(BOT_COMMAND.CONFIG, configCommand);
+  bot.command(BOT_COMMAND.FORK, forkCommand);
+  bot.command(BOT_COMMAND.TODO, todoCommand);
+  bot.command(BOT_COMMAND.FILES, filesCommand);
+  bot.command(BOT_COMMAND.MCP, mcpCommand);
+  bot.command(BOT_COMMAND.REVERT, revertCommand);
+  bot.command(BOT_COMMAND.MESSAGES, messagesCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 
@@ -1209,6 +1227,11 @@ export function createBot(): Bot<Context> {
       const handledVariant = await handleVariantSelect(ctx);
       const handledCompactConfirm = await handleCompactConfirm(ctx);
       const handledRenameCancel = await handleRenameCancel(ctx);
+      const handledDelete = await handleDeleteCallback(ctx);
+      const handledShare = await handleShareCallback(ctx);
+      const handledFiles = await handleFilesCallback(ctx);
+      const handledMcp = await handleMcpCallback(ctx);
+      const handledMessages = await handleMessagesCallback(ctx);
       const handledCommands = await handleCommandsCallback(ctx, { ensureEventSubscription });
 
       logger.debug(
@@ -1227,6 +1250,11 @@ export function createBot(): Bot<Context> {
         !handledVariant &&
         !handledCompactConfirm &&
         !handledRenameCancel &&
+        !handledDelete &&
+        !handledShare &&
+        !handledFiles &&
+        !handledMcp &&
+        !handledMessages &&
         !handledCommands
       ) {
         logger.debug("Unknown callback query:", ctx.callbackQuery?.data);
@@ -1491,6 +1519,11 @@ export function createBot(): Bot<Context> {
 
     const handledTask = await handleTaskTextAnswer(ctx);
     if (handledTask) {
+      return;
+    }
+
+    const handledMcpText = await handleMcpTextAnswer(ctx);
+    if (handledMcpText) {
       return;
     }
 
