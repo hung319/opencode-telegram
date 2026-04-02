@@ -117,6 +117,18 @@ export const ru: I18nDictionary = {
   "status.server_unavailable":
     "🔴 OpenCode Server недоступен\n\nИспользуйте /opencode_start для запуска сервера.",
 
+  "status.mcp.header": "🔌 MCP серверы:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 LSP серверы:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ Форматировщики:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "tts.enabled": "🔊 TTS-ответы включены для этой области чата.",
   "tts.enabled_not_configured":
     "🔊 TTS-ответы включены для этой области чата.\n\nУчетные данные TTS пока не настроены. Укажите `TTS_API_URL` и `TTS_API_KEY` или используйте `STT_API_URL` и `STT_API_KEY` как резервный вариант.",

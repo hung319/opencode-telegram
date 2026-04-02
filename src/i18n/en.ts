@@ -122,6 +122,18 @@ export const en = {
   "status.server_unavailable":
     "🔴 OpenCode Server is unavailable\n\nUse /opencode_start to start the server.",
 
+  "status.mcp.header": "🔌 MCP Servers:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 LSP Servers:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ Formatters:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "tts.enabled": "🔊 TTS replies enabled for this chat scope.",
   "tts.enabled_not_configured":
     "🔊 TTS replies enabled for this chat scope.\n\nTTS credentials are not configured yet. Set `TTS_API_URL` and `TTS_API_KEY`, or let them fall back to `STT_API_URL` and `STT_API_KEY`.",

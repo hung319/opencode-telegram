@@ -108,6 +108,18 @@ export const zh: I18nDictionary = {
   "status.session_hint": "使用 /sessions 选择一个会话，或 /new 创建",
   "status.server_unavailable": "🔴 OpenCode 服务器不可用\n\n使用 /opencode_start 启动服务器。",
 
+  "status.mcp.header": "🔌 MCP 服务器:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 LSP 服务器:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ 格式化工具:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "tts.enabled": "🔊 已为当前聊天范围启用 TTS 回复。",
   "tts.enabled_not_configured":
     "🔊 已为当前聊天范围启用 TTS 回复。\n\n当前尚未配置 TTS 凭据。请设置 `TTS_API_URL` 和 `TTS_API_KEY`，或让它们回退到 `STT_API_URL` 和 `STT_API_KEY`。",

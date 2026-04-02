@@ -25,6 +25,7 @@ export const BOT_COMMAND = {
   NEWPROJECT: "newproject",
   ADDPROJECT: "addproject",
   MANAGE: "manage",
+  CLEANUP: "cleanup",
   OPENCODE_START: "opencode_start",
   OPENCODE_STOP: "opencode_stop",
 } as const;

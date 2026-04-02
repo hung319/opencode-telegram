@@ -46,6 +46,7 @@ const COMMAND_DEFINITIONS: BotCommandI18nDefinition[] = [
   { command: BOT_COMMAND.NEWPROJECT, descriptionKey: "cmd.description.newproject" },
   { command: BOT_COMMAND.ADDPROJECT, descriptionKey: "cmd.description.addproject" },
   { command: BOT_COMMAND.MANAGE, descriptionKey: "cmd.description.manage" },
+  { command: BOT_COMMAND.CLEANUP, descriptionKey: "cmd.description.cleanup" },
   { command: BOT_COMMAND.OPENCODE_START, descriptionKey: "cmd.description.opencode_start" },
   { command: BOT_COMMAND.OPENCODE_STOP, descriptionKey: "cmd.description.opencode_stop" },
   { command: BOT_COMMAND.HELP, descriptionKey: "cmd.description.help" },

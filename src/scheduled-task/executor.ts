@@ -4,6 +4,32 @@ import type { ScheduledTask, ScheduledTaskExecutionResult } from "./types.js";
 
 const SCHEDULED_TASK_AGENT = "build";
 const SCHEDULED_TASK_SESSION_TITLE = "Scheduled task run";
+const HEALTH_CHECK_TIMEOUT_MS = 5000;
+
+/**
+ * Check if OpenCode server is healthy before running scheduled tasks.
+ * Returns true if server is ready, false otherwise.
+ */
+async function checkServerHealth(): Promise<boolean> {
+  try {
+    const { data, error } = await Promise.race([
+      opencodeClient.global.health(),
+      new Promise<{ data: null; error: Error }>((resolve) =>
+        setTimeout(() => resolve({ data: null, error: new Error("Health check timeout") }), HEALTH_CHECK_TIMEOUT_MS),
+      ),
+    ]);
+
+    if (error || !data) {
+      logger.warn("[ScheduledTaskExecutor] Server health check failed:", error);
+      return false;
+    }
+
+    return data.healthy === true;
+  } catch (error) {
+    logger.warn("[ScheduledTaskExecutor] Server health check error:", error);
+    return false;
+  }
+}
 
 function collectResponseText(
   parts: Array<{ type?: string; text?: string; ignored?: boolean }>,
@@ -34,6 +60,15 @@ export async function executeScheduledTask(
   let sessionId: string | null = null;
 
   try {
+    // Check server health before attempting to run the task
+    const isHealthy = await checkServerHealth();
+    if (!isHealthy) {
+      throw new Error(
+        "OpenCode server is not healthy or not responding. " +
+          "Scheduled task skipped.",
+      );
+    }
+
     const { data: session, error: createError } = await opencodeClient.session.create({
       directory: task.projectWorktree,
       title: SCHEDULED_TASK_SESSION_TITLE,

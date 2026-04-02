@@ -37,6 +37,7 @@ import { unrevertCommand } from "./commands/unrevert.js";
 import { messagesCommand, handleMessagesCallback } from "./commands/messages.js";
 import { newprojectCommand, addprojectCommand } from "./commands/newproject.js";
 import { manageCommand, handleManageCallback, handleManageTextAnswer } from "./commands/manage.js";
+import { cleanupCommand } from "./commands/cleanup.js";
 import {
   debouncePrompt,
   getPromptDebounceKey,
@@ -1216,6 +1217,7 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.NEWPROJECT, newprojectCommand);
   bot.command(BOT_COMMAND.ADDPROJECT, addprojectCommand);
   bot.command(BOT_COMMAND.MANAGE, manageCommand);
+  bot.command(BOT_COMMAND.CLEANUP, cleanupCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 

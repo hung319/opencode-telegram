@@ -123,6 +123,18 @@ export const de: I18nDictionary = {
   "status.server_unavailable":
     "🔴 OpenCode-Server ist nicht verfügbar\n\nNutze /opencode_start, um den Server zu starten.",
 
+  "status.mcp.header": "🔌 MCP-Server:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 LSP-Server:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ Formatter:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "tts.enabled": "🔊 TTS-Antworten für diesen Chat-Bereich aktiviert.",
   "tts.enabled_not_configured":
     "🔊 TTS-Antworten für diesen Chat-Bereich aktiviert.\n\nTTS-Zugangsdaten sind noch nicht konfiguriert. Setze `TTS_API_URL` und `TTS_API_KEY` oder nutze `STT_API_URL` und `STT_API_KEY` als Fallback.",

@@ -41,6 +41,19 @@ export const fr: I18nDictionary = {
   "status.line.version": "Version : {version}",
   "status.server_unavailable":
     "🔴 Le serveur OpenCode est indisponible\n\nUtilisez /opencode_start pour démarrer le serveur.",
+
+  "status.mcp.header": "🔌 Serveurs MCP:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 Serveurs LSP:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ Formateurs:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "opencode_start.starting": "🔄 Démarrage du serveur OpenCode...",
   "opencode_start.start_error":
     "🔴 Impossible de démarrer le serveur OpenCode\n\nErreur : {error}\n\nVérifiez que l'interface en ligne de commande OpenCode est installée et disponible dans le PATH :\nopencode --version\nnpm install -g @opencode-ai/cli",

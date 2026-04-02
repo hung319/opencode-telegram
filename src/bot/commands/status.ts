@@ -110,6 +110,55 @@ export async function statusCommand(ctx: CommandContext<Context>) {
       message += t("status.session_hint");
     }
 
+    try {
+      const currentProject = getCurrentProject(scopeKey);
+      const dir = currentProject?.worktree;
+      const [mcpResult, lspResult, formatterResult] = await Promise.allSettled([
+        opencodeClient.mcp.status({ directory: dir }),
+        opencodeClient.lsp.status({ directory: dir }),
+        opencodeClient.formatter.status({ directory: dir }),
+      ]);
+
+      const mcpData = mcpResult.status === "fulfilled" ? mcpResult.value.data : null;
+      const lspData = lspResult.status === "fulfilled" ? lspResult.value.data : null;
+      const formatterData = formatterResult.status === "fulfilled" ? formatterResult.value.data : null;
+
+      if (mcpData && Object.keys(mcpData).length > 0) {
+        message += `\n${t("status.mcp.header")}\n`;
+        for (const [name, info] of Object.entries(mcpData)) {
+          const status = (info as { status?: string })?.status || "unknown";
+          const icon = status === "connected"
+            ? t("status.mcp.connected")
+            : status === "disabled"
+              ? t("status.mcp.disabled")
+              : status === "failed"
+                ? t("status.mcp.failed")
+                : t("status.mcp.unknown");
+          message += `  ${icon} ${name}\n`;
+        }
+      }
+
+      if (lspData && typeof lspData === "object" && Array.isArray(lspData) && lspData.length > 0) {
+        message += `\n${t("status.lsp.header")}\n`;
+        for (const info of lspData as Array<{ id?: string; status?: string }>) {
+          const name = info?.id || "unknown";
+          const icon = info?.status === "running" ? t("status.lsp.running") : t("status.lsp.stopped");
+          message += `  ${icon} ${name}\n`;
+        }
+      }
+
+      if (formatterData && typeof formatterData === "object" && Array.isArray(formatterData) && formatterData.length > 0) {
+        message += `\n${t("status.formatter.header")}\n`;
+        for (const info of formatterData as Array<{ id?: string; disabled?: boolean }>) {
+          const name = info?.id || "unknown";
+          const icon = info?.disabled ? t("status.formatter.disabled") : t("status.formatter.enabled");
+          message += `  ${icon} ${name}\n`;
+        }
+      }
+    } catch {
+      // Silently skip - MCP/LSP/Formatter status is optional
+    }
+
     if (ctx.chat) {
       if (usePinned && !pinnedMessageManager.isInitialized(scopeKey)) {
         pinnedMessageManager.initialize(ctx.api, ctx.chat.id, scopeKey, scope?.threadId ?? null);

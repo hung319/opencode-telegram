@@ -122,6 +122,18 @@ export const vi = {
   "status.server_unavailable":
     "🔴 Máy chủ OpenCode không khả dụng\n\nSử dụng /opencode_start để khởi động máy chủ.",
 
+  "status.mcp.header": "🔌 Máy chủ MCP:",
+  "status.mcp.connected": "🟢",
+  "status.mcp.disabled": "⚫",
+  "status.mcp.failed": "🔴",
+  "status.mcp.unknown": "❓",
+  "status.lsp.header": "🔤 Máy chủ LSP:",
+  "status.lsp.running": "🟢",
+  "status.lsp.stopped": "🔴",
+  "status.formatter.header": "✨ Bộ định dạng:",
+  "status.formatter.enabled": "🟢",
+  "status.formatter.disabled": "🔴",
+
   "tts.enabled": "🔊 Đã bật trả lời TTS cho phạm vi trò chuyện này.",
   "tts.enabled_not_configured":
     "🔊 Đã bật trả lời TTS cho phạm vi trò chuyện này.\n\nThông tin xác thực TTS chưa được cấu hình. Đặt `TTS_API_URL` và `TTS_API_KEY`, hoặc để chúng dùng dự phòng từ `STT_API_URL` và `STT_API_KEY`.",
