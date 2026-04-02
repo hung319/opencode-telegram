@@ -1565,11 +1565,16 @@ export function createBot(): Bot<Context> {
     const threadId = scope?.threadId ?? null;
     const debounceKey = getPromptDebounceKey(chatId, userId, threadId);
 
-    const combinedText = await debouncePrompt(debounceKey, text);
+    const isFirst = debouncePrompt(debounceKey, text, async (combinedText) => {
+      await processUserPrompt(ctx, combinedText, promptDeps);
+      logger.debug("[Bot] Debounced prompt sent (combined length: " + combinedText.length + ")");
+    });
 
-    await processUserPrompt(ctx, combinedText, promptDeps);
-
-    logger.debug("[Bot] message:text handler completed (prompt sent in background)");
+    if (!isFirst) {
+      logger.debug("[Bot] Multi-part message buffered, waiting for debounce");
+    } else {
+      logger.debug("[Bot] message:text handler completed (prompt sent in background)");
+    }
   });
 
   bot.catch((err) => {

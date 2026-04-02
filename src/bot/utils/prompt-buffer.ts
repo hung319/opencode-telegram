@@ -3,7 +3,7 @@ import { logger } from "../../utils/logger.js";
 interface PendingPrompt {
   text: string;
   timer: ReturnType<typeof setTimeout>;
-  resolve: (text: string) => void;
+  isFirst: boolean;
 }
 
 const pendingPrompts = new Map<string, PendingPrompt>();
@@ -14,32 +14,39 @@ export function getPromptDebounceKey(chatId: number, userId: number, threadId: n
   return `${chatId}:${userId}:${threadId ?? 0}`;
 }
 
+/**
+ * Debounce multi-part messages from Telegram.
+ * Returns true if this is the first part (caller should wait for debounce),
+ * false if this is a continuation (caller should skip processing).
+ * After debounce timeout, the accumulated text is returned via the callback.
+ */
 export function debouncePrompt(
   key: string,
   text: string,
-): Promise<string> {
-  return new Promise((resolve) => {
-    const existing = pendingPrompts.get(key);
+  callback: (combinedText: string) => void,
+): boolean {
+  const existing = pendingPrompts.get(key);
 
-    if (existing) {
-      clearTimeout(existing.timer);
-      existing.text += "\n" + text;
-      logger.debug(`[PromptBuffer] Extended pending prompt for key=${key}, totalLength=${existing.text.length}`);
-    } else {
-      logger.debug(`[PromptBuffer] Starting new pending prompt for key=${key}`);
-    }
+  if (existing) {
+    clearTimeout(existing.timer);
+    existing.text += "\n" + text;
+    logger.debug(`[PromptBuffer] Extended pending prompt for key=${key}, totalLength=${existing.text.length}`);
+    return false;
+  }
 
-    const entry: PendingPrompt = {
-      text: existing?.text ?? text,
-      timer: setTimeout(() => {
-        pendingPrompts.delete(key);
-        resolve(entry.text);
-      }, DEBOUNCE_MS),
-      resolve,
-    };
+  logger.debug(`[PromptBuffer] Starting new pending prompt for key=${key}`);
 
-    pendingPrompts.set(key, entry);
-  });
+  const entry: PendingPrompt = {
+    text,
+    isFirst: true,
+    timer: setTimeout(() => {
+      pendingPrompts.delete(key);
+      callback(entry.text);
+    }, DEBOUNCE_MS),
+  };
+
+  pendingPrompts.set(key, entry);
+  return true;
 }
 
 export function cancelPendingPrompt(key: string): void {
