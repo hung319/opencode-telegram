@@ -434,7 +434,11 @@ export class LiveStream {
         return;
       }
 
-      const remainingEntries = latestState.entries.filter((entry) => entry.kind !== "assistant");
+      latestState.service.thinkingText = "";
+
+      const remainingEntries = latestState.entries.filter(
+        (entry) => entry.kind !== "assistant" && entry.kind !== "service",
+      );
       const remainingText = renderEntries(remainingEntries);
 
       if (!remainingText) {

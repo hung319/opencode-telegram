@@ -178,8 +178,8 @@ describe("bot/streaming/live-stream", () => {
 
     await stream.cleanupAfterFinalDelivery("s1");
 
-    expect(editText).toHaveBeenLastCalledWith("s1", 71, "Thinking", "raw", false);
-    expect(deleteText).not.toHaveBeenCalled();
+    expect(deleteText).toHaveBeenCalledWith("s1", 71);
+    expect(editText).not.toHaveBeenCalled();
   });
 
   it("deletes the current raw streamed message before final delivery when it only contains assistant text", async () => {
