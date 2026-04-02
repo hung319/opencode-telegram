@@ -145,12 +145,13 @@ describe("pinned manager scoped state", () => {
     expect(api.sendMessage).toHaveBeenCalledWith(
       -1,
       expect.stringContaining("Cost: $0.00"),
-      expect.objectContaining({ message_thread_id: 10 }),
+      expect.objectContaining({ message_thread_id: 10, parse_mode: "HTML" }),
     );
     expect(api.editMessageText).toHaveBeenCalledWith(
       -1,
       100,
-      expect.stringContaining("Cost: $0.013"),
+      expect.stringContaining("$0.013"),
+      { parse_mode: "HTML" },
     );
 
     expect(pinnedMessageManager.getState("chat:-1:10")).toEqual(
