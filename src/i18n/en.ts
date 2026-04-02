@@ -403,6 +403,10 @@ export const en = {
   "pinned.unknown": "Unknown",
   "pinned.line.project": "Project: {project}",
   "pinned.line.model": "Model: {model}",
+  "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.status": "Status: {status}",
+  "pinned.line.created": "Created: {time}",
+  "pinned.line.messages": "Messages: {count}",
   "pinned.line.context": "Context: {used} / {limit} ({percent}%)",
   "pinned.line.cost": "Cost: {cost}",
   "subagent.completed": "Completed",
@@ -487,6 +491,9 @@ export const en = {
   "cmd.description.mcp": "Manage MCP servers",
   "cmd.description.revert": "Revert last action",
   "cmd.description.messages": "View session messages",
+  "cmd.description.newproject": "List available projects",
+  "cmd.description.addproject": "Add project to this group",
+  "cmd.description.manage": "Manage OpenCode config",
 
   "delete.no_session": "⚠️ No active session. Create or select a session first.",
   "delete.confirm": "🗑️ Delete session \"{title}\"?\n\nThis will permanently remove the session and all its data. This cannot be undone.\n\nTap Delete to confirm or Cancel to abort.",
@@ -613,6 +620,20 @@ export const en = {
     "🎤 Voice recognition is not configured.\n\nSet STT_API_URL and STT_API_KEY in .env to enable it.",
   "stt.error": "🔴 Failed to recognize audio: {error}",
   "stt.empty_result": "🎤 No speech detected in the audio message.",
+
+  "newproject.fetch_error": "🔴 Không thể tải danh sách project.",
+  "newproject.no_available": "✅ Tất cả project khả dụng đã được thêm vào nhóm này.",
+  "newproject.available": "📋 Project khả dụng để thêm:",
+  "newproject.how_to_add": "\n💡 Dùng /addproject <tên-hoặc-id-project> để thêm.",
+  "newproject.error": "🔴 Lỗi khi tải danh sách project.",
+
+  "addproject.usage": "💡 Cách dùng: /addproject <tên-hoặc-id-project>\n\nDùng /newproject để xem danh sách project khả dụng.",
+  "addproject.fetch_error": "🔴 Không thể tải danh sách project.",
+  "addproject.not_found": "🔴 Không tìm thấy project: {query}",
+  "addproject.added": "✅ Đã thêm project: {name}",
+  "addproject.error": "🔴 Lỗi khi thêm project.",
+
+  "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
 } as const;
 
 export type I18nKey = keyof typeof en;

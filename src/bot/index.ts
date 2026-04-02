@@ -34,6 +34,8 @@ import { filesCommand, handleFilesCallback } from "./commands/files.js";
 import { mcpCommand, handleMcpCallback, handleMcpTextAnswer } from "./commands/mcp.js";
 import { revertCommand } from "./commands/revert.js";
 import { messagesCommand, handleMessagesCallback } from "./commands/messages.js";
+import { newprojectCommand, addprojectCommand } from "./commands/newproject.js";
+import { manageCommand, handleManageCallback, handleManageTextAnswer } from "./commands/manage.js";
 import {
   commandsCommand,
   handleCommandsCallback,
@@ -1203,6 +1205,9 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.MCP, mcpCommand);
   bot.command(BOT_COMMAND.REVERT, revertCommand);
   bot.command(BOT_COMMAND.MESSAGES, messagesCommand);
+  bot.command(BOT_COMMAND.NEWPROJECT, newprojectCommand);
+  bot.command(BOT_COMMAND.ADDPROJECT, addprojectCommand);
+  bot.command(BOT_COMMAND.MANAGE, manageCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 
@@ -1231,6 +1236,7 @@ export function createBot(): Bot<Context> {
       const handledShare = await handleShareCallback(ctx);
       const handledFiles = await handleFilesCallback(ctx);
       const handledMcp = await handleMcpCallback(ctx);
+      const handledManage = await handleManageCallback(ctx);
       const handledMessages = await handleMessagesCallback(ctx);
       const handledCommands = await handleCommandsCallback(ctx, { ensureEventSubscription });
 
@@ -1254,6 +1260,7 @@ export function createBot(): Bot<Context> {
         !handledShare &&
         !handledFiles &&
         !handledMcp &&
+        !handledManage &&
         !handledMessages &&
         !handledCommands
       ) {
@@ -1524,6 +1531,11 @@ export function createBot(): Bot<Context> {
 
     const handledMcpText = await handleMcpTextAnswer(ctx);
     if (handledMcpText) {
+      return;
+    }
+
+    const handledManageText = await handleManageTextAnswer(ctx);
+    if (handledManageText) {
       return;
     }
 

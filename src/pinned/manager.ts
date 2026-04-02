@@ -8,6 +8,7 @@ import {
   getCurrentProject,
 } from "../settings/manager.js";
 import { getStoredModel } from "../model/manager.js";
+import { getStoredAgent } from "../agent/manager.js";
 import type { FileChange, PinnedMessageState, TokensInfo } from "./types.js";
 import { t } from "../i18n/index.js";
 import { getThreadIdFromScopeKey, getThreadSendOptions } from "../bot/scope.js";
@@ -33,9 +34,13 @@ class PinnedMessageManager {
       sessionId: null,
       sessionTitle: t("pinned.default_session_title"),
       projectName: "",
+      agentName: "",
       tokensUsed: 0,
       tokensLimit: 0,
       assistantCost: 0,
+      messageCount: 0,
+      createdAt: 0,
+      status: "",
       lastUpdated: 0,
       changedFiles: [],
     };
@@ -112,10 +117,16 @@ class PinnedMessageManager {
     state.assistantCost = 0;
     state.sessionId = sessionId;
     state.sessionTitle = sessionTitle || t("pinned.default_session_title");
+    state.messageCount = 0;
+    state.createdAt = Date.now();
+    state.status = "active";
 
     const project = getCurrentProject(scopeKey);
     state.projectName =
       project?.name || this.extractProjectName(project?.worktree) || t("pinned.unknown");
+
+    const storedAgent = getStoredAgent(scopeKey);
+    state.agentName = storedAgent || t("pinned.unknown");
 
     await this.fetchContextLimit(scopeKey);
     this.syncSharedContext(scopeKey);
@@ -155,7 +166,9 @@ class PinnedMessageManager {
 
       let maxContextSize = 0;
       let totalAssistantCost = 0;
+      let messageCount = 0;
       messagesData.forEach(({ info }) => {
+        messageCount++;
         if (info.role !== "assistant") {
           return;
         }
@@ -180,6 +193,7 @@ class PinnedMessageManager {
 
       context.state.tokensUsed = maxContextSize;
       context.state.assistantCost = totalAssistantCost;
+      context.state.messageCount = messageCount;
       context.state.sessionId = sessionId;
       this.syncSharedContext(scopeKey);
       await this.updatePinnedMessage(scopeKey);
@@ -206,6 +220,7 @@ class PinnedMessageManager {
     const context = this.getContext(scopeKey);
     context.state.tokensUsed = tokens.input + tokens.cacheRead;
     context.state.assistantCost += tokens.cost;
+    context.state.messageCount++;
     await this.refreshSessionTitle(scopeKey);
     this.syncSharedContext(scopeKey);
   }
@@ -424,6 +439,14 @@ class PinnedMessageManager {
     return `$${normalized.replace(/\.0+$/u, "")}`;
   }
 
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
   private formatMessage(scopeKey: string): string {
     const context = this.getContext(scopeKey);
     const state = context.state;
@@ -435,10 +458,25 @@ class PinnedMessageManager {
         ? `${currentModel.providerID}/${currentModel.modelID}`
         : t("pinned.unknown");
 
+    const statusIcon = state.status === "active" ? "🟢" : state.status === "closed" ? "🔴" : "⚪";
+    const statusText = state.status === "active"
+      ? t("subagent.working")
+      : state.status === "closed"
+        ? t("subagent.completed")
+        : state.status;
+
+    const createdTime = state.createdAt > 0
+      ? `<tg-spoiler>🕐 ${new Date(state.createdAt).toLocaleString()}</tg-spoiler>`
+      : "";
+
     const lines = [
-      `${state.sessionTitle}`,
-      t("pinned.line.project", { project: state.projectName }),
-      t("pinned.line.model", { model: modelName }),
+      `${statusIcon} <b>${this.escapeHtml(state.sessionTitle)}</b>`,
+      t("pinned.line.project", { project: this.escapeHtml(state.projectName) }),
+      t("pinned.line.model", { model: this.escapeHtml(modelName) }),
+      t("pinned.line.agent", { agent: this.escapeHtml(state.agentName) }),
+      t("pinned.line.status", { status: statusText }),
+      createdTime,
+      t("pinned.line.messages", { count: state.messageCount }),
       t("pinned.line.context", {
         used: this.formatTokenCount(state.tokensUsed),
         limit: this.formatTokenCount(state.tokensLimit),
@@ -483,6 +521,7 @@ class PinnedMessageManager {
       "pinned message send",
       async () =>
         await context.api!.sendMessage(context.chatId!, this.formatMessage(scopeKey), {
+          parse_mode: "HTML",
           ...getThreadSendOptions(threadId),
         }),
     );
@@ -514,6 +553,7 @@ class PinnedMessageManager {
             context.chatId!,
             context.state.messageId!,
             this.formatMessage(scopeKey),
+            { parse_mode: "HTML" },
           ),
       );
       context.state.lastUpdated = Date.now();

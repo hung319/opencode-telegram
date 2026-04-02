@@ -21,6 +21,9 @@ export const BOT_COMMAND = {
   MCP: "mcp",
   REVERT: "revert",
   MESSAGES: "messages",
+  NEWPROJECT: "newproject",
+  ADDPROJECT: "addproject",
+  MANAGE: "manage",
   OPENCODE_START: "opencode_start",
   OPENCODE_STOP: "opencode_stop",
 } as const;

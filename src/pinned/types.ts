@@ -30,9 +30,13 @@ export interface PinnedMessageState {
   sessionId: string | null;
   sessionTitle: string;
   projectName: string;
+  agentName: string;
   tokensUsed: number;
   tokensLimit: number;
   assistantCost: number;
+  messageCount: number;
+  createdAt: number;
+  status: string;
   lastUpdated: number;
   changedFiles: FileChange[];
 }

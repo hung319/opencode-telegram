@@ -81,6 +81,7 @@ export interface TopicScopeState extends ScopeState {
 export interface GroupSettings {
   general?: ScopeState;
   topics?: Record<string, TopicScopeState>;
+  projects?: ProjectInfo[];
 }
 
 export interface Settings {
@@ -1027,6 +1028,14 @@ function rebuildIndexes(settings: Settings): SettingsIndexes {
       group.general,
     );
 
+    if (group.projects && group.projects.length > 0 && !group.general?.project) {
+      const generalScopeKey = createScopeKeyFromParams({
+        chatId: numericChatId,
+        context: SCOPE_CONTEXT.GROUP_GENERAL,
+      });
+      indexes.scopedProjects[generalScopeKey] = cloneProjectInfo(group.projects[0]);
+    }
+
     for (const [threadId, topicState] of Object.entries(group.topics ?? {})) {
       addScopeState(
         createScopeKeyFromParams({
@@ -1246,6 +1255,66 @@ export function setCurrentProject(
   scopeKey: string = GLOBAL_SCOPE_KEY,
 ): void {
   updateScopeState(scopeKey, "project", cloneProjectInfo(projectInfo));
+  registerGroupProject(projectInfo, scopeKey);
+}
+
+function registerGroupProject(projectInfo: ProjectInfo, scopeKey: string): void {
+  const parsed = parseScopeKey(scopeKey);
+  if (!parsed || parsed.context !== SCOPE_CONTEXT.GROUP_GENERAL) {
+    return;
+  }
+
+  const chatIdStr = String(parsed.chatId);
+  if (!currentSettings.groups) {
+    currentSettings.groups = {};
+  }
+  if (!currentSettings.groups[chatIdStr]) {
+    currentSettings.groups[chatIdStr] = {};
+  }
+  if (!currentSettings.groups[chatIdStr].projects) {
+    currentSettings.groups[chatIdStr].projects = [];
+  }
+
+  const projects = currentSettings.groups[chatIdStr].projects!;
+  const exists = projects.some((p: ProjectInfo) => p.id === projectInfo.id);
+  if (!exists) {
+    projects.push(cloneProjectInfo(projectInfo));
+    syncIndexes();
+    void writeSettingsFile(currentSettings);
+  }
+}
+
+export function getGroupProjects(chatId: number): ProjectInfo[] {
+  const chatIdStr = String(chatId);
+  const projects = currentSettings.groups?.[chatIdStr]?.projects;
+  if (!projects) {
+    return [];
+  }
+  return projects.map((p: ProjectInfo) => cloneProjectInfo(p));
+}
+
+export function removeGroupProject(chatId: number, projectId: string): void {
+  const chatIdStr = String(chatId);
+  const group = currentSettings.groups?.[chatIdStr];
+  if (!group?.projects) {
+    return;
+  }
+
+  group.projects = group.projects.filter((p: ProjectInfo) => p.id !== projectId);
+  syncIndexes();
+  void writeSettingsFile(currentSettings);
+}
+
+export function clearGroupProjects(chatId: number): void {
+  const chatIdStr = String(chatId);
+  const group = currentSettings.groups?.[chatIdStr];
+  if (!group) {
+    return;
+  }
+
+  group.projects = [];
+  syncIndexes();
+  void writeSettingsFile(currentSettings);
 }
 
 export function clearProject(scopeKey: string = GLOBAL_SCOPE_KEY): void {

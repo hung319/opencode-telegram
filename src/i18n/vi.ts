@@ -403,6 +403,10 @@ export const vi = {
   "pinned.unknown": "Không xác định",
   "pinned.line.project": "Dự án: {project}",
   "pinned.line.model": "Mô hình: {model}",
+  "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.status": "Trạng thái: {status}",
+  "pinned.line.created": "Tạo: {time}",
+  "pinned.line.messages": "Tin nhắn: {count}",
   "pinned.line.context": "Ngữ cảnh: {used} / {limit} ({percent}%)",
   "pinned.line.cost": "Chi phí: {cost}",
   "subagent.completed": "Hoàn thành",
@@ -583,6 +587,9 @@ export const vi = {
   "cmd.description.mcp": "Quản lý máy chủ MCP",
   "cmd.description.revert": "Hoàn tác hành động cuối",
   "cmd.description.messages": "Xem tin nhắn phiên",
+  "cmd.description.newproject": "Danh sách project khả dụng",
+  "cmd.description.addproject": "Thêm project vào nhóm",
+  "cmd.description.manage": "Quản lý cấu hình OpenCode",
 
   "cmd.description.rename": "Đổi tên phiên hiện tại",
 
@@ -613,4 +620,18 @@ export const vi = {
     "🎤 Nhận dạng giọng nói chưa được cấu hình.\n\nĐặt STT_API_URL và STT_API_KEY trong .env để bật.",
   "stt.error": "🔴 Không nhận dạng được âm thanh: {error}",
   "stt.empty_result": "🎤 Không phát hiện giọng nói trong tin nhắn âm thanh.",
+
+  "newproject.fetch_error": "🔴 Không thể tải danh sách project.",
+  "newproject.no_available": "✅ Tất cả project khả dụng đã được thêm vào nhóm này.",
+  "newproject.available": "📋 Project khả dụng để thêm:",
+  "newproject.how_to_add": "\n💡 Dùng /addproject <tên-hoặc-id-project> để thêm.",
+  "newproject.error": "🔴 Lỗi khi tải danh sách project.",
+
+  "addproject.usage": "💡 Cách dùng: /addproject <tên-hoặc-id-project>\n\nDùng /newproject để xem danh sách project khả dụng.",
+  "addproject.fetch_error": "🔴 Không thể tải danh sách project.",
+  "addproject.not_found": "🔴 Không tìm thấy project: {query}",
+  "addproject.added": "✅ Đã thêm project: {name}",
+  "addproject.error": "🔴 Lỗi khi thêm project.",
+
+  "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
 } as const;
