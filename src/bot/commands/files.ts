@@ -154,7 +154,7 @@ export async function handleFilesCallback(ctx: Context): Promise<boolean> {
   }
 
   await ctx.answerCallbackQuery();
-  await ctx.deleteMessage().catch(() => {});
+  await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
   const directory = interactionState.metadata.directory as string;
   const parts = data.slice(FILES_CALLBACK_PREFIX.length).split(":");

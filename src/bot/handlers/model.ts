@@ -75,7 +75,7 @@ export async function handleModelSelect(ctx: Context): Promise<boolean> {
     if (parts.length < 3) {
       logger.error(`[ModelHandler] Invalid callback data format: ${callbackQuery.data}`);
       clearActiveInlineMenu("model_select_invalid_callback", scopeKey);
-      await ctx.answerCallbackQuery({ text: t("model.change_error_callback") }).catch(() => {});
+      await ctx.answerCallbackQuery({ text: t("model.change_error_callback") }).catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
@@ -136,13 +136,13 @@ export async function handleModelSelect(ctx: Context): Promise<boolean> {
     });
 
     // Delete the inline menu message
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
     return true;
   } catch (err) {
     clearActiveInlineMenu("model_select_error", getScopeKeyFromContext(ctx));
     logger.error("[ModelHandler] Error handling model select:", err);
-    await ctx.answerCallbackQuery({ text: t("model.change_error_callback") }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: t("model.change_error_callback") }).catch((err) => logger.debug("Silent operation failed:", err));
     return false;
   }
 }

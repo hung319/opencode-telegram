@@ -103,7 +103,7 @@ export async function handleShareCallback(ctx: Context): Promise<boolean> {
 
   try {
     if (action === "create") {
-      await ctx.editMessageText(t("share.creating")).catch(() => {});
+      await ctx.editMessageText(t("share.creating")).catch((err) => logger.debug("Silent operation failed:", err));
 
       const { data: shareResult, error: shareError } = await opencodeClient.session.share({
         sessionID: sessionId,
@@ -115,7 +115,7 @@ export async function handleShareCallback(ctx: Context): Promise<boolean> {
       }
 
       interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
-      await ctx.editMessageText(t("share.created", { url: shareResult.share.url })).catch(() => {});
+      await ctx.editMessageText(t("share.created", { url: shareResult.share.url })).catch((err) => logger.debug("Silent operation failed:", err));
       logger.info(`[ShareHandler] Session shared: ${sessionId}, url: ${shareResult.share.url}`);
     } else if (action === "remove") {
       const { error: unshareError } = await opencodeClient.session.unshare({
@@ -128,13 +128,13 @@ export async function handleShareCallback(ctx: Context): Promise<boolean> {
       }
 
       interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
-      await ctx.editMessageText(t("share.unshared")).catch(() => {});
+      await ctx.editMessageText(t("share.unshared")).catch((err) => logger.debug("Silent operation failed:", err));
       logger.info(`[ShareHandler] Session unshared: ${sessionId}`);
     }
   } catch (error) {
     logger.error("[ShareHandler] Error:", error);
     const errorMsg = action === "create" ? t("share.error") : t("share.unshare_error");
-    await ctx.editMessageText(errorMsg).catch(() => {});
+    await ctx.editMessageText(errorMsg).catch((err) => logger.debug("Silent operation failed:", err));
   }
 
   return true;

@@ -467,7 +467,7 @@ async function executeCommand(
         logger.error("[Commands] session.command error details:", error);
         void ctx.api
           .sendMessage(ctx.chat!.id, t("commands.execute_error"), getThreadSendOptions(threadId))
-          .catch(() => {});
+          .catch((err) => logger.debug("Silent operation failed:", err));
         return;
       }
 
@@ -484,7 +484,7 @@ async function executeCommand(
       logger.error("[Commands] session.command background failure details:", error);
       void ctx.api
         .sendMessage(ctx.chat!.id, t("commands.execute_error"), getThreadSendOptions(threadId))
-        .catch(() => {});
+        .catch((err) => logger.debug("Silent operation failed:", err));
     },
   });
 }
@@ -554,7 +554,7 @@ export async function handleCommandsCallback(
     if (data === COMMANDS_CALLBACK_CANCEL) {
       clearCommandsInteraction("commands_cancelled", scopeKey);
       await ctx.answerCallbackQuery({ text: t("commands.cancelled_callback") });
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
@@ -566,7 +566,7 @@ export async function handleCommandsCallback(
 
       clearCommandsInteraction("commands_execute_clicked", scopeKey);
       await ctx.answerCallbackQuery({ text: t("commands.execute_callback") });
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
       await executeCommand(ctx, deps, {
         projectDirectory: metadata.projectDirectory,
@@ -639,7 +639,7 @@ export async function handleCommandsCallback(
   } catch (error) {
     logger.error("[Commands] Error handling command callback:", error);
     clearCommandsInteraction("commands_callback_error", scopeKey);
-    await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch((err) => logger.debug("Silent operation failed:", err));
     return true;
   }
 }
@@ -668,7 +668,7 @@ export async function handleCommandTextArguments(
   clearCommandsInteraction("commands_arguments_submitted", scopeKey);
 
   if (ctx.chat) {
-    await ctx.api.deleteMessage(ctx.chat.id, metadata.messageId).catch(() => {});
+    await ctx.api.deleteMessage(ctx.chat.id, metadata.messageId).catch((err) => logger.debug("Silent operation failed:", err));
   }
 
   await executeCommand(ctx, deps, {

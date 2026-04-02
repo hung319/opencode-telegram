@@ -6,6 +6,7 @@ const PER_CHAT_SEND_INTERVAL_MS = 1100;
 const PER_CHAT_EDIT_INTERVAL_MS = 250;
 const GROUP_WINDOW_MS = 60_000;
 const GROUP_LIMIT_PER_WINDOW = 20;
+const MAX_QUEUE_SIZE = 200;
 
 const RATE_LIMITED_METHODS = new Set<string>([
   "sendMessage",
@@ -219,6 +220,15 @@ export class TelegramRateLimiter {
       };
 
       this.queue.push(job);
+      if (this.queue.length > MAX_QUEUE_SIZE) {
+        const dropped = this.queue.shift();
+        if (dropped) {
+          logger.warn(
+            `[RateLimiter] Queue overflow (>${MAX_QUEUE_SIZE}); dropping oldest job method=${dropped.method}`,
+          );
+          dropped.rejects.forEach((r) => r(new Error("Dropped due to queue overflow")));
+        }
+      }
       if (this.queue.length > 25) {
         logger.debug(`[RateLimiter] Outbound queue depth=${this.queue.length}`);
       }

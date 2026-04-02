@@ -100,13 +100,13 @@ export async function handleAgentSelect(ctx: Context): Promise<boolean> {
     });
 
     // Delete the inline menu message
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
     return true;
   } catch (err) {
     clearActiveInlineMenu("agent_select_error", getScopeKeyFromContext(ctx));
     logger.error("[AgentHandler] Error handling agent select:", err);
-    await ctx.answerCallbackQuery({ text: t("agent.change_error_callback") }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: t("agent.change_error_callback") }).catch((err) => logger.debug("Silent operation failed:", err));
     return false;
   }
 }

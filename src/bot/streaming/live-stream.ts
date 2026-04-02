@@ -683,7 +683,19 @@ export class LiveStream {
       return;
     }
 
+    const maxIterations = Math.ceil(state.entries.length / 10) + 5;
+    let iteration = 0;
+
     while (true) {
+      iteration++;
+      if (iteration > maxIterations) {
+        logger.warn(
+          `[LiveStream] Flush iteration limit reached (${maxIterations}); aborting to prevent infinite loop`,
+          { sessionId },
+        );
+        return;
+      }
+
       const text = renderEntries(state.entries);
       if (!text) {
         return;

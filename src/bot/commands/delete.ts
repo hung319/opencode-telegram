@@ -91,7 +91,7 @@ export async function handleDeleteCallback(ctx: Context): Promise<boolean> {
   if (action === "cancel") {
     interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
     await ctx.answerCallbackQuery({ text: t("delete.cancelled") });
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
     return true;
   }
 
@@ -142,12 +142,12 @@ export async function handleDeleteCallback(ctx: Context): Promise<boolean> {
       );
     }
     interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
-    await ctx.editMessageText(t("delete.deleted", { title: sessionId })).catch(() => {});
+    await ctx.editMessageText(t("delete.deleted", { title: sessionId })).catch((err) => logger.debug("Silent operation failed:", err));
 
     logger.info(`[DeleteHandler] Session deleted: ${sessionId}`);
   } catch (error) {
     logger.error("[DeleteHandler] Error deleting session:", error);
-    await ctx.editMessageText(t("delete.error")).catch(() => {});
+    await ctx.editMessageText(t("delete.error")).catch((err) => logger.debug("Silent operation failed:", err));
   }
 
   return true;

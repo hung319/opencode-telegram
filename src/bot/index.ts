@@ -712,7 +712,7 @@ async function ensureEventSubscription(directory: string): Promise<void> {
 
         const previousMessageIds = questionManager.getMessageIds(target.scopeKey);
         for (const messageId of previousMessageIds) {
-          await botInstance.api.deleteMessage(target.chatId, messageId).catch(() => {});
+          await botInstance.api.deleteMessage(target.chatId, messageId).catch((err) => logger.debug("Silent operation failed:", err));
         }
 
         clearAllInteractionState(
@@ -1277,7 +1277,7 @@ export function createBot(): Bot<Context> {
         INTERACTION_CLEAR_REASON.CALLBACK_HANDLER_ERROR,
         getScopeFromContext(ctx)?.key ?? GLOBAL_SCOPE_KEY,
       );
-      await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch(() => {});
+      await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch((err) => logger.debug("Silent operation failed:", err));
     }
   });
 

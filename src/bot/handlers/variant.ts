@@ -117,13 +117,13 @@ export async function handleVariantSelect(ctx: Context): Promise<boolean> {
     });
 
     // Delete the inline menu message
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
     return true;
   } catch (err) {
     clearActiveInlineMenu("variant_select_error", getScopeKeyFromContext(ctx));
     logger.error("[VariantHandler] Error handling variant select:", err);
-    await ctx.answerCallbackQuery({ text: t("variant.change_error_callback") }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: t("variant.change_error_callback") }).catch((err) => logger.debug("Silent operation failed:", err));
     return false;
   }
 }

@@ -300,7 +300,7 @@ async function handlePermissionReply(
     if (ctx.api) {
       await ctx.api
         .sendMessage(chatId, t("permission.send_reply_error"), getThreadSendOptions(threadId))
-        .catch(() => {});
+        .catch((err) => logger.debug("Silent operation failed:", err));
     }
     return;
   }
@@ -308,7 +308,7 @@ async function handlePermissionReply(
   logger.info("[PermissionHandler] Permission reply sent successfully");
 
   // Delete the permission message only after successful reply
-  await ctx.deleteMessage().catch(() => {});
+  await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
   permissionManager.removeByMessageId(callbackMessageId, scopeKey);
 

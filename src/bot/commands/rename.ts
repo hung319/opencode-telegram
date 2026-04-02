@@ -128,7 +128,7 @@ export async function handleRenameCancel(ctx: Context): Promise<boolean> {
   interactionManager.clear(INTERACTION_CLEAR_REASON.RENAME_CANCELLED, scopeKey);
 
   await ctx.answerCallbackQuery();
-  await ctx.editMessageText(t("rename.cancelled")).catch(() => {});
+  await ctx.editMessageText(t("rename.cancelled")).catch((err) => logger.debug("Silent operation failed:", err));
 
   return true;
 }
@@ -206,7 +206,7 @@ export async function handleRenameTextAnswer(ctx: Context): Promise<boolean> {
 
     const messageId = renameManager.getMessageId(scopeKey);
     if (messageId && ctx.chat) {
-      await ctx.api.deleteMessage(ctx.chat.id, messageId).catch(() => {});
+      await ctx.api.deleteMessage(ctx.chat.id, messageId).catch((err) => logger.debug("Silent operation failed:", err));
     }
 
     await ctx.reply(

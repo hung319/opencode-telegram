@@ -98,7 +98,7 @@ export async function interactionGuardMiddleware(ctx: Context, next: NextFunctio
   );
 
   if (ctx.callbackQuery) {
-    await ctx.answerCallbackQuery({ text: message }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: message }).catch((err) => logger.debug("Silent operation failed:", err));
     return;
   }
 

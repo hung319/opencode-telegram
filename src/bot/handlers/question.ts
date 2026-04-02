@@ -105,7 +105,7 @@ export async function handleQuestionCallback(ctx: Context): Promise<boolean> {
     questionManager.clearCustomInput(scopeKey);
     questionManager.clearActiveMessage(scopeKey);
     syncQuestionInteractionState("callback", questionIndex, null, scopeKey);
-    await ctx.editMessageText(t("question.cancelled")).catch(() => {});
+    await ctx.editMessageText(t("question.cancelled")).catch((err) => logger.debug("Silent operation failed:", err));
     await ctx.answerCallbackQuery();
     return true;
   }
@@ -145,7 +145,7 @@ export async function handleQuestionCallback(ctx: Context): Promise<boolean> {
     }
 
     await ctx.answerCallbackQuery();
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
     await showNextQuestion(ctx, scopeKey);
     return true;
   }
@@ -161,7 +161,7 @@ export async function handleQuestionCallback(ctx: Context): Promise<boolean> {
     }
 
     await ctx.answerCallbackQuery();
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
     await showNextQuestion(ctx, scopeKey);
     return true;
   }
@@ -187,7 +187,7 @@ async function updateQuestionMessage(ctx: Context, scopeKey: string): Promise<vo
         scopeKey,
       ),
     })
-    .catch(() => {});
+    .catch((err) => logger.debug("Silent operation failed:", err));
 }
 
 export async function showCurrentQuestion(
@@ -240,7 +240,7 @@ export async function handleQuestionTextAnswer(ctx: Context): Promise<void> {
 
   const activeMessageId = questionManager.getActiveMessageId(scopeKey);
   if (activeMessageId !== null && ctx.chat) {
-    await ctx.api.deleteMessage(ctx.chat.id, activeMessageId).catch(() => {});
+    await ctx.api.deleteMessage(ctx.chat.id, activeMessageId).catch((err) => logger.debug("Silent operation failed:", err));
   }
 
   await showNextQuestion(ctx, scopeKey);
@@ -327,7 +327,7 @@ async function sendAllAnswersToAgent(
         logger.error("[QuestionHandler] Failed to send answers via question.reply:", error);
         void bot
           .sendMessage(chatId, t("question.send_answers_error"), getThreadSendOptions(threadId))
-          .catch(() => {});
+          .catch((err) => logger.debug("Silent operation failed:", err));
       }
     },
   });

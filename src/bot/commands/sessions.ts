@@ -337,7 +337,7 @@ export async function handleSessionSelect(ctx: Context): Promise<boolean> {
             }),
             getThreadSendOptions(scope?.threadId ?? null),
           );
-          await ctx.deleteMessage().catch(() => {});
+          await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
           return true;
         }
       }
@@ -439,7 +439,7 @@ export async function handleSessionSelect(ctx: Context): Promise<boolean> {
         }),
         getThreadSendOptions(scope?.threadId ?? null),
       );
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
@@ -551,7 +551,7 @@ export async function handleSessionSelect(ctx: Context): Promise<boolean> {
       });
     }
 
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
   } catch (error) {
     clearInteractionWithScope(INTERACTION_CLEAR_REASON.SESSION_SELECT_ERROR, scopeKey);
     logger.error("[Sessions] Error selecting session:", error);

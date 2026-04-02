@@ -585,7 +585,7 @@ class PinnedMessageManager {
           "unpin chat message",
           async () =>
             await context.api!.unpinChatMessage(context.chatId!, context.state.messageId!),
-        ).catch(() => {});
+        ).catch((err) => logger.debug("Silent operation failed:", err));
       }
     } finally {
       context.state.messageId = null;
@@ -608,11 +608,11 @@ class PinnedMessageManager {
       await this.retryTelegramCall(
         "clear pinned unpin",
         async () => await context.api!.unpinChatMessage(context.chatId!, context.state.messageId!),
-      ).catch(() => {});
+      ).catch((err) => logger.debug("Silent operation failed:", err));
       await this.retryTelegramCall(
         "clear pinned delete",
         async () => await context.api!.deleteMessage(context.chatId!, context.state.messageId!),
-      ).catch(() => {});
+      ).catch((err) => logger.debug("Silent operation failed:", err));
     }
 
     if (context.debounceTimer) {

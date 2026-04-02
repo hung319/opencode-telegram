@@ -150,7 +150,7 @@ export async function handleMessagesCallback(ctx: Context): Promise<boolean> {
   }
 
   await ctx.answerCallbackQuery();
-  await ctx.deleteMessage().catch(() => {});
+  await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
   const parts = data.slice(MESSAGES_CALLBACK_PREFIX.length).split(":");
   const action = parts[0];

@@ -109,7 +109,7 @@ export async function handleMcpCallback(ctx: Context): Promise<boolean> {
   await ctx.answerCallbackQuery();
 
   if (action === "add") {
-    await ctx.editMessageText(t("mcp.add_prompt")).catch(() => {});
+    await ctx.editMessageText(t("mcp.add_prompt")).catch((err) => logger.debug("Silent operation failed:", err));
     interactionManager.start(
       {
         kind: "custom",
@@ -123,15 +123,15 @@ export async function handleMcpCallback(ctx: Context): Promise<boolean> {
 
   if (action.startsWith("connect:")) {
     const serverName = action.slice("connect:".length);
-    await ctx.editMessageText(t("mcp.connecting", { name: serverName })).catch(() => {});
+    await ctx.editMessageText(t("mcp.connecting", { name: serverName })).catch((err) => logger.debug("Silent operation failed:", err));
 
     try {
       await opencodeClient.mcp.connect({ name: serverName });
-      await ctx.editMessageText(t("mcp.connected", { name: serverName })).catch(() => {});
+      await ctx.editMessageText(t("mcp.connected", { name: serverName })).catch((err) => logger.debug("Silent operation failed:", err));
       logger.info(`[McpHandler] Server connected: ${serverName}`);
     } catch (error) {
       logger.error("[McpHandler] Connect error:", error);
-      await ctx.editMessageText(t("mcp.connect_error")).catch(() => {});
+      await ctx.editMessageText(t("mcp.connect_error")).catch((err) => logger.debug("Silent operation failed:", err));
     }
     return true;
   }
@@ -141,11 +141,11 @@ export async function handleMcpCallback(ctx: Context): Promise<boolean> {
 
     try {
       await opencodeClient.mcp.disconnect({ name: serverName });
-      await ctx.editMessageText(t("mcp.disconnected", { name: serverName })).catch(() => {});
+      await ctx.editMessageText(t("mcp.disconnected", { name: serverName })).catch((err) => logger.debug("Silent operation failed:", err));
       logger.info(`[McpHandler] Server disconnected: ${serverName}`);
     } catch (error) {
       logger.error("[McpHandler] Disconnect error:", error);
-      await ctx.editMessageText(t("mcp.disconnect_error")).catch(() => {});
+      await ctx.editMessageText(t("mcp.disconnect_error")).catch((err) => logger.debug("Silent operation failed:", err));
     }
     return true;
   }

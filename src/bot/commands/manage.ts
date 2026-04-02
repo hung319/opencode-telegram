@@ -84,7 +84,7 @@ export async function handleManageCallback(ctx: Context): Promise<boolean> {
   try {
     if (action === "close") {
       interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 

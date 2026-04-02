@@ -24,7 +24,7 @@ export async function forkCommand(ctx: CommandContext<Context>): Promise<void> {
     });
 
     if (error || !forkedSession) {
-      await ctx.api.deleteMessage(ctx.chat!.id, message.message_id).catch(() => {});
+      await ctx.api.deleteMessage(ctx.chat!.id, message.message_id).catch((err) => logger.debug("Silent operation failed:", err));
       await ctx.reply(
         t("fork.error"),
         getThreadSendOptions(scope?.threadId ?? null),

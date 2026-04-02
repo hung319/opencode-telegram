@@ -240,7 +240,7 @@ export async function handleVoiceMessage(ctx: Context, deps: VoiceMessageDeps): 
       );
     } catch {
       // If we can't edit the status message, try sending a new one
-      await ctx.reply(t("stt.error", { error: errorMessage })).catch(() => {});
+      await ctx.reply(t("stt.error", { error: errorMessage })).catch((err) => logger.debug("Silent operation failed:", err));
     }
   }
 }

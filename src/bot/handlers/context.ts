@@ -106,7 +106,7 @@ export async function handleCompactConfirm(ctx: Context): Promise<boolean> {
     if (isGeneralForumScope(ctx)) {
       clearActiveInlineMenu("context_general_scope", scopeKey);
       await ctx.answerCallbackQuery({ text: t("context.general_not_available_callback") });
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
@@ -119,14 +119,14 @@ export async function handleCompactConfirm(ctx: Context): Promise<boolean> {
         t("context.no_active_session"),
         getThreadSendOptions(scope?.threadId ?? null),
       );
-      await ctx.deleteMessage().catch(() => {});
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
     // Answer callback query and delete menu immediately
     await ctx.answerCallbackQuery({ text: t("context.callback_compacting") });
     clearActiveInlineMenu("context_compact_confirmed", scopeKey);
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
     // Send progress message
     const progressMessage = await ctx.reply(
@@ -160,7 +160,7 @@ export async function handleCompactConfirm(ctx: Context): Promise<boolean> {
       // Update progress message to show error
       await ctx.api
         .editMessageText(ctx.chat!.id, progressMessage.message_id, t("context.error"))
-        .catch(() => {});
+        .catch((err) => logger.debug("Silent operation failed:", err));
       return true;
     }
 
@@ -170,18 +170,18 @@ export async function handleCompactConfirm(ctx: Context): Promise<boolean> {
     // Update progress message to show success
     await ctx.api
       .editMessageText(ctx.chat!.id, progressMessage.message_id, t("context.success"))
-      .catch(() => {});
+      .catch((err) => logger.debug("Silent operation failed:", err));
 
     return true;
   } catch (err) {
     clearActiveInlineMenu("context_compact_error", getScopeKeyFromContext(ctx));
     logger.error("[ContextHandler] Compact exception:", err);
-    await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch(() => {});
+    await ctx.answerCallbackQuery({ text: t("callback.processing_error") }).catch((err) => logger.debug("Silent operation failed:", err));
     await ctx.reply(
       t("context.error"),
       getThreadSendOptions(getScopeFromContext(ctx)?.threadId ?? null),
     );
-    await ctx.deleteMessage().catch(() => {});
+    await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
     return false;
   }
 }

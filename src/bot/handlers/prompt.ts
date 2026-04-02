@@ -123,7 +123,7 @@ async function sendQueuedPromptNotice(
     .sendMessage(chatId, t("bot.session_queued", { position: String(position) }), {
       ...getThreadSendOptions(threadId),
     })
-    .catch(() => {});
+    .catch((err) => logger.debug("Silent operation failed:", err));
 }
 
 function truncateQueuedPromptPreview(text: string): string {
@@ -158,7 +158,7 @@ async function sendQueuedPromptStartedNotice(
         ...getThreadSendOptions(request.threadId),
       },
     )
-    .catch(() => {});
+    .catch((err) => logger.debug("Silent operation failed:", err));
 }
 
 function buildPromptRequest(
@@ -281,7 +281,7 @@ function submitPromptRequest(bot: Bot<Context>, request: QueuedPromptRequest): v
           .sendMessage(request.chatId, t(errorMessageKey), {
             ...getThreadSendOptions(request.threadId),
           })
-          .catch(() => {});
+          .catch((err) => logger.debug("Silent operation failed:", err));
         return;
       }
 
@@ -320,7 +320,7 @@ function submitPromptRequest(bot: Bot<Context>, request: QueuedPromptRequest): v
         .sendMessage(request.chatId, t(errorMessageKey), {
           ...getThreadSendOptions(request.threadId),
         })
-        .catch(() => {});
+        .catch((err) => logger.debug("Silent operation failed:", err));
     },
   });
 }

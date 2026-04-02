@@ -222,7 +222,7 @@ export async function ensureActiveInlineMenu(
 
   await ctx
     .answerCallbackQuery({ text: t("inline.inactive_callback"), show_alert: true })
-    .catch(() => {});
+    .catch((err) => logger.debug("Silent operation failed:", err));
 
   return false;
 }
@@ -265,8 +265,8 @@ export async function handleInlineMenuCancel(ctx: Context): Promise<boolean> {
 
   clearActiveInlineMenu(`inline_menu_cancel:${menuKind}`, getScopeKeyFromContext(ctx));
 
-  await ctx.answerCallbackQuery({ text: t("inline.cancelled_callback") }).catch(() => {});
-  await ctx.deleteMessage().catch(() => {});
+  await ctx.answerCallbackQuery({ text: t("inline.cancelled_callback") }).catch((err) => logger.debug("Silent operation failed:", err));
+  await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
 
   logger.debug(`[InlineMenu] Menu cancelled: kind=${menuKind}`);
 
