@@ -608,7 +608,7 @@ async function ensureEventSubscription(directory: string): Promise<void> {
 
       const isFileMutationTool = FILE_MUTATION_TOOLS.has(toolInfo.tool);
 
-      if (config.bot.hideToolCallMessages || isFileMutationTool || toolInfo.tool === "task") {
+      if (config.bot.hideToolCallMessages || config.bot.compactMode || isFileMutationTool || toolInfo.tool === "task") {
         return;
       }
 
@@ -641,7 +641,7 @@ async function ensureEventSubscription(directory: string): Promise<void> {
 
   summaryAggregator.setOnSubagent((sessionId, subagents) => {
     enqueueSessionDelivery(sessionId, async () => {
-      if (config.bot.hideToolCallMessages) {
+      if (config.bot.hideToolCallMessages || config.bot.compactMode) {
         return;
       }
 
@@ -787,7 +787,7 @@ async function ensureEventSubscription(directory: string): Promise<void> {
 
   summaryAggregator.setOnThinking(async (sessionId) => {
     enqueueSessionDelivery(sessionId, async () => {
-      if (config.bot.hideThinkingMessages) {
+      if (config.bot.hideThinkingMessages || config.bot.compactMode) {
         return;
       }
 
