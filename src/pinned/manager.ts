@@ -41,6 +41,7 @@ class PinnedMessageManager {
       messageCount: 0,
       createdAt: 0,
       status: "",
+      gitBranch: "",
       lastUpdated: 0,
       changedFiles: [],
     };
@@ -128,6 +129,10 @@ class PinnedMessageManager {
     const storedAgent = getStoredAgent(scopeKey);
     state.agentName = storedAgent || t("pinned.unknown");
 
+    if (project?.worktree) {
+      await this.loadGitBranch(project.worktree, scopeKey);
+    }
+
     await this.fetchContextLimit(scopeKey);
     this.syncSharedContext(scopeKey);
 
@@ -210,6 +215,18 @@ class PinnedMessageManager {
     await this.loadContextFromHistory(sessionId, directory, scopeKey, {
       includeSummaries: true,
     });
+  }
+
+  private async loadGitBranch(directory: string, scopeKey: string): Promise<void> {
+    try {
+      const { data: vcsInfo } = await opencodeClient.vcs.get({ directory });
+      if (vcsInfo?.branch) {
+        const context = this.getContext(scopeKey);
+        context.state.gitBranch = vcsInfo.branch;
+      }
+    } catch (err) {
+      logger.debug("[PinnedManager] Failed to load git branch:", err);
+    }
   }
 
   async onMessageComplete(tokens: TokensInfo, scopeKey: string = "global"): Promise<void> {
@@ -474,6 +491,7 @@ class PinnedMessageManager {
       t("pinned.line.project", { project: this.escapeHtml(state.projectName) }),
       t("pinned.line.model", { model: this.escapeHtml(modelName) }),
       t("pinned.line.agent", { agent: this.escapeHtml(state.agentName) }),
+      state.gitBranch ? t("pinned.line.branch", { branch: this.escapeHtml(state.gitBranch) }) : "",
       t("pinned.line.status", { status: statusText }),
       createdTime,
       t("pinned.line.messages", { count: state.messageCount }),
@@ -483,7 +501,7 @@ class PinnedMessageManager {
         percent: percentage,
       }),
       t("pinned.line.cost", { cost: this.formatCost(state.assistantCost) }),
-    ];
+    ].filter(Boolean);
 
     if (state.changedFiles.length > 0) {
       const maxFiles = 10;

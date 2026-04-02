@@ -350,6 +350,7 @@ export const zh: I18nDictionary = {
   "pinned.line.project": "项目: {project}",
   "pinned.line.model": "模型: {model}",
   "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.branch": "Branch: {branch}",
   "pinned.line.status": "状态: {status}",
   "pinned.line.created": "创建: {time}",
   "pinned.line.messages": "消息: {count}",
@@ -476,6 +477,7 @@ export const zh: I18nDictionary = {
   "cmd.description.files": "Browse project files",
   "cmd.description.mcp": "Manage MCP servers",
   "cmd.description.revert": "Revert last action",
+  "cmd.description.unrevert": "Unrevert messages in session",
   "cmd.description.messages": "View session messages",
 
   "delete.no_session": "⚠️ No active session. Create or select a session first.",
@@ -560,6 +562,9 @@ export const zh: I18nDictionary = {
   "revert.success": "✅ Message reverted successfully.",
   "revert.error": "🔴 Failed to revert message.",
   "revert.no_message": "⚠️ No message to revert in this session.",
+  "unrevert.no_session": "⚠️ No active session. Create or select a session first.",
+  "unrevert.success": "✅ Messages unreverted successfully.",
+  "unrevert.error": "🔴 Failed to unrevert messages.",
 
   "messages.no_session": "⚠️ No active session. Create or select a session first.",
   "messages.empty": "📭 No messages in this session.",

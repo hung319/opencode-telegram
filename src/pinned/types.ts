@@ -37,6 +37,7 @@ export interface PinnedMessageState {
   messageCount: number;
   createdAt: number;
   status: string;
+  gitBranch: string;
   lastUpdated: number;
   changedFiles: FileChange[];
 }

@@ -33,6 +33,7 @@ import { todoCommand } from "./commands/todo.js";
 import { filesCommand, handleFilesCallback } from "./commands/files.js";
 import { mcpCommand, handleMcpCallback, handleMcpTextAnswer } from "./commands/mcp.js";
 import { revertCommand } from "./commands/revert.js";
+import { unrevertCommand } from "./commands/unrevert.js";
 import { messagesCommand, handleMessagesCallback } from "./commands/messages.js";
 import { newprojectCommand, addprojectCommand } from "./commands/newproject.js";
 import { manageCommand, handleManageCallback, handleManageTextAnswer } from "./commands/manage.js";
@@ -114,6 +115,8 @@ import { consumePendingCompactionNotice } from "./utils/pending-compaction-notic
 import { LiveStream } from "./streaming/live-stream.js";
 import { contextStateManager } from "../context/manager.js";
 import { formatContextForButton } from "./utils/keyboard.js";
+import { processManager } from "../process/manager.js";
+import { clearAllPendingPrompts } from "./utils/prompt-buffer.js";
 
 let botInstance: Bot<Context> | null = null;
 const initializedCommandChats = new Set<number>();
@@ -1208,6 +1211,7 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.FILES, filesCommand);
   bot.command(BOT_COMMAND.MCP, mcpCommand);
   bot.command(BOT_COMMAND.REVERT, revertCommand);
+  bot.command(BOT_COMMAND.UNREVERT, unrevertCommand);
   bot.command(BOT_COMMAND.MESSAGES, messagesCommand);
   bot.command(BOT_COMMAND.NEWPROJECT, newprojectCommand);
   bot.command(BOT_COMMAND.ADDPROJECT, addprojectCommand);
@@ -1591,5 +1595,29 @@ export function createBot(): Bot<Context> {
     }
   });
 
+  processManager.onCrash((_code, signal) => {
+    logger.error(`[Bot] OpenCode server crashed (signal: ${signal}). Sending notification...`);
+    clearAllPendingPrompts();
+    void notifyServerCrash(bot);
+  });
+
+  processManager.enableHealthCheck();
+
   return bot;
+}
+
+async function notifyServerCrash(bot: Bot<Context>): Promise<void> {
+  try {
+    const message =
+      "🔴 **OpenCode Server Crashed**\n\n" +
+      "Máy chủ OpenCode đã dừng bất ngờ.\n" +
+      "Dùng `/status` để kiểm tra hoặc `/opencode_start` để khởi động lại.";
+
+    const userId = config.telegram.allowedUserId;
+    if (userId) {
+      await bot.api.sendMessage(userId, message, { parse_mode: "Markdown" });
+    }
+  } catch (err) {
+    logger.error("[Bot] Failed to send server crash notification:", err);
+  }
 }

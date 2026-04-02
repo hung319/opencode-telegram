@@ -19,6 +19,46 @@ class ProcessManager implements ProcessManagerInterface {
     isRunning: false,
   };
 
+  private crashCallbacks: Array<(code: number | null, signal: string | null) => void> = [];
+  private healthCheckInterval: ReturnType<typeof setInterval> | null = null;
+  private healthCheckEnabled = false;
+  private readonly HEALTH_CHECK_INTERVAL_MS = 30_000;
+
+  onCrash(callback: (code: number | null, signal: string | null) => void): void {
+    this.crashCallbacks.push(callback);
+  }
+
+  enableHealthCheck(): void {
+    if (this.healthCheckEnabled) return;
+    this.healthCheckEnabled = true;
+    this.healthCheckInterval = setInterval(() => {
+      this.runHealthCheck();
+    }, this.HEALTH_CHECK_INTERVAL_MS);
+    logger.info("[ProcessManager] Health check enabled (interval: 30s)");
+  }
+
+  disableHealthCheck(): void {
+    this.healthCheckEnabled = false;
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval);
+      this.healthCheckInterval = null;
+    }
+    logger.info("[ProcessManager] Health check disabled");
+  }
+
+  private async runHealthCheck(): Promise<void> {
+    if (!this.state.isRunning || !this.state.pid) return;
+
+    if (!this.isProcessAlive(this.state.pid)) {
+      logger.warn("[ProcessManager] Health check detected dead process, restarting...");
+      this.cleanup();
+      await this.start();
+      for (const cb of this.crashCallbacks) {
+        cb(null, "health_check_restart");
+      }
+    }
+  }
+
   /**
    * Initialize the manager by restoring state from settings
    * Checks if the stored process is still alive
@@ -93,6 +133,9 @@ class ProcessManager implements ProcessManagerInterface {
       childProcess.on("exit", (code, signal) => {
         logger.info(`[ProcessManager] Process exited: code=${code}, signal=${signal}`);
         this.cleanup();
+        for (const cb of this.crashCallbacks) {
+          cb(code, signal);
+        }
       });
 
       // Log stdout/stderr

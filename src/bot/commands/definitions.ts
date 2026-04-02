@@ -41,6 +41,7 @@ const COMMAND_DEFINITIONS: BotCommandI18nDefinition[] = [
   { command: BOT_COMMAND.FILES, descriptionKey: "cmd.description.files" },
   { command: BOT_COMMAND.MCP, descriptionKey: "cmd.description.mcp" },
   { command: BOT_COMMAND.REVERT, descriptionKey: "cmd.description.revert" },
+  { command: BOT_COMMAND.UNREVERT, descriptionKey: "cmd.description.unrevert" },
   { command: BOT_COMMAND.MESSAGES, descriptionKey: "cmd.description.messages" },
   { command: BOT_COMMAND.NEWPROJECT, descriptionKey: "cmd.description.newproject" },
   { command: BOT_COMMAND.ADDPROJECT, descriptionKey: "cmd.description.addproject" },

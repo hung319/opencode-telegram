@@ -404,6 +404,7 @@ export const en = {
   "pinned.line.project": "Project: {project}",
   "pinned.line.model": "Model: {model}",
   "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.branch": "Branch: {branch}",
   "pinned.line.status": "Status: {status}",
   "pinned.line.created": "Created: {time}",
   "pinned.line.messages": "Messages: {count}",
@@ -577,6 +578,12 @@ export const en = {
   "revert.success": "✅ Message reverted successfully.",
   "revert.error": "🔴 Failed to revert message.",
   "revert.no_message": "⚠️ No message to revert in this session.",
+
+  "unrevert.no_session": "⚠️ No active session. Create or select a session first.",
+  "unrevert.success": "✅ Messages unreverted successfully.",
+  "unrevert.error": "🔴 Failed to unrevert messages.",
+
+  "cmd.description.unrevert": "Unrevert messages in session",
 
   "messages.no_session": "⚠️ No active session. Create or select a session first.",
   "messages.empty": "📭 No messages in this session.",

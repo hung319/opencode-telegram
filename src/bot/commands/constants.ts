@@ -20,6 +20,7 @@ export const BOT_COMMAND = {
   FILES: "files",
   MCP: "mcp",
   REVERT: "revert",
+  UNREVERT: "unrevert",
   MESSAGES: "messages",
   NEWPROJECT: "newproject",
   ADDPROJECT: "addproject",

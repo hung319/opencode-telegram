@@ -398,6 +398,7 @@ export const es: I18nDictionary = {
   "pinned.line.project": "Proyecto: {project}",
   "pinned.line.model": "Modelo: {model}",
   "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.branch": "Branch: {branch}",
   "pinned.line.status": "Estado: {status}",
   "pinned.line.created": "Creado: {time}",
   "pinned.line.messages": "Mensajes: {count}",
@@ -537,6 +538,7 @@ export const es: I18nDictionary = {
   "cmd.description.files": "Browse project files",
   "cmd.description.mcp": "Manage MCP servers",
   "cmd.description.revert": "Revert last action",
+  "cmd.description.unrevert": "Unrevert messages in session",
   "cmd.description.messages": "View session messages",
 
   "delete.no_session": "⚠️ No active session. Create or select a session first.",
@@ -621,6 +623,9 @@ export const es: I18nDictionary = {
   "revert.success": "✅ Message reverted successfully.",
   "revert.error": "🔴 Failed to revert message.",
   "revert.no_message": "⚠️ No message to revert in this session.",
+  "unrevert.no_session": "⚠️ No active session. Create or select a session first.",
+  "unrevert.success": "✅ Messages unreverted successfully.",
+  "unrevert.error": "🔴 Failed to unrevert messages.",
 
   "messages.no_session": "⚠️ No active session. Create or select a session first.",
   "messages.empty": "📭 No messages in this session.",

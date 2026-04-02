@@ -404,6 +404,7 @@ export const vi = {
   "pinned.line.project": "Dự án: {project}",
   "pinned.line.model": "Mô hình: {model}",
   "pinned.line.agent": "Agent: {agent}",
+  "pinned.line.branch": "Branch: {branch}",
   "pinned.line.status": "Trạng thái: {status}",
   "pinned.line.created": "Tạo: {time}",
   "pinned.line.messages": "Tin nhắn: {count}",
@@ -564,6 +565,12 @@ export const vi = {
   "revert.success": "✅ Đã hoàn tác tin nhắn thành công.",
   "revert.error": "🔴 Không hoàn tác được tin nhắn.",
   "revert.no_message": "⚠️ Không có tin nhắn nào để hoàn tác trong phiên này.",
+
+  "unrevert.no_session": "⚠️ Không có phiên hoạt động. Tạo hoặc chọn phiên trước.",
+  "unrevert.success": "✅ Đã khôi phục tin nhắn thành công.",
+  "unrevert.error": "🔴 Không khôi phục được tin nhắn.",
+
+  "cmd.description.unrevert": "Khôi phục tin nhắn trong phiên",
 
   "messages.no_session": "⚠️ Không có phiên hoạt động. Tạo hoặc chọn phiên trước.",
   "messages.empty": "📭 Không có tin nhắn nào trong phiên này.",
