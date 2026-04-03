@@ -158,7 +158,7 @@ Model picker behavior:
 
 Open tasks for upcoming iterations:
 
-- [ ] Display MCP servers, formatters, and plugins in bot status/details
+- [x] Display MCP servers, formatters, and plugins in bot status/details
 - [x] Configure visibility level for thinking and intermediate steps
 - [ ] Add server crash notifications in Telegram
 - [ ] Add periodic health checks and optional auto-restart for OpenCode server
