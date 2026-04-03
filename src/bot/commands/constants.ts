@@ -26,6 +26,10 @@ export const BOT_COMMAND = {
   ADDPROJECT: "addproject",
   MANAGE: "manage",
   CLEANUP: "cleanup",
+  MODEL: "model",
+  AGENT: "agent",
+  VARIANT: "variant",
+  CONTEXT: "context",
   OPENCODE_START: "opencode_start",
   OPENCODE_STOP: "opencode_stop",
 } as const;

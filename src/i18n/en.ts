@@ -12,6 +12,8 @@ export const en = {
   "cmd.description.commands": "Custom commands",
   "cmd.description.model": "Select model",
   "cmd.description.agent": "Select agent mode",
+  "cmd.description.variant": "Select model variant",
+  "cmd.description.context": "Compact session context",
   "cmd.description.cleanup": "Close stale topic threads",
   "cmd.description.opencode_start": "Start OpenCode server",
   "cmd.description.opencode_stop": "Stop OpenCode server",

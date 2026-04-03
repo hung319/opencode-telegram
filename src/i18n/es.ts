@@ -15,6 +15,8 @@ export const es: I18nDictionary = {
   "cmd.description.model": "Seleccionar modelo",
   "cmd.description.agent": "Seleccionar modo de agente",
   "cmd.description.cleanup": "Cerrar temas obsoletos",
+  "cmd.description.variant": "Seleccionar variante del modelo",
+  "cmd.description.context": "Compactar contexto de sesión",
   "cmd.description.opencode_start": "Iniciar servidor OpenCode",
   "cmd.description.opencode_stop": "Detener servidor OpenCode",
   "cmd.description.help": "Ayuda",

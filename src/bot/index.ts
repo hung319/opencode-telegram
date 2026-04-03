@@ -38,6 +38,10 @@ import { messagesCommand, handleMessagesCallback } from "./commands/messages.js"
 import { newprojectCommand, addprojectCommand } from "./commands/newproject.js";
 import { manageCommand, handleManageCallback, handleManageTextAnswer } from "./commands/manage.js";
 import { cleanupCommand } from "./commands/cleanup.js";
+import { modelCommand } from "./commands/model.js";
+import { agentCommand } from "./commands/agent.js";
+import { variantCommand } from "./commands/variant.js";
+import { contextCommand } from "./commands/context.js";
 import {
   debouncePrompt,
   getPromptDebounceKey,
@@ -1218,6 +1222,10 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.ADDPROJECT, addprojectCommand);
   bot.command(BOT_COMMAND.MANAGE, manageCommand);
   bot.command(BOT_COMMAND.CLEANUP, cleanupCommand);
+  bot.command(BOT_COMMAND.MODEL, modelCommand);
+  bot.command(BOT_COMMAND.AGENT, agentCommand);
+  bot.command(BOT_COMMAND.VARIANT, variantCommand);
+  bot.command(BOT_COMMAND.CONTEXT, contextCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 

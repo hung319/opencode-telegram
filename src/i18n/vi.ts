@@ -13,6 +13,8 @@ export const vi = {
   "cmd.description.model": "Chọn mô hình",
   "cmd.description.agent": "Chọn chế độ agent",
   "cmd.description.cleanup": "Đóng các luồng cũ",
+  "cmd.description.variant": "Chọn biến thể mô hình",
+  "cmd.description.context": "Nén ngữ cảnh phiên",
   "cmd.description.opencode_start": "Khởi động máy chủ OpenCode",
   "cmd.description.opencode_stop": "Dừng máy chủ OpenCode",
   "cmd.description.help": "Trợ giúp",
