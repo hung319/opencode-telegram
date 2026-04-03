@@ -13,6 +13,8 @@ const { getServerProcessMock, setServerProcessMock, clearServerProcessMock } = v
   clearServerProcessMock: vi.fn(),
 }));
 
+const healthMock = vi.hoisted(() => vi.fn());
+
 vi.mock("child_process", () => ({
   spawn: spawnMock,
   exec: execMock,
@@ -22,6 +24,14 @@ vi.mock("../../src/settings/manager.js", () => ({
   getServerProcess: getServerProcessMock,
   setServerProcess: setServerProcessMock,
   clearServerProcess: clearServerProcessMock,
+}));
+
+vi.mock("../../src/opencode/client.js", () => ({
+  opencodeClient: {
+    global: {
+      health: healthMock,
+    },
+  },
 }));
 
 import { processManager } from "../../src/process/manager.js";
@@ -70,6 +80,7 @@ describe("process/manager", () => {
       startTime: new Date(Date.now() - 10_000).toISOString(),
     });
     vi.spyOn(process, "kill").mockImplementation(() => true);
+    healthMock.mockResolvedValue({ data: { healthy: true }, error: null });
 
     await processManager.initialize();
 
@@ -88,6 +99,7 @@ describe("process/manager", () => {
     vi.spyOn(process, "kill").mockImplementation(() => {
       throw new Error("ESRCH");
     });
+    healthMock.mockResolvedValue({ data: { healthy: true }, error: null });
 
     await processManager.initialize();
 
