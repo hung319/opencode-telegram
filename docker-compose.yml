@@ -1,0 +1,59 @@
+services:
+  bot:
+    build: .
+    container_name: opencode-telegram-bot
+    restart: unless-stopped
+    environment:
+      # Required
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_ALLOWED_USER_ID=${TELEGRAM_ALLOWED_USER_ID}
+      
+      # Optional - OpenCode settings
+      - OPENCODE_MODEL_PROVIDER=${OPENCODE_MODEL_PROVIDER:-opencode}
+      - OPENCODE_MODEL_ID=${OPENCODE_MODEL_ID:-big-pickle}
+      
+      # Optional - Bot settings
+      - BOT_LOCALE=${BOT_LOCALE:-en}
+      - COMPACT_MODE=${COMPACT_MODE:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      
+      # Optional - Service messages
+      - HIDE_THINKING_MESSAGES=${HIDE_THINKING_MESSAGES:-false}
+      - HIDE_TOOL_CALL_MESSAGES=${HIDE_TOOL_CALL_MESSAGES:-false}
+      - SERVICE_MESSAGES_INTERVAL_SEC=${SERVICE_MESSAGES_INTERVAL_SEC:-2}
+      
+      # Optional - AI Provider API keys
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      
+      # Optional - STT/TTS
+      - STT_API_URL=${STT_API_URL}
+      - STT_API_KEY=${STT_API_KEY}
+      - TTS_API_URL=${TTS_API_URL}
+      - TTS_API_KEY=${TTS_API_KEY}
+      
+      # Optional - Proxy
+      - TELEGRAM_PROXY_URL=${TELEGRAM_PROXY_URL}
+      
+    volumes:
+      # Persist OpenCode config and bot settings
+      - opencode-config:/root/.config
+      - opencode-data:/root/.opencode
+      
+    ports:
+      - "4096:4096"  # OpenCode API (optional, for external access)
+      
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+volumes:
+  opencode-config:
+  opencode-data:

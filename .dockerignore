@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.local
+*.md
+!README.md
+tests
+coverage
+.nyc_output
+.eslintrc*
+.prettierrc*
+tsconfig.json
+vitest.config.ts
+opencode-telegram

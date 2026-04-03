@@ -167,7 +167,7 @@ Open tasks for upcoming iterations:
 - [x] Support sending PDF documents from Telegram to OpenCode
 - [x] Support sending text files from Telegram to OpenCode (code, configs, etc.)
 - [x] Add scheduled tasks
-- [ ] Provide a Docker image and basic container deployment guide
+- [x] Provide a Docker image and basic container deployment guide
 - [x] Add voice transcription
 
 ## Possible Improvements
