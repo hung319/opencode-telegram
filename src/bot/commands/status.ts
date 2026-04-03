@@ -149,10 +149,16 @@ export async function statusCommand(ctx: CommandContext<Context>) {
 
       if (formatterData && typeof formatterData === "object" && Array.isArray(formatterData) && formatterData.length > 0) {
         message += `\n${t("status.formatter.header")}\n`;
-        for (const info of formatterData as Array<{ id?: string; disabled?: boolean }>) {
-          const name = info?.id || "unknown";
-          const icon = info?.disabled ? t("status.formatter.disabled") : t("status.formatter.enabled");
+        const maxShow = 10;
+        const shown = formatterData.slice(0, maxShow) as Array<Record<string, unknown>>;
+        for (const info of shown) {
+          const name = (info.id as string) || (info.name as string) || (info.command as string) || "formatter";
+          const disabled = info.disabled === true || info.enabled === false;
+          const icon = disabled ? t("status.formatter.disabled") : t("status.formatter.enabled");
           message += `  ${icon} ${name}\n`;
+        }
+        if (formatterData.length > maxShow) {
+          message += `  ... +${formatterData.length - maxShow} more\n`;
         }
       }
     } catch {
