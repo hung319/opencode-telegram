@@ -706,4 +706,38 @@ export const de: I18nDictionary = {
   "ssh.not_found": "❌ Kein Mapping für {user}@{host} gefunden",
   "ssh.removed_success": "✅ SSH-Mapping für {user}@{host} entfernt",
   "ssh.remove_error": "❌ Fehler beim Entfernen des SSH-Mappings: {message}",
+
+  "cmd.description.clone": "Git-Repository klonen",
+  "cmd.description.ls": "Projektdateien durchsuchen",
+  "cmd.description.open": "Dateiinhalt öffnen",
+  "cmd.description.worktree": "Git-Worktrees verwalten",
+
+  "clone.usage": "🔧 Git-Repository klonen\n\nVerwendung: /clone <git-url>\nBeispiel: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ Ungültige Git-URL. Verwende SSH (git@github.com:user/repo.git) oder HTTPS.",
+  "clone.cloning": "🔄 Klone {repo}...",
+  "clone.success": "✅ Geklont: {repo}\n\nPfad: {path}\n\nNutze /addproject zum Hinzufügen zur Gruppe.",
+  "clone.error": "❌ Klonen fehlgeschlagen: {message}",
+
+  "ls.no_project": "⚠️ Kein Projekt ausgewählt. Nutze zuerst /projects.",
+  "ls.empty": "📂 Verzeichnis {path} ist leer.",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "Zeige erste {max} Einträge.",
+  "ls.no_dirs": "Keine Unterverzeichnisse",
+  "ls.error": "❌ Verzeichnis konnte nicht aufgelistet werden.",
+
+  "open.no_project": "⚠️ Kein Projekt ausgewählt. Nutze zuerst /projects.",
+  "open.usage": "📄 Datei öffnen\n\nVerwendung: /open <dateipfad>\nBeispiel: /open src/index.ts",
+  "open.not_found": "❌ Datei nicht gefunden: {path}",
+  "open.too_large": "📄 Datei {path} zu groß ({size}). Max: {max}.",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git-Worktrees",
+  "worktree.no_worktrees": "Keine Worktrees gefunden.",
+  "worktree.usage": "🌿 Git-Worktrees verwalten\n\n/worktree list - Worktrees anzeigen\n/worktree create <branch> - Worktree für Branch erstellen",
+  "worktree.no_project": "⚠️ Kein Projekt ausgewählt.",
+  "worktree.create_usage": "Verwendung: /worktree create <branch>",
+  "worktree.created": "✅ Worktree erstellt für Branch: {branch}\nPfad: {path}",
+  "worktree.error": "❌ Fehler beim Verwalten des Worktrees: {message}",
+  "worktree.switching": "Wechsle zu Branch: {branch}",
+  "worktree.switched": "✅ Gewechselt zu Branch: {branch}",
 };

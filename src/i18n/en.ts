@@ -15,6 +15,10 @@ export const en = {
   "cmd.description.variant": "Select model variant",
   "cmd.description.context": "Compact session context",
   "cmd.description.ssh": "Configure SSH for Git repos",
+  "cmd.description.clone": "Clone a Git repository",
+  "cmd.description.ls": "Browse project files",
+  "cmd.description.open": "Open a file content",
+  "cmd.description.worktree": "Manage git worktrees",
   "cmd.description.cleanup": "Close stale topic threads",
   "cmd.description.opencode_start": "Start OpenCode server",
   "cmd.description.opencode_stop": "Stop OpenCode server",
@@ -692,6 +696,35 @@ export const en = {
   "ssh.not_found": "❌ No mapping found for {user}@{host}",
   "ssh.removed_success": "✅ SSH mapping removed for {user}@{host}",
   "ssh.remove_error": "❌ Error removing SSH mapping: {message}",
+
+  "clone.usage": "🔧 Clone a Git repository\n\nUsage: /clone <git-url>\nExample: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ Invalid Git URL. Use SSH (git@github.com:user/repo.git) or HTTPS format.",
+  "clone.cloning": "🔄 Cloning {repo}...",
+  "clone.success": "✅ Cloned {repo}\n\nPath: {path}\n\nUse /addproject to add it to this group.",
+  "clone.error": "❌ Failed to clone: {message}",
+
+  "ls.no_project": "⚠️ No project selected. Use /projects first.",
+  "ls.empty": "📂 Directory {path} is empty.",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "Showing first {max} entries.",
+  "ls.no_dirs": "No subdirectories",
+  "ls.error": "❌ Failed to list directory.",
+
+  "open.no_project": "⚠️ No project selected. Use /projects first.",
+  "open.usage": "📄 Open a file\n\nUsage: /open <file-path>\nExample: /open src/index.ts",
+  "open.not_found": "❌ File not found: {path}",
+  "open.too_large": "📄 File {path} is too large ({size}). Max: {max}.",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git Worktrees",
+  "worktree.no_worktrees": "No worktrees found for current project.",
+  "worktree.usage": "🌿 Manage git worktrees\n\n/worktree list - Show worktrees\n/worktree create <branch> - Create worktree for branch",
+  "worktree.created": "✅ Created worktree for branch: {branch}\nPath: {path}",
+  "worktree.error": "❌ Failed to manage worktree: {message}",
+  "worktree.no_project": "⚠️ No project selected.",
+  "worktree.create_usage": "Usage: /worktree create <branch>",
+  "worktree.switching": "Switching to branch: {branch}",
+  "worktree.switched": "✅ Switched to branch: {branch}",
 } as const;
 
 export type I18nKey = keyof typeof en;

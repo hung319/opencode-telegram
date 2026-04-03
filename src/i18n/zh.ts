@@ -644,4 +644,38 @@ export const zh: I18nDictionary = {
   "ssh.not_found": "❌ 未找到 {user}@{host} 的映射",
   "ssh.removed_success": "✅ 已删除 {user}@{host} 的 SSH 映射",
   "ssh.remove_error": "❌ 删除 SSH 映射时出错: {message}",
+
+  "cmd.description.clone": "克隆 Git 仓库",
+  "cmd.description.ls": "浏览项目文件",
+  "cmd.description.open": "打开文件内容",
+  "cmd.description.worktree": "管理 git worktree",
+
+  "clone.usage": "🔧 克隆 Git 仓库\n\n用法: /clone <git-url>\n示例: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ Git URL 无效。使用 SSH (git@github.com:user/repo.git) 或 HTTPS 格式。",
+  "clone.cloning": "🔄 正在克隆 {repo}...",
+  "clone.success": "✅ 已克隆 {repo}\n\n路径: {path}\n\n使用 /addproject 添加到群组。",
+  "clone.error": "❌ 克隆失败: {message}",
+
+  "ls.no_project": "⚠️ 未选择项目。请先使用 /projects。",
+  "ls.empty": "📂 目录 {path} 为空。",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "显示前 {max} 个条目。",
+  "ls.no_dirs": "没有子目录",
+  "ls.error": "❌ 无法列出目录。",
+
+  "open.no_project": "⚠️ 未选择项目。请先使用 /projects。",
+  "open.usage": "📄 打开文件\n\n用法: /open <文件路径>\n示例: /open src/index.ts",
+  "open.not_found": "❌ 文件未找到: {path}",
+  "open.too_large": "📄 文件 {path} 太大 ({size})。最大: {max}。",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git Worktrees",
+  "worktree.no_worktrees": "未找到 worktree。",
+  "worktree.usage": "🌿 管理 git worktree\n\n/worktree list - 查看 worktrees\n/worktree create <branch> - 为分支创建 worktree",
+  "worktree.no_project": "⚠️ 未选择项目。",
+  "worktree.create_usage": "用法: /worktree create <branch>",
+  "worktree.created": "✅ 已为分支创建 worktree: {branch}\n路径: {path}",
+  "worktree.error": "❌ 管理 worktree 失败: {message}",
+  "worktree.switching": "正在切换到分支: {branch}",
+  "worktree.switched": "✅ 已切换到分支: {branch}",
 };

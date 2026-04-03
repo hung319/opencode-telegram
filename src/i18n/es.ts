@@ -705,4 +705,38 @@ export const es: I18nDictionary = {
   "ssh.not_found": "❌ No se encontró mapeo para {user}@{host}",
   "ssh.removed_success": "✅ Mapeo SSH eliminado para {user}@{host}",
   "ssh.remove_error": "❌ Error eliminando mapeo SSH: {message}",
+
+  "cmd.description.clone": "Clonar repositorio Git",
+  "cmd.description.ls": "Explorar archivos del proyecto",
+  "cmd.description.open": "Abrir contenido de archivo",
+  "cmd.description.worktree": "Gestionar git worktree",
+
+  "clone.usage": "🔧 Clonar repositorio Git\n\nUso: /clone <git-url>\nEjemplo: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ URL Git inválida. Usa SSH (git@github.com:user/repo.git) o HTTPS.",
+  "clone.cloning": "🔄 Clonando {repo}...",
+  "clone.success": "✅ Clonado {repo}\n\nRuta: {path}\n\nUsa /addproject para añadirlo al grupo.",
+  "clone.error": "❌ Error al clonar: {message}",
+
+  "ls.no_project": "⚠️ Proyecto no seleccionado. Usa /projects primero.",
+  "ls.empty": "📂 Directorio {path} vacío.",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "Mostrando primeras {max} entradas.",
+  "ls.no_dirs": "Sin subdirectorios",
+  "ls.error": "❌ Error al listar directorio.",
+
+  "open.no_project": "⚠️ Proyecto no seleccionado. Usa /projects primero.",
+  "open.usage": "📄 Abrir archivo\n\nUso: /open <ruta-archivo>\nEjemplo: /open src/index.ts",
+  "open.not_found": "❌ Archivo no encontrado: {path}",
+  "open.too_large": "📄 Archivo {path} demasiado grande ({size}). Máx: {max}.",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git Worktrees",
+  "worktree.no_worktrees": "No se encontraron worktrees.",
+  "worktree.usage": "🌿 Gestionar git worktree\n\n/worktree list - Mostrar worktrees\n/worktree create <branch> - Crear worktree para rama",
+  "worktree.no_project": "⚠️ Proyecto no seleccionado.",
+  "worktree.create_usage": "Uso: /worktree create <branch>",
+  "worktree.created": "✅ Worktree creado para rama: {branch}\nRuta: {path}",
+  "worktree.error": "❌ Error gestionando worktree: {message}",
+  "worktree.switching": "Cambiando a rama: {branch}",
+  "worktree.switched": "✅ Cambiado a rama: {branch}",
 };

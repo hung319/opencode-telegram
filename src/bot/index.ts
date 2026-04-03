@@ -43,6 +43,10 @@ import { agentCommand } from "./commands/agent.js";
 import { variantCommand } from "./commands/variant.js";
 import { contextCommand } from "./commands/context.js";
 import { sshCommand } from "./commands/ssh.js";
+import { cloneCommand } from "./commands/clone.js";
+import { lsCommand, handleLsCallback } from "./commands/ls.js";
+import { openCommand } from "./commands/open.js";
+import { worktreeCommand, handleWorktreeCallback } from "./commands/worktree.js";
 import {
   debouncePrompt,
   getPromptDebounceKey,
@@ -1228,6 +1232,10 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.VARIANT, variantCommand);
   bot.command(BOT_COMMAND.CONTEXT, contextCommand);
   bot.command(BOT_COMMAND.SSH, sshCommand);
+  bot.command(BOT_COMMAND.CLONE, cloneCommand);
+  bot.command(BOT_COMMAND.LS, lsCommand);
+  bot.command(BOT_COMMAND.OPEN, openCommand);
+  bot.command(BOT_COMMAND.WORKTREE, worktreeCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 
@@ -1244,6 +1252,8 @@ export function createBot(): Bot<Context> {
       const handledInlineCancel = await handleInlineMenuCancel(ctx);
       const handledSession = await handleSessionSelect(ctx);
       const handledSessionAction = await handleSessionActionCallback(ctx);
+      const handledLs = await handleLsCallback(ctx);
+      const handledWorktree = await handleWorktreeCallback(ctx);
       const handledProject = await handleProjectSelect(ctx);
       const handledTaskList = await handleTaskListCallback(ctx);
       const handledQuestion = await handleQuestionCallback(ctx);
@@ -1262,13 +1272,15 @@ export function createBot(): Bot<Context> {
       const handledCommands = await handleCommandsCallback(ctx, { ensureEventSubscription });
 
       logger.debug(
-        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, sessionAction=${handledSessionAction}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
+        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, sessionAction=${handledSessionAction}, ls=${handledLs}, worktree=${handledWorktree}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
       );
 
       if (
         !handledInlineCancel &&
         !handledSession &&
         !handledSessionAction &&
+        !handledLs &&
+        !handledWorktree &&
         !handledProject &&
         !handledTaskList &&
         !handledQuestion &&

@@ -692,4 +692,38 @@ export const vi = {
   "ssh.not_found": "❌ Không tìm thấy mapping cho {user}@{host}",
   "ssh.removed_success": "✅ Đã xóa SSH mapping cho {user}@{host}",
   "ssh.remove_error": "❌ Lỗi khi xóa SSH mapping: {message}",
+
+  "cmd.description.clone": "Clone Git repository",
+  "cmd.description.ls": "Duyệt tệp project",
+  "cmd.description.open": "Mở nội dung tệp",
+  "cmd.description.worktree": "Quản lý git worktree",
+
+  "clone.usage": "🔧 Clone Git repository\n\nCách dùng: /clone <git-url>\nVí dụ: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ Git URL không hợp lệ. Dùng SSH (git@github.com:user/repo.git) hoặc HTTPS.",
+  "clone.cloning": "🔄 Đang clone {repo}...",
+  "clone.success": "✅ Đã clone {repo}\n\nĐường dẫn: {path}\n\nDùng /addproject để thêm vào nhóm.",
+  "clone.error": "❌ Clone thất bại: {message}",
+
+  "ls.no_project": "⚠️ Chưa chọn project. Dùng /projects trước.",
+  "ls.empty": "📂 Thư mục {path} trống.",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "Hiển thị {max} mục đầu tiên.",
+  "ls.no_dirs": "Không có thư mục con",
+  "ls.error": "❌ Không thể liệt kê thư mục.",
+
+  "open.no_project": "⚠️ Chưa chọn project. Dùng /projects trước.",
+  "open.usage": "📄 Mở tệp\n\nCách dùng: /open <đường-dẫn>\nVí dụ: /open src/index.ts",
+  "open.not_found": "❌ Không tìm thấy tệp: {path}",
+  "open.too_large": "📄 Tệp {path} quá lớn ({size}). Tối đa: {max}.",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git Worktrees",
+  "worktree.no_worktrees": "Không tìm thấy worktree nào.",
+  "worktree.usage": "🌿 Quản lý git worktree\n\n/worktree list - Xem worktrees\n/worktree create <branch> - Tạo worktree cho branch",
+  "worktree.no_project": "⚠️ Chưa chọn project.",
+  "worktree.create_usage": "Cách dùng: /worktree create <branch>",
+  "worktree.created": "✅ Đã tạo worktree cho branch: {branch}\nĐường dẫn: {path}",
+  "worktree.error": "❌ Lỗi khi quản lý worktree: {message}",
+  "worktree.switching": "Đang chuyển sang branch: {branch}",
+  "worktree.switched": "✅ Đã chuyển sang branch: {branch}",
 } as const;

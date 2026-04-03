@@ -694,4 +694,38 @@ export const ru: I18nDictionary = {
   "ssh.not_found": "❌ Маппинг для {user}@{host} не найден",
   "ssh.removed_success": "✅ SSH маппинг для {user}@{host} удален",
   "ssh.remove_error": "❌ Ошибка удаления SSH маппинга: {message}",
+
+  "cmd.description.clone": "Клонировать Git репозиторий",
+  "cmd.description.ls": "Просмотр файлов проекта",
+  "cmd.description.open": "Открыть содержимое файла",
+  "cmd.description.worktree": "Управление git worktree",
+
+  "clone.usage": "🔧 Клонировать Git репозиторий\n\nИспользование: /clone <git-url>\nПример: /clone git@github.com:user/repo.git",
+  "clone.invalid_url": "❌ Неверный Git URL. Используйте SSH (git@github.com:user/repo.git) или HTTPS.",
+  "clone.cloning": "🔄 Клонирование {repo}...",
+  "clone.success": "✅ Клонировано {repo}\n\nПуть: {path}\n\nИспользуйте /addproject для добавления в группу.",
+  "clone.error": "❌ Ошибка клонирования: {message}",
+
+  "ls.no_project": "⚠️ Проект не выбран. Используйте /projects.",
+  "ls.empty": "📂 Директория {path} пуста.",
+  "ls.header": "📂 **{project}** - `{path}`",
+  "ls.truncated": "Показаны первые {max} записей.",
+  "ls.no_dirs": "Нет поддиректорий",
+  "ls.error": "❌ Не удалось列出 директорию.",
+
+  "open.no_project": "⚠️ Проект не выбран. Используйте /projects.",
+  "open.usage": "📄 Открыть файл\n\nИспользование: /open <путь-к-файлу>\nПример: /open src/index.ts",
+  "open.not_found": "❌ Файл не найден: {path}",
+  "open.too_large": "📄 Файл {path} слишком большой ({size}). Макс: {max}.",
+  "open.header": "📄 **{path}**\n\n",
+
+  "worktree.list_header": "🌿 Git Worktrees",
+  "worktree.no_worktrees": "Worktree не найдены.",
+  "worktree.usage": "🌿 Управление git worktree\n\n/worktree list - Показать worktrees\n/worktree create <branch> - Создать worktree для ветки",
+  "worktree.no_project": "⚠️ Проект не выбран.",
+  "worktree.create_usage": "Использование: /worktree create <branch>",
+  "worktree.created": "✅ Создан worktree для ветки: {branch}\nПуть: {path}",
+  "worktree.error": "❌ Ошибка управления worktree: {message}",
+  "worktree.switching": "Переключение на ветку: {branch}",
+  "worktree.switched": "✅ Переключено на ветку: {branch}",
 };
