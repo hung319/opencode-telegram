@@ -9,8 +9,12 @@ import { t } from "../../i18n/index.js";
 
 const execAsync = promisify(exec);
 
+const SUPPORTED_HOSTS = ["github.com", "gitlab.com", "bitbucket.org"] as const;
+type SupportedHost = (typeof SUPPORTED_HOSTS)[number];
+
 interface SshMapping {
   user: string;
+  keyName: string;
   keyPath: string;
   host: string;
 }
@@ -19,7 +23,11 @@ function getHostAlias(host: string, user: string): string {
   return `${host}-${user}`;
 }
 
-async function findSshKeys(): Promise<string[]> {
+function isSupportedHost(host: string): boolean {
+  return SUPPORTED_HOSTS.includes(host as SupportedHost);
+}
+
+async function findExistingKeys(): Promise<string[]> {
   const sshDir = path.join(os.homedir(), ".ssh");
 
   try {
@@ -61,6 +69,16 @@ async function writeSshConfig(content: string): Promise<void> {
   }
 }
 
+async function savePrivateKey(keyName: string, content: string): Promise<string> {
+  const sshDir = path.join(os.homedir(), ".ssh");
+  const keyPath = path.join(sshDir, keyName);
+
+  await fs.mkdir(sshDir, { mode: 0o700, recursive: true });
+  await fs.writeFile(keyPath, content, { mode: 0o600 });
+
+  return keyPath;
+}
+
 function parseExistingMappings(config: string): SshMapping[] {
   const mappings: SshMapping[] = [];
   const lines = config.split("\n");
@@ -80,7 +98,8 @@ function parseExistingMappings(config: string): SshMapping[] {
         const parts = currentHost.split("-");
         const host = parts.slice(0, -1).join("-");
         const user = parts[parts.length - 1];
-        mappings.push({ user, keyPath: currentKeyPath, host });
+        const keyName = path.basename(currentKeyPath);
+        mappings.push({ user, keyName, keyPath: currentKeyPath, host });
       }
       currentHost = hostMatch[1];
       currentUser = null;
@@ -103,13 +122,14 @@ function parseExistingMappings(config: string): SshMapping[] {
     const parts = currentHost.split("-");
     const host = parts.slice(0, -1).join("-");
     const user = parts[parts.length - 1];
-    mappings.push({ user, keyPath: currentKeyPath, host });
+    const keyName = path.basename(currentKeyPath);
+    mappings.push({ user, keyName, keyPath: currentKeyPath, host });
   }
 
   return mappings;
 }
 
-async function addSshMapping(user: string, keyPath: string, host: string): Promise<void> {
+async function addSshMapping(user: string, keyName: string, keyContent: string, host: string): Promise<{ hostAlias: string; keyPath: string }> {
   const config = await readSshConfig();
   const existing = parseExistingMappings(config);
   const hostAlias = getHostAlias(host, user);
@@ -119,8 +139,10 @@ async function addSshMapping(user: string, keyPath: string, host: string): Promi
   );
 
   if (alreadyExists) {
-    throw new Error(`Mapping for ${user}@${host} already exists`);
+    throw new Error(`Mapping for ${user}@${host} already exists. Use /ssh remove ${host} ${user} first.`);
   }
+
+  const keyPath = await savePrivateKey(keyName, keyContent);
 
   const newEntry = `\nHost ${hostAlias}\n  HostName ${host}\n  User git\n  IdentityFile ${keyPath}\n  IdentitiesOnly yes\n`;
 
@@ -128,6 +150,8 @@ async function addSshMapping(user: string, keyPath: string, host: string): Promi
   await writeSshConfig(updatedConfig);
 
   await configureGitUrlRewrite(host, user, hostAlias, true);
+
+  return { hostAlias, keyPath };
 }
 
 async function removeSshMapping(host: string, user: string): Promise<void> {
@@ -137,6 +161,7 @@ async function removeSshMapping(host: string, user: string): Promise<void> {
   const filtered: string[] = [];
   let skipBlock = false;
   let inTargetBlock = false;
+  let keyPathToDelete: string | null = null;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -149,6 +174,11 @@ async function removeSshMapping(host: string, user: string): Promise<void> {
     }
 
     if (skipBlock && inTargetBlock) {
+      const keyMatch = trimmed.match(/^IdentityFile\s+(.+)$/i);
+      if (keyMatch) {
+        keyPathToDelete = keyMatch[1].replace(/"/g, "");
+      }
+
       if (trimmed.startsWith("Host ") || (trimmed.length > 0 && !trimmed.startsWith("#") && !/^\s/.test(line))) {
         skipBlock = false;
         inTargetBlock = false;
@@ -161,6 +191,15 @@ async function removeSshMapping(host: string, user: string): Promise<void> {
   }
 
   await writeSshConfig(filtered.join("\n"));
+
+  if (keyPathToDelete) {
+    try {
+      await fs.unlink(keyPathToDelete);
+    } catch {
+      // Key file might not exist, ignore
+    }
+  }
+
   await configureGitUrlRewrite(host, user, hostAlias, false);
 }
 
@@ -177,7 +216,7 @@ async function configureGitUrlRewrite(
     try {
       await execAsync(`git config --global url."${toUrl}".insteadOf "${fromUrl}"`);
     } catch {
-      // git config might fail if git is not installed, which is ok
+      // git might not be installed, which is ok
     }
   } else {
     try {
@@ -220,10 +259,10 @@ export async function sshCommand(ctx: CommandContext<Context>): Promise<void> {
 
   if (subcommand === "add") {
     const user = parts[2];
-    const keyPath = parts[3];
-    const host = parts[4] || "github.com";
+    const host = parts[3];
+    const keyContent = parts.slice(4).join(" ");
 
-    if (!user || !keyPath) {
+    if (!user || !host || !keyContent) {
       await ctx.reply(
         t("ssh.add_usage"),
         getThreadSendOptions(scope?.threadId ?? null),
@@ -231,7 +270,15 @@ export async function sshCommand(ctx: CommandContext<Context>): Promise<void> {
       return;
     }
 
-    await handleSshAdd(ctx, scope, user, keyPath, host);
+    if (!isSupportedHost(host)) {
+      await ctx.reply(
+        t("ssh.unsupported_host", { host, supported: SUPPORTED_HOSTS.join(", ") }),
+        getThreadSendOptions(scope?.threadId ?? null),
+      );
+      return;
+    }
+
+    await handleSshAdd(ctx, scope, user, host, keyContent);
     return;
   }
 
@@ -264,7 +311,7 @@ async function handleSshList(
   const config = await readSshConfig();
   const mappings = parseExistingMappings(config);
   const rewrites = await getGitUrlRewrites();
-  const keys = await findSshKeys();
+  const keys = await findExistingKeys();
 
   let message = t("ssh.list_header");
 
@@ -275,16 +322,16 @@ async function handleSshList(
       const hostAlias = getHostAlias(mapping.host, mapping.user);
       const rewriteActive = rewrites.has(`git@${mapping.host}:${mapping.user}/`);
       const status = rewriteActive ? "✅" : "⚠️";
-      message += `\n${status} **${mapping.user}@${mapping.host}**\n`;
-      message += `   Host alias: ${hostAlias}\n`;
-      message += `   Key: ${mapping.keyPath}\n`;
+      message += `\n${status} **${mapping.user}@${mapping.host}**`;
+      message += `\n   Alias: ${hostAlias}`;
+      message += `\n   Key: ${mapping.keyName}`;
     }
   }
 
   if (keys.length > 0) {
     message += "\n\n" + t("ssh.available_keys", { count: keys.length });
     for (const key of keys.slice(0, 5)) {
-      message += `\n  • ${key}`;
+      message += `\n  • ${path.basename(key)}`;
     }
     if (keys.length > 5) {
       message += `\n  ... +${keys.length - 5}`;
@@ -298,39 +345,26 @@ async function handleSshAdd(
   ctx: CommandContext<Context>,
   scope: ReturnType<typeof getScopeFromContext>,
   user: string,
-  keyPath: string,
   host: string,
+  keyContent: string,
 ): Promise<void> {
-  const keys = await findSshKeys();
-  let resolvedKeyPath = keyPath;
+  const decodedKey = keyContent.replace(/\\n/g, "\n");
 
-  if (!keyPath.startsWith("/") && !keyPath.startsWith("~")) {
-    const found = keys.find((k) => k.endsWith(keyPath) || k.includes(keyPath));
-    if (found) {
-      resolvedKeyPath = found;
-    } else {
-      resolvedKeyPath = path.join(os.homedir(), ".ssh", keyPath);
-    }
-  } else if (keyPath.startsWith("~")) {
-    resolvedKeyPath = keyPath.replace("~", os.homedir());
-  }
-
-  try {
-    await fs.access(resolvedKeyPath);
-  } catch {
+  if (!decodedKey.includes("BEGIN") || !decodedKey.includes("PRIVATE KEY")) {
     await ctx.reply(
-      t("ssh.key_not_found", { keyPath: resolvedKeyPath }),
+      t("ssh.invalid_key"),
       getThreadSendOptions(scope?.threadId ?? null),
     );
     return;
   }
 
-  try {
-    await addSshMapping(user, resolvedKeyPath, host);
+  const keyName = `${host}-${user}`;
 
-    const hostAlias = getHostAlias(host, user);
+  try {
+    const { hostAlias } = await addSshMapping(user, keyName, decodedKey, host);
+
     await ctx.reply(
-      t("ssh.added_success", { user, host, hostAlias, keyPath: resolvedKeyPath }),
+      t("ssh.added_success", { user, host, hostAlias, keyName }),
       getThreadSendOptions(scope?.threadId ?? null),
     );
   } catch (error) {

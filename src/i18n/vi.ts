@@ -658,7 +658,7 @@ export const vi = {
 
   "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
 
-  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nLệnh:\n/ssh list - Xem tất cả mapping\n/ssh add <user> <key> [host] - Thêm mapping (mặc định: github.com)\n/ssh remove <host> <user> - Xóa mapping\n\nVí dụ: /ssh add hoangxg4 id_ed25519 github.com\n\nCấu hình SSH để git clone/push đến git@github.com:hoangxg4/repo.git dùng đúng key.",
+  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nLệnh:\n/ssh list - Xem tất cả mapping\n/ssh add <user> <host> <private-key> - Thêm SSH key trực tiếp\n/ssh remove <host> <user> - Xóa mapping\n\nVí dụ: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nHỗ trợ: github.com, gitlab.com, bitbucket.org",
   "ssh.available_keys": "🔑 SSH keys khả dụng ({count}):",
   "ssh.configured_hosts": "📋 SSH hosts đã cấu hình ({count}):",
   "ssh.invalid_url": "❌ SSH URL không hợp lệ. Định dạng: git@github.com:username/repo.git",
@@ -667,8 +667,10 @@ export const vi = {
   "ssh.configured_success": "✅ Cấu hình SSH host thành công!\n\nHost: {host}\nKey: {keyPath}\n\nKiểm tra kết nối thành công.",
   "ssh.configured_test_failed": "⚠️ Đã cấu hình SSH host, nhưng kiểm tra kết nối thất bại.\n\nHost: {host}\nKey: {keyPath}\n\nVui lòng xác minh SSH key đã được thêm vào Git provider.",
   "ssh.error": "❌ Lỗi khi cấu hình SSH: {message}",
-  "ssh.add_usage": "Cách dùng: /ssh add <user> <key> [host]\nVí dụ: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.add_usage": "Cách dùng: /ssh add <user> <host> <nội-dung-private-key>\nVí dụ: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "Cách dùng: /ssh remove <host> <user>\nVí dụ: /ssh remove github.com hoangxg4",
+  "ssh.unsupported_host": "❌ Host không hỗ trợ: {host}\nHost hỗ trợ: {supported}",
+  "ssh.invalid_key": "❌ SSH private key không hợp lệ. Nội dung phải chứa 'BEGIN' và 'PRIVATE KEY'.",
   "ssh.list_header": "🔧 SSH Git Mappings",
   "ssh.no_mappings": "Chưa có mapping nào. Dùng /ssh add <user> <key> [host]",
   "ssh.key_not_found": "❌ Không tìm thấy SSH key: {keyPath}",

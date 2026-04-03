@@ -169,6 +169,9 @@ Open tasks for upcoming iterations:
 - [x] Add scheduled tasks
 - [x] Provide a Docker image and basic container deployment guide
 - [x] Add voice transcription
+- [x] Add /model, /agent, /variant, /context commands for desktop users
+- [x] Add /ssh command for Git SSH key management
+- [x] Show context details with token usage and compact option
 
 ## Possible Improvements
 
