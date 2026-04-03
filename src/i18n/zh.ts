@@ -610,7 +610,7 @@ export const zh: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 SSH Git 配置\n\n命令:\n/ssh list - 查看所有映射\n/ssh add <user> <host> <私钥> - 直接添加 SSH 密钥\n/ssh remove <host> <user> - 删除映射\n\n示例: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\n支持: github.com, gitlab.com, bitbucket.org",
+  "ssh.usage": "🔧 SSH Git 配置\n\n命令:\n/ssh list - 查看所有映射\n/ssh add <user> <host> <私钥> - 直接添加 SSH 密钥\n/ssh remove <host> <user> - 删除映射\n\n示例: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n示例: /ssh add dev git.myserver.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\n适用于任何 Git 主机: GitHub, GitLab, Bitbucket, 自托管等。",
   "ssh.available_keys": "🔑 可用的 SSH 密钥 ({count}):",
   "ssh.configured_hosts": "📋 已配置的 SSH 主机 ({count}):",
   "ssh.invalid_url": "❌ SSH URL 无效。格式: git@github.com:username/repo.git",
@@ -622,6 +622,7 @@ export const zh: I18nDictionary = {
   "ssh.add_usage": "用法: /ssh add <user> <host> <私钥内容>\n示例: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "用法: /ssh remove <host> <user>\n示例: /ssh remove github.com hoangxg4",
   "ssh.unsupported_host": "❌ 不支持的主机: {host}\n支持的主机: {supported}",
+  "ssh.invalid_host": "❌ 无效的主机名: {host}",
   "ssh.invalid_key": "❌ SSH 私钥无效。内容必须包含 'BEGIN' 和 'PRIVATE KEY'。",
   "ssh.list_header": "🔧 SSH Git 映射",
   "ssh.no_mappings": "未配置映射。使用 /ssh add <user> <key> [host]",

@@ -658,7 +658,7 @@ export const en = {
 
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available projects, /addproject to add.",
 
-  "ssh.usage": "🔧 SSH Git Configuration\n\nCommands:\n/ssh list - Show all SSH mappings\n/ssh add <user> <host> <private-key> - Add SSH key directly\n/ssh remove <host> <user> - Remove SSH mapping\n\nExample: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nSupports: github.com, gitlab.com, bitbucket.org",
+  "ssh.usage": "🔧 SSH Git Configuration\n\nCommands:\n/ssh list - Show all SSH mappings\n/ssh add <user> <host> <private-key> - Add SSH key directly\n/ssh remove <host> <user> - Remove SSH mapping\n\nExample: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\nExample: /ssh add dev git.myserver.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nWorks with any Git host: GitHub, GitLab, Bitbucket, self-hosted, etc.",
   "ssh.available_keys": "🔑 Available SSH keys ({count}):",
   "ssh.configured_hosts": "📋 Configured SSH hosts ({count}):",
   "ssh.invalid_url": "❌ Invalid SSH URL. Expected format: git@github.com:username/repo.git",
@@ -670,6 +670,7 @@ export const en = {
   "ssh.add_usage": "Usage: /ssh add <user> <host> <private-key-content>\nExample: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "Usage: /ssh remove <host> <user>\nExample: /ssh remove github.com hoangxg4",
   "ssh.unsupported_host": "❌ Unsupported host: {host}\nSupported hosts: {supported}",
+  "ssh.invalid_host": "❌ Invalid hostname: {host}",
   "ssh.invalid_key": "❌ Invalid SSH private key. Content must include 'BEGIN' and 'PRIVATE KEY'.",
   "ssh.list_header": "🔧 SSH Git Mappings",
   "ssh.no_mappings": "No mappings configured. Use /ssh add <user> <key> [host]",

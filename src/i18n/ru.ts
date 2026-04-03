@@ -660,7 +660,7 @@ export const ru: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 Настройка SSH для Git\n\nКоманды:\n/ssh list - Показать все маппинги\n/ssh add <user> <host> <приватный-ключ> - Добавить SSH ключ напрямую\n/ssh remove <host> <user> - Удалить маппинг\n\nПример: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nПоддерживает: github.com, gitlab.com, bitbucket.org",
+  "ssh.usage": "🔧 Настройка SSH для Git\n\nКоманды:\n/ssh list - Показать все маппинги\n/ssh add <user> <host> <приватный-ключ> - Добавить SSH ключ напрямую\n/ssh remove <host> <user> - Удалить маппинг\n\nПример: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\nПример: /ssh add dev git.myserver.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nРаботает с любым Git хостом: GitHub, GitLab, Bitbucket, self-hosted и т.д.",
   "ssh.available_keys": "🔑 Доступные SSH ключи ({count}):",
   "ssh.configured_hosts": "📋 Настроенные SSH хосты ({count}):",
   "ssh.invalid_url": "❌ Неверный SSH URL. Формат: git@github.com:username/repo.git",
@@ -672,6 +672,7 @@ export const ru: I18nDictionary = {
   "ssh.add_usage": "Использование: /ssh add <user> <host> <содержимое-приватного-ключа>\nПример: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "Использование: /ssh remove <host> <user>\nПример: /ssh remove github.com hoangxg4",
   "ssh.unsupported_host": "❌ Неподдерживаемый хост: {host}\nПоддерживаемые: {supported}",
+  "ssh.invalid_host": "❌ Невалидное имя хоста: {host}",
   "ssh.invalid_key": "❌ Невалидный SSH приватный ключ. Содержимое должно включать 'BEGIN' и 'PRIVATE KEY'.",
   "ssh.list_header": "🔧 SSH Git маппинги",
   "ssh.no_mappings": "Нет настроенных маппингов. Используйте /ssh add <user> <key> [host]",

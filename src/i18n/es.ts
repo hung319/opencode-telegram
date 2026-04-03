@@ -671,7 +671,7 @@ export const es: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 Configuración SSH para Git\n\nComandos:\n/ssh list - Mostrar todos los mapeos\n/ssh add <user> <host> <clave-privada> - Agregar clave SSH directamente\n/ssh remove <host> <user> - Eliminar mapeo\n\nEjemplo: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nSoporta: github.com, gitlab.com, bitbucket.org",
+  "ssh.usage": "🔧 Configuración SSH para Git\n\nComandos:\n/ssh list - Mostrar todos los mapeos\n/ssh add <user> <host> <clave-privada> - Agregar clave SSH directamente\n/ssh remove <host> <user> - Eliminar mapeo\n\nEjemplo: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\nEjemplo: /ssh add dev git.myserver.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nFunciona con cualquier host Git: GitHub, GitLab, Bitbucket, self-hosted, etc.",
   "ssh.available_keys": "🔑 Claves SSH disponibles ({count}):",
   "ssh.configured_hosts": "📋 Hosts SSH configurados ({count}):",
   "ssh.invalid_url": "❌ URL SSH inválida. Formato: git@github.com:username/repo.git",
@@ -683,6 +683,7 @@ export const es: I18nDictionary = {
   "ssh.add_usage": "Uso: /ssh add <user> <host> <contenido-clave-privada>\nEjemplo: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "Uso: /ssh remove <host> <user>\nEjemplo: /ssh remove github.com hoangxg4",
   "ssh.unsupported_host": "❌ Host no soportado: {host}\nHosts soportados: {supported}",
+  "ssh.invalid_host": "❌ Nombre de host inválido: {host}",
   "ssh.invalid_key": "❌ Clave privada SSH inválida. El contenido debe incluir 'BEGIN' y 'PRIVATE KEY'.",
   "ssh.list_header": "🔧 Mapeos SSH Git",
   "ssh.no_mappings": "No hay mapeos configurados. Usa /ssh add <user> <key> [host]",

@@ -9,9 +9,6 @@ import { t } from "../../i18n/index.js";
 
 const execAsync = promisify(exec);
 
-const SUPPORTED_HOSTS = ["github.com", "gitlab.com", "bitbucket.org"] as const;
-type SupportedHost = (typeof SUPPORTED_HOSTS)[number];
-
 interface SshMapping {
   user: string;
   keyName: string;
@@ -23,8 +20,9 @@ function getHostAlias(host: string, user: string): string {
   return `${host}-${user}`;
 }
 
-function isSupportedHost(host: string): boolean {
-  return SUPPORTED_HOSTS.includes(host as SupportedHost);
+function isValidHostname(host: string): boolean {
+  const hostnameRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/;
+  return hostnameRegex.test(host) && host.length <= 253;
 }
 
 async function findExistingKeys(): Promise<string[]> {
@@ -280,9 +278,9 @@ export async function sshCommand(ctx: CommandContext<Context>): Promise<void> {
       return;
     }
 
-    if (!isSupportedHost(host)) {
+    if (!isValidHostname(host)) {
       await ctx.reply(
-        t("ssh.unsupported_host", { host, supported: SUPPORTED_HOSTS.join(", ") }),
+        t("ssh.invalid_host", { host }),
         getThreadSendOptions(scope?.threadId ?? null),
       );
       return;

@@ -658,7 +658,7 @@ export const vi = {
 
   "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
 
-  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nLệnh:\n/ssh list - Xem tất cả mapping\n/ssh add <user> <host> <private-key> - Thêm SSH key trực tiếp\n/ssh remove <host> <user> - Xóa mapping\n\nVí dụ: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nHỗ trợ: github.com, gitlab.com, bitbucket.org",
+  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nLệnh:\n/ssh list - Xem tất cả mapping\n/ssh add <user> <host> <private-key> - Thêm SSH key trực tiếp\n/ssh remove <host> <user> - Xóa mapping\n\nVí dụ: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----...\nVí dụ: /ssh add dev git.myserver.com -----BEGIN OPENSSH PRIVATE KEY-----...\n\nHoạt động với mọi Git host: GitHub, GitLab, Bitbucket, self-hosted, v.v.",
   "ssh.available_keys": "🔑 SSH keys khả dụng ({count}):",
   "ssh.configured_hosts": "📋 SSH hosts đã cấu hình ({count}):",
   "ssh.invalid_url": "❌ SSH URL không hợp lệ. Định dạng: git@github.com:username/repo.git",
@@ -670,6 +670,7 @@ export const vi = {
   "ssh.add_usage": "Cách dùng: /ssh add <user> <host> <nội-dung-private-key>\nVí dụ: /ssh add hoangxg4 github.com -----BEGIN OPENSSH PRIVATE KEY-----\\n...",
   "ssh.remove_usage": "Cách dùng: /ssh remove <host> <user>\nVí dụ: /ssh remove github.com hoangxg4",
   "ssh.unsupported_host": "❌ Host không hỗ trợ: {host}\nHost hỗ trợ: {supported}",
+  "ssh.invalid_host": "❌ Tên host không hợp lệ: {host}",
   "ssh.invalid_key": "❌ SSH private key không hợp lệ. Nội dung phải chứa 'BEGIN' và 'PRIVATE KEY'.",
   "ssh.list_header": "🔧 SSH Git Mappings",
   "ssh.no_mappings": "Chưa có mapping nào. Dùng /ssh add <user> <key> [host]",
