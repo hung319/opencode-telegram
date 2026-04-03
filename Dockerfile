@@ -21,8 +21,9 @@ RUN npm run build && npm link
 # Set environment
 ENV HOME=/root
 ENV OPENCODE_API_URL=http://127.0.0.1:4096
+ENV OPENCODE_AUTO_START=true
 
-# Create startup script
+# Create startup script that lets the bot manage OpenCode lifecycle
 RUN echo '#!/bin/sh' > /start.sh && \
     echo 'set -e' >> /start.sh && \
     echo '' >> /start.sh && \
@@ -57,23 +58,9 @@ RUN echo '#!/bin/sh' > /start.sh && \
     echo 'add_env TTS_API_URL' >> /start.sh && \
     echo 'add_env TELEGRAM_PROXY_URL' >> /start.sh && \
     echo '' >> /start.sh && \
-    echo '# Start OpenCode server in background' >> /start.sh && \
-    echo 'echo "🚀 Starting OpenCode server..."' >> /start.sh && \
-    echo 'opencode serve &' >> /start.sh && \
-    echo '' >> /start.sh && \
-    echo '# Wait for OpenCode to start' >> /start.sh && \
-    echo 'echo "Waiting for OpenCode server..."' >> /start.sh && \
-    echo 'for i in $(seq 1 30); do' >> /start.sh && \
-    echo '  if curl -s http://127.0.0.1:4096/health > /dev/null 2>&1; then' >> /start.sh && \
-    echo '    echo "✅ OpenCode server is ready"' >> /start.sh && \
-    echo '    break' >> /start.sh && \
-    echo '  fi' >> /start.sh && \
-    echo '  echo "Waiting... ($i/30)"' >> /start.sh && \
-    echo '  sleep 1' >> /start.sh && \
-    echo 'done' >> /start.sh && \
-    echo '' >> /start.sh && \
-    echo '# Start the bot' >> /start.sh && \
+    echo '# Start the bot - it will auto-start OpenCode via OPENCODE_AUTO_START' >> /start.sh && \
     echo 'echo "🤖 Starting Telegram Bot..."' >> /start.sh && \
+    echo 'echo "💡 OpenCode server will be auto-started by the bot."' >> /start.sh && \
     echo 'exec opencode-telegram-group-topics-bot start' >> /start.sh && \
     chmod +x /start.sh
 

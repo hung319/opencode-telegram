@@ -17,6 +17,9 @@ services:
       - COMPACT_MODE=${COMPACT_MODE:-false}
       - LOG_LEVEL=${LOG_LEVEL:-info}
       
+      # OpenCode auto-start (bot manages OpenCode lifecycle)
+      - OPENCODE_AUTO_START=${OPENCODE_AUTO_START:-true}
+      
       # Optional - Service messages
       - HIDE_THINKING_MESSAGES=${HIDE_THINKING_MESSAGES:-false}
       - HIDE_TOOL_CALL_MESSAGES=${HIDE_TOOL_CALL_MESSAGES:-false}

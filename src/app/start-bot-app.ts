@@ -39,6 +39,17 @@ export async function startBotApp(): Promise<void> {
   await reconcileStoredModelSelection();
   await warmupSessionDirectoryCache();
 
+  // Auto-start OpenCode server if configured (e.g. in Docker)
+  if (config.opencode.autoStart && !processManager.isRunning()) {
+    logger.info("[App] Auto-starting OpenCode server (OPENCODE_AUTO_START=true)...");
+    const result = await processManager.start();
+    if (result.success) {
+      logger.info(`[App] OpenCode server auto-started with PID=${processManager.getPID()}`);
+    } else {
+      logger.error(`[App] Failed to auto-start OpenCode server: ${result.error}`);
+    }
+  }
+
   const bot = createBot();
   createScheduledTaskRuntime(bot).start();
 

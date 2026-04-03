@@ -63,6 +63,8 @@ opencode serve
 
 Default API URL: `http://localhost:4096`
 
+> **Note:** When running via Docker, the bot can auto-start OpenCode for you. See the [Docker Deployment](#docker-deployment) section below.
+
 ### 4. Install the Bot
 
 #### Option A: `npx`
@@ -187,6 +189,7 @@ Installed-mode config paths:
 | `OPENCODE_API_URL`                 | OpenCode server URL                                                                  |    No    | `http://localhost:4096`  |
 | `OPENCODE_SERVER_USERNAME`         | Server auth username                                                                 |    No    | `opencode`               |
 | `OPENCODE_SERVER_PASSWORD`         | Server auth password                                                                 |    No    | -                        |
+| `OPENCODE_AUTO_START`              | Auto-start OpenCode server when the bot starts (useful for Docker)                   |    No    | `false`                  |
 | `OPENCODE_MODEL_PROVIDER`          | Default model provider                                                               |   Yes    | `opencode`               |
 | `OPENCODE_MODEL_ID`                | Default model ID                                                                     |   Yes    | `big-pickle`             |
 | `BOT_LOCALE`                       | Bot UI language (`en`, `de`, `es`, `fr`, `ru`, `zh`)                                 |    No    | `en`                     |
@@ -277,6 +280,48 @@ npm run dev
 | `npm run test:coverage`         | Run tests with coverage |
 
 No watcher is used because the bot maintains persistent SSE and polling connections.
+
+## Docker Deployment
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/shanekunz/opencode-telegram-group-topics-bot.git
+cd opencode-telegram-group-topics-bot
+
+# 2. Create .env file with your configuration
+cat > .env << 'EOF'
+TELEGRAM_BOT_TOKEN=your-bot-token-here
+TELEGRAM_ALLOWED_USER_ID=your-telegram-user-id
+OPENCODE_MODEL_PROVIDER=opencode
+OPENCODE_MODEL_ID=big-pickle
+EOF
+
+# 3. Start with Docker Compose
+docker compose up -d
+
+# 4. Check logs
+docker compose logs -f
+```
+
+The bot will auto-start OpenCode server inside the container (via `OPENCODE_AUTO_START=true`). You can use `/opencode_start` and `/opencode_stop` from Telegram to manage the server lifecycle.
+
+### Configuration
+
+See [docs/DOCKER_DEPLOYMENT.md](docs/DOCKER_DEPLOYMENT.md) for full documentation including volume backup, resource limits, and troubleshooting.
+
+### Without Docker Compose
+
+```bash
+docker build -t opencode-telegram-bot .
+docker run -d \
+  --name opencode-telegram-bot \
+  -e TELEGRAM_BOT_TOKEN=your-token \
+  -e TELEGRAM_ALLOWED_USER_ID=your-user-id \
+  -e OPENCODE_AUTO_START=true \
+  opencode-telegram-bot
+```
 
 ## Troubleshooting
 
