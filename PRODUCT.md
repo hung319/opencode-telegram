@@ -172,6 +172,9 @@ Open tasks for upcoming iterations:
 - [x] Add /model, /agent, /variant, /context commands for desktop users
 - [x] Add /ssh command for Git SSH key management
 - [x] Show context details with token usage and compact option
+- [x] Create new OpenCode projects directly from Telegram (/clone)
+- [x] Add project file browsing helpers (/ls, /open)
+- [x] Improve support for git worktree-based workflows (/worktree)
 
 ## Possible Improvements
 

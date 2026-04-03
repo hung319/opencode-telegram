@@ -1,14 +1,10 @@
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { CommandContext, Context } from "grammy";
 import { getCurrentProject } from "../../settings/manager.js";
-import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getThreadSendOptions } from "../scope.js";
 
-const execAsync = promisify(exec);
 const MAX_FILE_SIZE = 50 * 1024; // 50KB
 
 export async function openCommand(ctx: CommandContext<Context>): Promise<void> {
@@ -67,7 +63,7 @@ export async function openCommand(ctx: CommandContext<Context>): Promise<void> {
       parse_mode: "Markdown",
       ...getThreadSendOptions(scope?.threadId ?? null),
     });
-  } catch (error) {
+  } catch {
     await ctx.reply(
       t("open.not_found", { path: filePath }),
       getThreadSendOptions(scope?.threadId ?? null),

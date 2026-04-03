@@ -135,7 +135,6 @@ export async function handleLsCallback(ctx: Context): Promise<boolean> {
   }
 
   const scopeKey = getScopeKeyFromContext(ctx);
-  const scope = getScopeFromContext(ctx);
   const currentProject = getCurrentProject(scopeKey);
 
   if (!currentProject) {
