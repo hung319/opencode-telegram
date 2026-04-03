@@ -39,16 +39,29 @@ export async function opencodeStartCommand(ctx: CommandContext<Context>) {
   try {
     // 1. Check if process is already running under our management
     if (processManager.isRunning()) {
-      const uptime = processManager.getUptime();
-      const uptimeStr = uptime ? Math.floor(uptime / 1000) : 0;
+      // Verify HTTP health - PID might be alive but server hung
+      try {
+        const { data, error } = await opencodeClient.global.health();
 
-      await ctx.reply(
-        t("opencode_start.already_running_managed", {
-          pid: processManager.getPID() ?? "-",
-          seconds: uptimeStr,
-        }),
-      );
-      return;
+        if (!error && data?.healthy) {
+          const uptime = processManager.getUptime();
+          const uptimeStr = uptime ? Math.floor(uptime / 1000) : 0;
+
+          await ctx.reply(
+            t("opencode_start.already_running_managed", {
+              pid: processManager.getPID() ?? "-",
+              seconds: uptimeStr,
+            }),
+          );
+          return;
+        }
+      } catch {
+        // Server not responding, will restart below
+      }
+
+      // Process is running but HTTP unresponsive - kill and restart
+      logger.warn("[Bot] Process running but HTTP unresponsive, restarting...");
+      processManager.forceKill();
     }
 
     // 2. Check if server is accessible (external process)

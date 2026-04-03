@@ -1,10 +1,13 @@
 import { spawn, exec, type ChildProcess } from "child_process";
 import { promisify } from "util";
 import { getServerProcess, setServerProcess, clearServerProcess } from "../settings/manager.js";
+import { opencodeClient } from "../opencode/client.js";
 import { logger } from "../utils/logger.js";
 import type { ProcessState, ProcessOperationResult, ProcessManagerInterface } from "./types.js";
 
 const execAsync = promisify(exec);
+
+const HEALTH_CHECK_TIMEOUT_MS = 5000;
 
 /**
  * Singleton manager for OpenCode server process
@@ -56,6 +59,50 @@ class ProcessManager implements ProcessManagerInterface {
       for (const cb of this.crashCallbacks) {
         cb(null, "health_check_restart");
       }
+      return;
+    }
+
+    // Also check HTTP responsiveness
+    const isHttpHealthy = await this.checkHttpHealth();
+    if (!isHttpHealthy) {
+      logger.warn("[ProcessManager] Health check detected unresponsive HTTP server, restarting...");
+      this.killProcess();
+      this.cleanup();
+      await this.start();
+      for (const cb of this.crashCallbacks) {
+        cb(null, "health_check_http_restart");
+      }
+    }
+  }
+
+  private async checkHttpHealth(): Promise<boolean> {
+    try {
+      const { data, error } = await Promise.race([
+        opencodeClient.global.health(),
+        new Promise<{ data: null; error: Error }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: new Error("Health check timeout") }), HEALTH_CHECK_TIMEOUT_MS),
+        ),
+      ]);
+
+      return !error && data?.healthy === true;
+    } catch {
+      return false;
+    }
+  }
+
+  private killProcess(): void {
+    if (this.state.process) {
+      try {
+        this.state.process.kill("SIGKILL");
+      } catch {
+        // Process might already be dead
+      }
+    } else if (this.state.pid) {
+      try {
+        process.kill(this.state.pid, "SIGKILL");
+      } catch {
+        // Process might already be dead
+      }
     }
   }
 
@@ -75,16 +122,27 @@ class ProcessManager implements ProcessManagerInterface {
 
     // Check if the process is still alive
     if (this.isProcessAlive(savedProcess.pid)) {
-      logger.info(
-        `[ProcessManager] Process PID=${savedProcess.pid} is still alive, restoring state`,
-      );
+      // Verify HTTP responsiveness - PID might be alive but server hung
+      const isHttpHealthy = await this.checkHttpHealth();
 
-      this.state = {
-        process: null, // Cannot recover ChildProcess reference
-        pid: savedProcess.pid,
-        startTime: new Date(savedProcess.startTime),
-        isRunning: true,
-      };
+      if (isHttpHealthy) {
+        logger.info(
+          `[ProcessManager] Process PID=${savedProcess.pid} is alive and responsive, restoring state`,
+        );
+        this.state = {
+          process: null, // Cannot recover ChildProcess reference
+          pid: savedProcess.pid,
+          startTime: new Date(savedProcess.startTime),
+          isRunning: true,
+        };
+      } else {
+        logger.warn(
+          `[ProcessManager] Process PID=${savedProcess.pid} is alive but HTTP unresponsive, restarting...`,
+        );
+        this.killProcess();
+        this.cleanup();
+        clearServerProcess();
+      }
     } else {
       logger.warn(`[ProcessManager] Process PID=${savedProcess.pid} is dead, cleaning up`);
       clearServerProcess();
@@ -283,6 +341,16 @@ class ProcessManager implements ProcessManagerInterface {
     }
 
     return true;
+  }
+
+  /**
+   * Force kill the current process and clean up state
+   * Used when the process is alive but HTTP unresponsive
+   */
+  forceKill(): void {
+    this.killProcess();
+    this.cleanup();
+    logger.info("[ProcessManager] Force killed unresponsive process");
   }
 
   /**
