@@ -3,7 +3,8 @@ import { getRuntimePaths } from "./runtime/paths.js";
 import { normalizeLocale, type Locale } from "./i18n/index.js";
 
 const runtimePaths = getRuntimePaths();
-dotenv.config({ path: runtimePaths.envFilePath, quiet: true });
+// Load .env file as fallback only - system environment variables take priority
+dotenv.config({ path: runtimePaths.envFilePath, quiet: true, override: false });
 
 export type MessageFormatMode = "raw" | "markdown";
 
