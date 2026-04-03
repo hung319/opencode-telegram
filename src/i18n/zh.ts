@@ -610,7 +610,7 @@ export const zh: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 SSH Git 配置\n\n用法: /ssh <ssh-url>\n示例: /ssh git@github.com:username/repo.git\n\n此命令通过将用户名映射到 SSH 密钥来配置 SSH 以使用 Git 仓库。",
+  "ssh.usage": "🔧 SSH Git 配置\n\n命令:\n/ssh list - 查看所有映射\n/ssh add <user> <key> [host] - 添加映射 (默认: github.com)\n/ssh remove <host> <user> - 删除映射\n\n示例: /ssh add hoangxg4 id_ed25519 github.com\n\n配置 SSH 使 git clone/push 到 git@github.com:hoangxg4/repo.git 使用正确的密钥。",
   "ssh.available_keys": "🔑 可用的 SSH 密钥 ({count}):",
   "ssh.configured_hosts": "📋 已配置的 SSH 主机 ({count}):",
   "ssh.invalid_url": "❌ SSH URL 无效。格式: git@github.com:username/repo.git",
@@ -619,4 +619,14 @@ export const zh: I18nDictionary = {
   "ssh.configured_success": "✅ SSH 主机配置成功！\n\n主机: {host}\n密钥: {keyPath}\n\n连接测试通过。",
   "ssh.configured_test_failed": "⚠️ SSH 主机已配置，但连接测试失败。\n\n主机: {host}\n密钥: {keyPath}\n\n请验证 SSH 密钥已添加到 Git 提供商。",
   "ssh.error": "❌ 配置 SSH 时出错: {message}",
+  "ssh.add_usage": "用法: /ssh add <user> <key> [host]\n示例: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "用法: /ssh remove <host> <user>\n示例: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 SSH Git 映射",
+  "ssh.no_mappings": "未配置映射。使用 /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ 未找到 SSH 密钥: {keyPath}",
+  "ssh.added_success": "✅ SSH 映射已添加！\n\n用户: {user}\n主机: {host}\n主机别名: {hostAlias}\n密钥: {keyPath}\n\n已配置 Git URL 重写。git clone/push 到 git@{host}:{user}/repo.git 将使用此密钥。",
+  "ssh.add_error": "❌ 添加 SSH 映射时出错: {message}",
+  "ssh.not_found": "❌ 未找到 {user}@{host} 的映射",
+  "ssh.removed_success": "✅ 已删除 {user}@{host} 的 SSH 映射",
+  "ssh.remove_error": "❌ 删除 SSH 映射时出错: {message}",
 };

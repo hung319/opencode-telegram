@@ -658,7 +658,7 @@ export const vi = {
 
   "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
 
-  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nCách dùng: /ssh <ssh-url>\nVí dụ: /ssh git@github.com:username/repo.git\n\nLệnh này cấu hình SSH để làm việc với Git repos bằng cách map username vào SSH keys.",
+  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nLệnh:\n/ssh list - Xem tất cả mapping\n/ssh add <user> <key> [host] - Thêm mapping (mặc định: github.com)\n/ssh remove <host> <user> - Xóa mapping\n\nVí dụ: /ssh add hoangxg4 id_ed25519 github.com\n\nCấu hình SSH để git clone/push đến git@github.com:hoangxg4/repo.git dùng đúng key.",
   "ssh.available_keys": "🔑 SSH keys khả dụng ({count}):",
   "ssh.configured_hosts": "📋 SSH hosts đã cấu hình ({count}):",
   "ssh.invalid_url": "❌ SSH URL không hợp lệ. Định dạng: git@github.com:username/repo.git",
@@ -667,4 +667,14 @@ export const vi = {
   "ssh.configured_success": "✅ Cấu hình SSH host thành công!\n\nHost: {host}\nKey: {keyPath}\n\nKiểm tra kết nối thành công.",
   "ssh.configured_test_failed": "⚠️ Đã cấu hình SSH host, nhưng kiểm tra kết nối thất bại.\n\nHost: {host}\nKey: {keyPath}\n\nVui lòng xác minh SSH key đã được thêm vào Git provider.",
   "ssh.error": "❌ Lỗi khi cấu hình SSH: {message}",
+  "ssh.add_usage": "Cách dùng: /ssh add <user> <key> [host]\nVí dụ: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "Cách dùng: /ssh remove <host> <user>\nVí dụ: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 SSH Git Mappings",
+  "ssh.no_mappings": "Chưa có mapping nào. Dùng /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ Không tìm thấy SSH key: {keyPath}",
+  "ssh.added_success": "✅ Đã thêm SSH mapping!\n\nUser: {user}\nHost: {host}\nHost alias: {hostAlias}\nKey: {keyPath}\n\nĐã cấu hình Git URL rewrite. git clone/push đến git@{host}:{user}/repo.git sẽ dùng key này.",
+  "ssh.add_error": "❌ Lỗi khi thêm SSH mapping: {message}",
+  "ssh.not_found": "❌ Không tìm thấy mapping cho {user}@{host}",
+  "ssh.removed_success": "✅ Đã xóa SSH mapping cho {user}@{host}",
+  "ssh.remove_error": "❌ Lỗi khi xóa SSH mapping: {message}",
 } as const;

@@ -671,7 +671,7 @@ export const es: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 Configuración SSH para Git\n\nUso: /ssh <ssh-url>\nEjemplo: /ssh git@github.com:username/repo.git\n\nEste comando configura SSH para trabajar con repositorios Git mapeando el nombre de usuario a tus claves SSH.",
+  "ssh.usage": "🔧 Configuración SSH para Git\n\nComandos:\n/ssh list - Mostrar todos los mapeos\n/ssh add <user> <key> [host] - Agregar mapeo (predeterminado: github.com)\n/ssh remove <host> <user> - Eliminar mapeo\n\nEjemplo: /ssh add hoangxg4 id_ed25519 github.com\n\nConfigura SSH para que git clone/push a git@github.com:hoangxg4/repo.git use la clave correcta.",
   "ssh.available_keys": "🔑 Claves SSH disponibles ({count}):",
   "ssh.configured_hosts": "📋 Hosts SSH configurados ({count}):",
   "ssh.invalid_url": "❌ URL SSH inválida. Formato: git@github.com:username/repo.git",
@@ -680,4 +680,14 @@ export const es: I18nDictionary = {
   "ssh.configured_success": "✅ ¡Host SSH configurado exitosamente!\n\nHost: {host}\nClave: {keyPath}\n\nPrueba de conexión exitosa.",
   "ssh.configured_test_failed": "⚠️ Host SSH configurado, pero la prueba de conexión falló.\n\nHost: {host}\nClave: {keyPath}\n\nVerifica que la clave SSH esté agregada al proveedor Git.",
   "ssh.error": "❌ Error configurando SSH: {message}",
+  "ssh.add_usage": "Uso: /ssh add <user> <key> [host]\nEjemplo: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "Uso: /ssh remove <host> <user>\nEjemplo: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 Mapeos SSH Git",
+  "ssh.no_mappings": "No hay mapeos configurados. Usa /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ Clave SSH no encontrada: {keyPath}",
+  "ssh.added_success": "✅ ¡Mapeo SSH agregado!\n\nUsuario: {user}\nHost: {host}\nAlias del host: {hostAlias}\nClave: {keyPath}\n\nReescritura de URL Git configurada. git clone/push a git@{host}:{user}/repo.git ahora usará esta clave.",
+  "ssh.add_error": "❌ Error agregando mapeo SSH: {message}",
+  "ssh.not_found": "❌ No se encontró mapeo para {user}@{host}",
+  "ssh.removed_success": "✅ Mapeo SSH eliminado para {user}@{host}",
+  "ssh.remove_error": "❌ Error eliminando mapeo SSH: {message}",
 };

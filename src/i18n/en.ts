@@ -658,7 +658,7 @@ export const en = {
 
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available projects, /addproject to add.",
 
-  "ssh.usage": "🔧 SSH Git Configuration\n\nUsage: /ssh <ssh-url>\nExample: /ssh git@github.com:username/repo.git\n\nThis command configures SSH to work with Git repos by mapping the username to your SSH keys.",
+  "ssh.usage": "🔧 SSH Git Configuration\n\nCommands:\n/ssh list - Show all SSH mappings\n/ssh add <user> <key> [host] - Add SSH mapping (default host: github.com)\n/ssh remove <host> <user> - Remove SSH mapping\n\nExample: /ssh add hoangxg4 id_ed25519 github.com\n\nThis configures SSH so git clone/push to git@github.com:hoangxg4/repo.git uses the correct key.",
   "ssh.available_keys": "🔑 Available SSH keys ({count}):",
   "ssh.configured_hosts": "📋 Configured SSH hosts ({count}):",
   "ssh.invalid_url": "❌ Invalid SSH URL. Expected format: git@github.com:username/repo.git",
@@ -667,6 +667,16 @@ export const en = {
   "ssh.configured_success": "✅ SSH host configured successfully!\n\nHost: {host}\nKey: {keyPath}\n\nConnection test passed.",
   "ssh.configured_test_failed": "⚠️ SSH host configured, but connection test failed.\n\nHost: {host}\nKey: {keyPath}\n\nPlease verify your SSH key is added to the Git provider.",
   "ssh.error": "❌ Error configuring SSH: {message}",
+  "ssh.add_usage": "Usage: /ssh add <user> <key> [host]\nExample: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "Usage: /ssh remove <host> <user>\nExample: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 SSH Git Mappings",
+  "ssh.no_mappings": "No mappings configured. Use /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ SSH key not found: {keyPath}",
+  "ssh.added_success": "✅ SSH mapping added!\n\nUser: {user}\nHost: {host}\nHost alias: {hostAlias}\nKey: {keyPath}\n\nGit URL rewrite configured. git clone/push to git@{host}:{user}/repo.git will now use this key.",
+  "ssh.add_error": "❌ Error adding SSH mapping: {message}",
+  "ssh.not_found": "❌ No mapping found for {user}@{host}",
+  "ssh.removed_success": "✅ SSH mapping removed for {user}@{host}",
+  "ssh.remove_error": "❌ Error removing SSH mapping: {message}",
 } as const;
 
 export type I18nKey = keyof typeof en;

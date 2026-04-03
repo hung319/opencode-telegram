@@ -672,7 +672,7 @@ export const de: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 SSH-Konfiguration für Git\n\nVerwendung: /ssh <ssh-url>\nBeispiel: /ssh git@github.com:username/repo.git\n\nDieser Befehl konfiguriert SSH für Git-Repositories, indem der Benutzername deinen SSH-Schlüsseln zugeordnet wird.",
+  "ssh.usage": "🔧 SSH-Konfiguration für Git\n\nBefehle:\n/ssh list - Alle Mappings anzeigen\n/ssh add <user> <key> [host] - Mapping hinzufügen (Standard: github.com)\n/ssh remove <host> <user> - Mapping entfernen\n\nBeispiel: /ssh add hoangxg4 id_ed25519 github.com\n\nKonfiguriert SSH, sodass git clone/push zu git@github.com:hoangxg4/repo.git den richtigen Schlüssel verwendet.",
   "ssh.available_keys": "🔑 Verfügbare SSH-Schlüssel ({count}):",
   "ssh.configured_hosts": "📋 Konfigurierte SSH-Hosts ({count}):",
   "ssh.invalid_url": "❌ Ungültige SSH-URL. Format: git@github.com:username/repo.git",
@@ -681,4 +681,14 @@ export const de: I18nDictionary = {
   "ssh.configured_success": "✅ SSH-Host erfolgreich konfiguriert!\n\nHost: {host}\nSchlüssel: {keyPath}\n\nVerbindungstest bestanden.",
   "ssh.configured_test_failed": "⚠️ SSH-Host konfiguriert, aber Verbindungstest fehlgeschlagen.\n\nHost: {host}\nSchlüssel: {keyPath}\n\nBitte überprüfe, ob der SSH-Schlüssel beim Git-Provider hinzugefügt wurde.",
   "ssh.error": "❌ Fehler bei der SSH-Konfiguration: {message}",
+  "ssh.add_usage": "Verwendung: /ssh add <user> <key> [host]\nBeispiel: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "Verwendung: /ssh remove <host> <user>\nBeispiel: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 SSH Git Mappings",
+  "ssh.no_mappings": "Keine Mappings konfiguriert. Verwende /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ SSH-Schlüssel nicht gefunden: {keyPath}",
+  "ssh.added_success": "✅ SSH-Mapping hinzugefügt!\n\nBenutzer: {user}\nHost: {host}\nHost-Alias: {hostAlias}\nSchlüssel: {keyPath}\n\nGit-URL-Rewrite konfiguriert. git clone/push zu git@{host}:{user}/repo.git verwendet jetzt diesen Schlüssel.",
+  "ssh.add_error": "❌ Fehler beim Hinzufügen des SSH-Mappings: {message}",
+  "ssh.not_found": "❌ Kein Mapping für {user}@{host} gefunden",
+  "ssh.removed_success": "✅ SSH-Mapping für {user}@{host} entfernt",
+  "ssh.remove_error": "❌ Fehler beim Entfernen des SSH-Mappings: {message}",
 };

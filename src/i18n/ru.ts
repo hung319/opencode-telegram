@@ -660,7 +660,7 @@ export const ru: I18nDictionary = {
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
 
-  "ssh.usage": "🔧 Настройка SSH для Git\n\nИспользование: /ssh <ssh-url>\nПример: /ssh git@github.com:username/repo.git\n\nЭта команда настраивает SSH для работы с Git репозиториями, сопоставляя имя пользователя с SSH ключами.",
+  "ssh.usage": "🔧 Настройка SSH для Git\n\nКоманды:\n/ssh list - Показать все маппинги\n/ssh add <user> <key> [host] - Добавить маппинг (по умолчанию: github.com)\n/ssh remove <host> <user> - Удалить маппинг\n\nПример: /ssh add hoangxg4 id_ed25519 github.com\n\nНастраивает SSH так, чтобы git clone/push в git@github.com:hoangxg4/repo.git использовал правильный ключ.",
   "ssh.available_keys": "🔑 Доступные SSH ключи ({count}):",
   "ssh.configured_hosts": "📋 Настроенные SSH хосты ({count}):",
   "ssh.invalid_url": "❌ Неверный SSH URL. Формат: git@github.com:username/repo.git",
@@ -669,4 +669,14 @@ export const ru: I18nDictionary = {
   "ssh.configured_success": "✅ SSH хост успешно настроен!\n\nХост: {host}\nКлюч: {keyPath}\n\nТест подключения пройден.",
   "ssh.configured_test_failed": "⚠️ SSH хост настроен, но тест подключения не пройден.\n\nХост: {host}\nКлюч: {keyPath}\n\nПроверьте, что SSH ключ добавлен в Git провайдер.",
   "ssh.error": "❌ Ошибка настройки SSH: {message}",
+  "ssh.add_usage": "Использование: /ssh add <user> <key> [host]\nПример: /ssh add hoangxg4 id_ed25519 github.com",
+  "ssh.remove_usage": "Использование: /ssh remove <host> <user>\nПример: /ssh remove github.com hoangxg4",
+  "ssh.list_header": "🔧 SSH Git маппинги",
+  "ssh.no_mappings": "Нет настроенных маппингов. Используйте /ssh add <user> <key> [host]",
+  "ssh.key_not_found": "❌ SSH ключ не найден: {keyPath}",
+  "ssh.added_success": "✅ SSH маппинг добавлен!\n\nПользователь: {user}\nХост: {host}\nПсевдоним хоста: {hostAlias}\nКлюч: {keyPath}\n\nНастроен Git URL rewrite. git clone/push в git@{host}:{user}/repo.git теперь будет использовать этот ключ.",
+  "ssh.add_error": "❌ Ошибка добавления SSH маппинга: {message}",
+  "ssh.not_found": "❌ Маппинг для {user}@{host} не найден",
+  "ssh.removed_success": "✅ SSH маппинг для {user}@{host} удален",
+  "ssh.remove_error": "❌ Ошибка удаления SSH маппинга: {message}",
 };
