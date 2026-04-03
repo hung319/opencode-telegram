@@ -17,6 +17,7 @@ export const ru: I18nDictionary = {
   "cmd.description.cleanup": "Закрыть устаревшие темы",
   "cmd.description.variant": "Выбрать вариант модели",
   "cmd.description.context": "Сжать контекст сессии",
+  "cmd.description.ssh": "Настроить SSH для Git",
   "cmd.description.opencode_start": "Запустить OpenCode сервер",
   "cmd.description.opencode_stop": "Остановить OpenCode сервер",
   "cmd.description.help": "Справка",
@@ -658,4 +659,14 @@ export const ru: I18nDictionary = {
   "addproject.added": "✅ Added project: {name}",
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
+
+  "ssh.usage": "🔧 Настройка SSH для Git\n\nИспользование: /ssh <ssh-url>\nПример: /ssh git@github.com:username/repo.git\n\nЭта команда настраивает SSH для работы с Git репозиториями, сопоставляя имя пользователя с SSH ключами.",
+  "ssh.available_keys": "🔑 Доступные SSH ключи ({count}):",
+  "ssh.configured_hosts": "📋 Настроенные SSH хосты ({count}):",
+  "ssh.invalid_url": "❌ Неверный SSH URL. Формат: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ Хост {host} уже настроен:\n  Ключ: {keyPath}",
+  "ssh.no_keys_found": "❌ SSH ключи не найдены в ~/.ssh. Создайте: ssh-keygen -t ed25519",
+  "ssh.configured_success": "✅ SSH хост успешно настроен!\n\nХост: {host}\nКлюч: {keyPath}\n\nТест подключения пройден.",
+  "ssh.configured_test_failed": "⚠️ SSH хост настроен, но тест подключения не пройден.\n\nХост: {host}\nКлюч: {keyPath}\n\nПроверьте, что SSH ключ добавлен в Git провайдер.",
+  "ssh.error": "❌ Ошибка настройки SSH: {message}",
 };

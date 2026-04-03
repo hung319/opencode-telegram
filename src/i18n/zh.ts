@@ -17,6 +17,7 @@ export const zh: I18nDictionary = {
   "cmd.description.cleanup": "关闭过期话题",
   "cmd.description.variant": "选择模型变体",
   "cmd.description.context": "压缩会话上下文",
+  "cmd.description.ssh": "配置 Git 的 SSH",
   "cmd.description.opencode_start": "启动 OpenCode 服务器",
   "cmd.description.opencode_stop": "停止 OpenCode 服务器",
   "cmd.description.help": "帮助",
@@ -608,4 +609,14 @@ export const zh: I18nDictionary = {
   "addproject.added": "✅ Added project: {name}",
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
+
+  "ssh.usage": "🔧 SSH Git 配置\n\n用法: /ssh <ssh-url>\n示例: /ssh git@github.com:username/repo.git\n\n此命令通过将用户名映射到 SSH 密钥来配置 SSH 以使用 Git 仓库。",
+  "ssh.available_keys": "🔑 可用的 SSH 密钥 ({count}):",
+  "ssh.configured_hosts": "📋 已配置的 SSH 主机 ({count}):",
+  "ssh.invalid_url": "❌ SSH URL 无效。格式: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ 主机 {host} 已配置:\n  密钥: {keyPath}",
+  "ssh.no_keys_found": "❌ 在 ~/.ssh 中未找到 SSH 密钥。使用 ssh-keygen -t ed25519 生成。",
+  "ssh.configured_success": "✅ SSH 主机配置成功！\n\n主机: {host}\n密钥: {keyPath}\n\n连接测试通过。",
+  "ssh.configured_test_failed": "⚠️ SSH 主机已配置，但连接测试失败。\n\n主机: {host}\n密钥: {keyPath}\n\n请验证 SSH 密钥已添加到 Git 提供商。",
+  "ssh.error": "❌ 配置 SSH 时出错: {message}",
 };

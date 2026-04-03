@@ -51,6 +51,7 @@ const COMMAND_DEFINITIONS: BotCommandI18nDefinition[] = [
   { command: BOT_COMMAND.AGENT, descriptionKey: "cmd.description.agent" },
   { command: BOT_COMMAND.VARIANT, descriptionKey: "cmd.description.variant" },
   { command: BOT_COMMAND.CONTEXT, descriptionKey: "cmd.description.context" },
+  { command: BOT_COMMAND.SSH, descriptionKey: "cmd.description.ssh" },
   { command: BOT_COMMAND.OPENCODE_START, descriptionKey: "cmd.description.opencode_start" },
   { command: BOT_COMMAND.OPENCODE_STOP, descriptionKey: "cmd.description.opencode_stop" },
   { command: BOT_COMMAND.HELP, descriptionKey: "cmd.description.help" },

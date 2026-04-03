@@ -17,6 +17,7 @@ export const es: I18nDictionary = {
   "cmd.description.cleanup": "Cerrar temas obsoletos",
   "cmd.description.variant": "Seleccionar variante del modelo",
   "cmd.description.context": "Compactar contexto de sesión",
+  "cmd.description.ssh": "Configurar SSH para Git",
   "cmd.description.opencode_start": "Iniciar servidor OpenCode",
   "cmd.description.opencode_stop": "Detener servidor OpenCode",
   "cmd.description.help": "Ayuda",
@@ -669,4 +670,14 @@ export const es: I18nDictionary = {
   "addproject.added": "✅ Added project: {name}",
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
+
+  "ssh.usage": "🔧 Configuración SSH para Git\n\nUso: /ssh <ssh-url>\nEjemplo: /ssh git@github.com:username/repo.git\n\nEste comando configura SSH para trabajar con repositorios Git mapeando el nombre de usuario a tus claves SSH.",
+  "ssh.available_keys": "🔑 Claves SSH disponibles ({count}):",
+  "ssh.configured_hosts": "📋 Hosts SSH configurados ({count}):",
+  "ssh.invalid_url": "❌ URL SSH inválida. Formato: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ El host {host} ya está configurado:\n  Clave: {keyPath}",
+  "ssh.no_keys_found": "❌ No se encontraron claves SSH en ~/.ssh. Genera una con: ssh-keygen -t ed25519",
+  "ssh.configured_success": "✅ ¡Host SSH configurado exitosamente!\n\nHost: {host}\nClave: {keyPath}\n\nPrueba de conexión exitosa.",
+  "ssh.configured_test_failed": "⚠️ Host SSH configurado, pero la prueba de conexión falló.\n\nHost: {host}\nClave: {keyPath}\n\nVerifica que la clave SSH esté agregada al proveedor Git.",
+  "ssh.error": "❌ Error configurando SSH: {message}",
 };

@@ -15,6 +15,7 @@ export const vi = {
   "cmd.description.cleanup": "Đóng các luồng cũ",
   "cmd.description.variant": "Chọn biến thể mô hình",
   "cmd.description.context": "Nén ngữ cảnh phiên",
+  "cmd.description.ssh": "Cấu hình SSH cho Git",
   "cmd.description.opencode_start": "Khởi động máy chủ OpenCode",
   "cmd.description.opencode_stop": "Dừng máy chủ OpenCode",
   "cmd.description.help": "Trợ giúp",
@@ -656,4 +657,14 @@ export const vi = {
   "addproject.error": "🔴 Lỗi khi thêm project.",
 
   "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
+
+  "ssh.usage": "🔧 Cấu hình SSH cho Git\n\nCách dùng: /ssh <ssh-url>\nVí dụ: /ssh git@github.com:username/repo.git\n\nLệnh này cấu hình SSH để làm việc với Git repos bằng cách map username vào SSH keys.",
+  "ssh.available_keys": "🔑 SSH keys khả dụng ({count}):",
+  "ssh.configured_hosts": "📋 SSH hosts đã cấu hình ({count}):",
+  "ssh.invalid_url": "❌ SSH URL không hợp lệ. Định dạng: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ Host {host} đã được cấu hình:\n  Key: {keyPath}",
+  "ssh.no_keys_found": "❌ Không tìm thấy SSH key trong ~/.ssh. Tạo bằng: ssh-keygen -t ed25519",
+  "ssh.configured_success": "✅ Cấu hình SSH host thành công!\n\nHost: {host}\nKey: {keyPath}\n\nKiểm tra kết nối thành công.",
+  "ssh.configured_test_failed": "⚠️ Đã cấu hình SSH host, nhưng kiểm tra kết nối thất bại.\n\nHost: {host}\nKey: {keyPath}\n\nVui lòng xác minh SSH key đã được thêm vào Git provider.",
+  "ssh.error": "❌ Lỗi khi cấu hình SSH: {message}",
 } as const;

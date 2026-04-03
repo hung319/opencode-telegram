@@ -17,6 +17,7 @@ export const de: I18nDictionary = {
   "cmd.description.cleanup": "Veraltete Themen schließen",
   "cmd.description.variant": "Modellvariante auswählen",
   "cmd.description.context": "Sitzungskontext komprimieren",
+  "cmd.description.ssh": "SSH für Git konfigurieren",
   "cmd.description.opencode_start": "OpenCode-Server starten",
   "cmd.description.opencode_stop": "OpenCode-Server stoppen",
   "cmd.description.help": "Hilfe",
@@ -670,4 +671,14 @@ export const de: I18nDictionary = {
   "addproject.added": "✅ Added project: {name}",
   "addproject.error": "🔴 Error adding project.",
   "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available, /addproject to add.",
+
+  "ssh.usage": "🔧 SSH-Konfiguration für Git\n\nVerwendung: /ssh <ssh-url>\nBeispiel: /ssh git@github.com:username/repo.git\n\nDieser Befehl konfiguriert SSH für Git-Repositories, indem der Benutzername deinen SSH-Schlüsseln zugeordnet wird.",
+  "ssh.available_keys": "🔑 Verfügbare SSH-Schlüssel ({count}):",
+  "ssh.configured_hosts": "📋 Konfigurierte SSH-Hosts ({count}):",
+  "ssh.invalid_url": "❌ Ungültige SSH-URL. Format: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ Host {host} ist bereits konfiguriert:\n  Schlüssel: {keyPath}",
+  "ssh.no_keys_found": "❌ Keine SSH-Schlüssel in ~/.ssh gefunden. Erstelle einen mit: ssh-keygen -t ed25519",
+  "ssh.configured_success": "✅ SSH-Host erfolgreich konfiguriert!\n\nHost: {host}\nSchlüssel: {keyPath}\n\nVerbindungstest bestanden.",
+  "ssh.configured_test_failed": "⚠️ SSH-Host konfiguriert, aber Verbindungstest fehlgeschlagen.\n\nHost: {host}\nSchlüssel: {keyPath}\n\nBitte überprüfe, ob der SSH-Schlüssel beim Git-Provider hinzugefügt wurde.",
+  "ssh.error": "❌ Fehler bei der SSH-Konfiguration: {message}",
 };

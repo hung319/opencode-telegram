@@ -30,6 +30,7 @@ export const BOT_COMMAND = {
   AGENT: "agent",
   VARIANT: "variant",
   CONTEXT: "context",
+  SSH: "ssh",
   OPENCODE_START: "opencode_start",
   OPENCODE_STOP: "opencode_stop",
 } as const;

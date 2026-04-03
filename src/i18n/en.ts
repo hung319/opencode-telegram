@@ -14,6 +14,7 @@ export const en = {
   "cmd.description.agent": "Select agent mode",
   "cmd.description.variant": "Select model variant",
   "cmd.description.context": "Compact session context",
+  "cmd.description.ssh": "Configure SSH for Git repos",
   "cmd.description.cleanup": "Close stale topic threads",
   "cmd.description.opencode_start": "Start OpenCode server",
   "cmd.description.opencode_stop": "Stop OpenCode server",
@@ -655,7 +656,17 @@ export const en = {
   "addproject.added": "✅ Đã thêm project: {name}",
   "addproject.error": "🔴 Lỗi khi thêm project.",
 
-  "projects.multi_info": "💡 Nhóm này hỗ trợ nhiều project. Dùng /newproject để xem project khả dụng, /addproject để thêm.",
+  "projects.multi_info": "💡 This group supports multiple projects. Use /newproject to see available projects, /addproject to add.",
+
+  "ssh.usage": "🔧 SSH Git Configuration\n\nUsage: /ssh <ssh-url>\nExample: /ssh git@github.com:username/repo.git\n\nThis command configures SSH to work with Git repos by mapping the username to your SSH keys.",
+  "ssh.available_keys": "🔑 Available SSH keys ({count}):",
+  "ssh.configured_hosts": "📋 Configured SSH hosts ({count}):",
+  "ssh.invalid_url": "❌ Invalid SSH URL. Expected format: git@github.com:username/repo.git",
+  "ssh.already_configured": "✅ Host {host} is already configured:\n  Key: {keyPath}",
+  "ssh.no_keys_found": "❌ No SSH keys found in ~/.ssh. Generate one with: ssh-keygen -t ed25519",
+  "ssh.configured_success": "✅ SSH host configured successfully!\n\nHost: {host}\nKey: {keyPath}\n\nConnection test passed.",
+  "ssh.configured_test_failed": "⚠️ SSH host configured, but connection test failed.\n\nHost: {host}\nKey: {keyPath}\n\nPlease verify your SSH key is added to the Git provider.",
+  "ssh.error": "❌ Error configuring SSH: {message}",
 } as const;
 
 export type I18nKey = keyof typeof en;

@@ -42,6 +42,7 @@ import { modelCommand } from "./commands/model.js";
 import { agentCommand } from "./commands/agent.js";
 import { variantCommand } from "./commands/variant.js";
 import { contextCommand } from "./commands/context.js";
+import { sshCommand } from "./commands/ssh.js";
 import {
   debouncePrompt,
   getPromptDebounceKey,
@@ -1226,6 +1227,7 @@ export function createBot(): Bot<Context> {
   bot.command(BOT_COMMAND.AGENT, agentCommand);
   bot.command(BOT_COMMAND.VARIANT, variantCommand);
   bot.command(BOT_COMMAND.CONTEXT, contextCommand);
+  bot.command(BOT_COMMAND.SSH, sshCommand);
 
   bot.on("message:text", unknownCommandMiddleware);
 
