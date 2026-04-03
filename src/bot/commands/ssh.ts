@@ -260,9 +260,19 @@ export async function sshCommand(ctx: CommandContext<Context>): Promise<void> {
   if (subcommand === "add") {
     const user = parts[2];
     const host = parts[3];
-    const keyContent = parts.slice(4).join(" ");
 
-    if (!user || !host || !keyContent) {
+    if (!user || !host) {
+      await ctx.reply(
+        t("ssh.add_usage"),
+        getThreadSendOptions(scope?.threadId ?? null),
+      );
+      return;
+    }
+
+    const addMarker = `/ssh add ${user} ${host}`;
+    const keyContent = text.slice(text.indexOf(addMarker) + addMarker.length).trim();
+
+    if (!keyContent) {
       await ctx.reply(
         t("ssh.add_usage"),
         getThreadSendOptions(scope?.threadId ?? null),
