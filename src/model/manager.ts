@@ -74,10 +74,10 @@ async function getValidModelKeys(): Promise<Set<string> | null> {
       const response = await opencodeClient.config.providers();
 
       if (response.error || !response.data) {
-        logger.warn("[ModelManager] Failed to refresh model catalog:", response.error);
+        logger.debug("[ModelManager] Failed to refresh model catalog:", response.error);
 
         if (cachedValidModelKeys) {
-          logger.warn("[ModelManager] Using stale model catalog cache after refresh failure");
+          logger.debug("[ModelManager] Using stale model catalog cache after refresh failure");
           return cachedValidModelKeys;
         }
 
@@ -101,10 +101,10 @@ async function getValidModelKeys(): Promise<Set<string> | null> {
 
       return cachedValidModelKeys;
     } catch (err) {
-      logger.warn("[ModelManager] Error refreshing model catalog:", err);
+      logger.debug("[ModelManager] Error refreshing model catalog:", err);
 
       if (cachedValidModelKeys) {
-        logger.warn("[ModelManager] Using stale model catalog cache after refresh exception");
+        logger.debug("[ModelManager] Using stale model catalog cache after refresh exception");
         return cachedValidModelKeys;
       }
 
@@ -193,20 +193,20 @@ export async function getModelSelectionLists(): Promise<ModelSelectionLists> {
       : validatedFavorites;
 
     if (rawFavorites.length === 0 && envDefaultModel) {
-      logger.info(
+      logger.debug(
         `[ModelManager] No favorites in ${stateFilePath}, using config model as favorite`,
       );
     }
 
     if (favorites.length === 0) {
-      logger.warn(`[ModelManager] No favorites in ${stateFilePath}`);
+      logger.debug(`[ModelManager] No favorites in ${stateFilePath}`);
     }
 
     const filteredOutFavorites = rawFavorites.length - validatedFavorites.length;
     const filteredOutRecent = rawRecent.length - validatedRecent.length;
 
     if (filteredOutFavorites > 0 || filteredOutRecent > 0) {
-      logger.info(
+      logger.debug(
         `[ModelManager] Filtered unavailable models from OpenCode state: favoritesRemoved=${filteredOutFavorites}, recentRemoved=${filteredOutRecent}`,
       );
     }
@@ -255,13 +255,13 @@ export async function reconcileStoredModelSelection(): Promise<void> {
   const validModelKeys = await getValidModelKeys();
 
   if (!validModelKeys) {
-    logger.warn("[ModelManager] Skipping stored model validation: model catalog unavailable");
+    logger.debug("[ModelManager] Skipping stored model validation: model catalog unavailable");
     return;
   }
 
   const envDefaultModel = getEnvDefaultModel();
   if (!envDefaultModel) {
-    logger.warn(
+    logger.debug(
       "[ModelManager] Cannot reconcile unavailable stored models: env default model is missing",
     );
     return;
