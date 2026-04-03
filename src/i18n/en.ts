@@ -339,8 +339,9 @@ export const en = {
 
   "context.button.confirm": "✅ Yes, compact context",
   "context.no_active_session": "⚠️ No active session. Create a session with /new",
-  "context.confirm_text":
-    '📊 Context compaction for session "{title}"\n\nThis will reduce context usage by removing old messages from history. Current task will not be interrupted.\n\nContinue?',
+  "context.no_context_limit": "⚠️ Context limit not available. Open a session topic first.",
+  "context.status_text":
+    "📊 **Context Status**\n\nSession: {title}\nTokens: {used} / {limit} ({percent}%)\n`{bar}`\n\nUse compact to reduce context usage by removing old messages.",
   "context.general_not_available":
     "⚠️ Context compaction is only available inside a session topic, not in General.",
   "context.general_not_available_callback": "Open a session topic first.",

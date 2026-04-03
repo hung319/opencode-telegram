@@ -289,8 +289,9 @@ export const zh: I18nDictionary = {
 
   "context.button.confirm": "✅ 是的，压缩上下文",
   "context.no_active_session": "⚠️ 没有活动会话。使用 /new 创建会话",
-  "context.confirm_text":
-    '📊 会话 "{title}" 的上下文压缩\n\n这会通过移除历史中的旧消息来减少上下文占用。当前任务不会被中断。\n\n继续？',
+  "context.no_context_limit": "⚠️ 上下文限制不可用。请先打开一个会话话题。",
+  "context.status_text":
+    "📊 **上下文状态**\n\n会话: {title}\nTokens: {used} / {limit} ({percent}%)\n`{bar}`\n\n使用 compact 通过删除旧消息来减少上下文占用。",
   "context.general_not_available": "⚠️ 上下文压缩仅在会话话题中可用，General 中不可用。",
   "context.general_not_available_callback": "请先打开一个会话话题。",
   "context.callback_session_not_found": "未找到会话",

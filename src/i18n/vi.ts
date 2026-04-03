@@ -339,8 +339,9 @@ export const vi = {
 
   "context.button.confirm": "✅ Có, thu gọn ngữ cảnh",
   "context.no_active_session": "⚠️ Không có phiên hoạt động. Tạo phiên với /new",
-  "context.confirm_text":
-    '📊 Thu gọn ngữ cảnh cho phiên "{title}"\n\nThao tác này sẽ giảm mức sử dụng ngữ cảnh bằng cách xóa tin nhắn cũ khỏi lịch sử. Tác vụ hiện tại sẽ không bị gián đoạn.\n\nTiếp tục?',
+  "context.no_context_limit": "⚠️ Giới hạn ngữ cảnh không khả dụng. Mở topic phiên trước.",
+  "context.status_text":
+    "📊 **Trạng thái ngữ cảnh**\n\nPhiên: {title}\nToken: {used} / {limit} ({percent}%)\n`{bar}`\n\nDùng compact để giảm sử dụng ngữ cảnh bằng cách xóa tin nhắn cũ.",
   "context.general_not_available":
     "⚠️ Thu gọn ngữ cảnh chỉ khả dụng trong chủ đề phiên, không khả dụng trong General.",
   "context.general_not_available_callback": "Mở chủ đề phiên trước.",

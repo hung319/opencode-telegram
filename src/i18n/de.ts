@@ -335,8 +335,9 @@ export const de: I18nDictionary = {
 
   "context.button.confirm": "✅ Ja, Kontext komprimieren",
   "context.no_active_session": "⚠️ Keine aktive Sitzung. Erstelle eine Sitzung mit /new",
-  "context.confirm_text":
-    '📊 Kontext-Komprimierung für Sitzung "{title}"\n\nDadurch wird die Kontextnutzung reduziert, indem alte Nachrichten aus dem Verlauf entfernt werden. Die aktuelle Aufgabe wird nicht unterbrochen.\n\nFortfahren?',
+  "context.no_context_limit": "⚠️ Kontextlimit nicht verfügbar. Öffne zuerst ein Sitzungs-Thema.",
+  "context.status_text":
+    "📊 **Kontext-Status**\n\nSitzung: {title}\nTokens: {used} / {limit} ({percent}%)\n`{bar}`\n\nNutze compact, um die Kontextnutzung durch Entfernen alter Nachrichten zu reduzieren.",
   "context.general_not_available":
     "⚠️ Kontext-Kompaktierung ist nur innerhalb eines Sitzungs-Themas verfügbar, nicht im General-Thema.",
   "context.general_not_available_callback": "Öffne zuerst ein Sitzungs-Thema.",

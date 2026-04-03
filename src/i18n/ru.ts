@@ -325,8 +325,9 @@ export const ru: I18nDictionary = {
 
   "context.button.confirm": "✅ Да, сжать контекст",
   "context.no_active_session": "⚠️ Нет активной сессии. Создайте сессию командой /new",
-  "context.confirm_text":
-    '📊 Сжатие контекста для сессии "{title}"\n\nЭто уменьшит использование контекста, удалив старые сообщения из истории. Текущая задача не будет прервана.\n\nПродолжить?',
+  "context.no_context_limit": "⚠️ Лимит контекста недоступен. Сначала откройте топик сессии.",
+  "context.status_text":
+    "📊 **Статус контекста**\n\nСессия: {title}\nТокены: {used} / {limit} ({percent}%)\n`{bar}`\n\nИспользуйте compact для уменьшения использования контекста, удалив старые сообщения.",
   "context.general_not_available":
     "⚠️ Сжатие контекста доступно только внутри топика сессии, а не в General.",
   "context.general_not_available_callback": "Сначала откройте топик сессии.",

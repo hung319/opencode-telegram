@@ -2,6 +2,8 @@ import { Context, InlineKeyboard } from "grammy";
 import { getCurrentSession } from "../../session/manager.js";
 import { opencodeClient } from "../../opencode/client.js";
 import { getStoredModel } from "../../model/manager.js";
+import { pinnedMessageManager } from "../../pinned/manager.js";
+import { keyboardManager } from "../../keyboard/manager.js";
 import {
   clearActiveInlineMenu,
   ensureActiveInlineMenu,
@@ -34,9 +36,44 @@ function isGeneralForumScope(ctx: Context): boolean {
   );
 }
 
+function formatTokenCount(count: number): string {
+  if (count >= 1000000) {
+    return `${(count / 1000000).toFixed(1)}M`;
+  } else if (count >= 1000) {
+    return `${Math.round(count / 1000)}K`;
+  }
+  return count.toString();
+}
+
+/**
+ * Build context status text showing current usage and compact option
+ */
+function buildContextStatusText(
+  sessionTitle: string,
+  tokensUsed: number,
+  tokensLimit: number,
+  messageCount: number,
+): string {
+  const percent = tokensLimit > 0 ? Math.round((tokensUsed / tokensLimit) * 100) : 0;
+  const usedFormatted = formatTokenCount(tokensUsed);
+  const limitFormatted = formatTokenCount(tokensLimit);
+
+  const barLength = 10;
+  const filled = Math.round((percent / 100) * barLength);
+  const bar = "█".repeat(filled) + "░".repeat(barLength - filled);
+
+  return t("context.status_text", {
+    title: sessionTitle,
+    used: usedFormatted,
+    limit: limitFormatted,
+    percent,
+    bar,
+    messages: messageCount,
+  });
+}
+
 /**
  * Build inline keyboard with compact confirmation menu
- * @returns InlineKeyboard with confirmation button
  */
 export function buildCompactConfirmationMenu(): InlineKeyboard {
   const keyboard = new InlineKeyboard();
@@ -48,8 +85,7 @@ export function buildCompactConfirmationMenu(): InlineKeyboard {
 
 /**
  * Handle context button press (text message from Reply Keyboard)
- * Shows inline menu with compact confirmation
- * @param ctx grammY context
+ * Shows context status with compact option
  */
 export async function handleContextButtonPress(ctx: Context): Promise<void> {
   logger.debug("[ContextHandler] Context button pressed");
@@ -71,11 +107,34 @@ export async function handleContextButtonPress(ctx: Context): Promise<void> {
     return;
   }
 
+  const contextInfo =
+    pinnedMessageManager.getContextInfo(scopeKey) ??
+    (pinnedMessageManager.getContextLimit(scopeKey) > 0
+      ? { tokensUsed: 0, tokensLimit: pinnedMessageManager.getContextLimit(scopeKey) }
+      : keyboardManager.getContextInfo(scopeKey));
+
+  if (!contextInfo || contextInfo.tokensLimit === 0) {
+    await ctx.reply(
+      t("context.no_context_limit"),
+      getThreadSendOptions(scope?.threadId ?? null),
+    );
+    return;
+  }
+
+  const pinnedState = pinnedMessageManager.getState(scopeKey);
+  const messageCount = pinnedState?.messageCount ?? 0;
+
   const keyboard = buildCompactConfirmationMenu();
+  const text = buildContextStatusText(
+    session.title,
+    contextInfo.tokensUsed,
+    contextInfo.tokensLimit,
+    messageCount,
+  );
 
   await replyWithInlineMenu(ctx, {
     menuKind: "context",
-    text: t("context.confirm_text", { title: session.title }),
+    text,
     keyboard,
   });
 }

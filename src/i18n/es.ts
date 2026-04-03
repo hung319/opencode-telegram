@@ -333,8 +333,9 @@ export const es: I18nDictionary = {
 
   "context.button.confirm": "✅ Sí, compactar contexto",
   "context.no_active_session": "⚠️ No hay una sesión activa. Crea una sesión con /new",
-  "context.confirm_text":
-    '📊 Compactación de contexto para la sesión "{title}"\n\nEsto reducirá el uso de contexto eliminando mensajes antiguos del historial. La tarea actual no se interrumpirá.\n\n¿Continuar?',
+  "context.no_context_limit": "⚠️ Límite de contexto no disponible. Abre un tema de sesión primero.",
+  "context.status_text":
+    "📊 **Estado del contexto**\n\nSesión: {title}\nTokens: {used} / {limit} ({percent}%)\n`{bar}`\n\nUsa compact para reducir el uso de contexto eliminando mensajes antiguos.",
   "context.general_not_available":
     "⚠️ La compactación de contexto solo está disponible dentro de un tema de sesión, no en General.",
   "context.general_not_available_callback": "Primero abre un tema de sesión.",
