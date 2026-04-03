@@ -16,7 +16,7 @@ import {
   MODEL_BUTTON_TEXT_PATTERN,
   VARIANT_BUTTON_TEXT_PATTERN,
 } from "./message-patterns.js";
-import { sessionsCommand, handleSessionSelect } from "./commands/sessions.js";
+import { sessionsCommand, handleSessionSelect, handleSessionActionCallback } from "./commands/sessions.js";
 import { createNewCommand } from "./commands/new.js";
 import { projectsCommand, handleProjectSelect } from "./commands/projects.js";
 import { taskCommand, handleTaskTextAnswer } from "./commands/task.js";
@@ -1243,6 +1243,7 @@ export function createBot(): Bot<Context> {
     try {
       const handledInlineCancel = await handleInlineMenuCancel(ctx);
       const handledSession = await handleSessionSelect(ctx);
+      const handledSessionAction = await handleSessionActionCallback(ctx);
       const handledProject = await handleProjectSelect(ctx);
       const handledTaskList = await handleTaskListCallback(ctx);
       const handledQuestion = await handleQuestionCallback(ctx);
@@ -1261,12 +1262,13 @@ export function createBot(): Bot<Context> {
       const handledCommands = await handleCommandsCallback(ctx, { ensureEventSubscription });
 
       logger.debug(
-        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
+        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, sessionAction=${handledSessionAction}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
       );
 
       if (
         !handledInlineCancel &&
         !handledSession &&
+        !handledSessionAction &&
         !handledProject &&
         !handledTaskList &&
         !handledQuestion &&

@@ -1,7 +1,7 @@
 import { CommandContext, Context } from "grammy";
 import { InlineKeyboard } from "grammy";
 import { opencodeClient } from "../../opencode/client.js";
-import { setCurrentSession, SessionInfo } from "../../session/manager.js";
+import { setCurrentSession, SessionInfo, getCurrentSession } from "../../session/manager.js";
 import {
   TOPIC_SESSION_STATUS,
   getCurrentProject,
@@ -56,6 +56,8 @@ import {
 
 const SESSION_CALLBACK_PREFIX = "session:";
 const SESSION_PAGE_CALLBACK_PREFIX = "session:page:";
+const SESSION_HIDE_MESSAGE_CALLBACK = "sessions:hide_message";
+const SESSION_CLOSE_SESSION_CALLBACK = "sessions:close_session";
 const SESSION_FETCH_EXTRA_COUNT = 1;
 
 type SessionListItem = {
@@ -211,11 +213,9 @@ export async function sessionsCommand(ctx: CommandContext<Context>) {
     const scope = getScopeFromContext(ctx);
     const scopeKey = scope?.key ?? GLOBAL_SCOPE_KEY;
 
+    // When in a topic session, show session summary with hide/close buttons
     if (isTopicScope(scope)) {
-      await ctx.reply(
-        t(BOT_I18N_KEY.SESSIONS_TOPIC_LOCKED),
-        getThreadSendOptions(scope?.threadId ?? null),
-      );
+      await showSessionSummary(ctx, scope, scopeKey);
       return;
     }
 
@@ -252,6 +252,66 @@ export async function sessionsCommand(ctx: CommandContext<Context>) {
     logger.error("[Sessions] Error fetching sessions:", error);
     await ctx.reply(t("sessions.fetch_error"));
   }
+}
+
+async function showSessionSummary(
+  ctx: CommandContext<Context>,
+  scope: ReturnType<typeof getScopeFromContext>,
+  scopeKey: string,
+): Promise<void> {
+  const currentSession = getCurrentSession(scopeKey);
+
+  if (!currentSession) {
+    await ctx.reply(
+      t("sessions.no_active_session"),
+      getThreadSendOptions(scope?.threadId ?? null),
+    );
+    return;
+  }
+
+  // Fetch latest session info from OpenCode
+  let sessionTitle = currentSession.title;
+
+  try {
+    const { data: session } = await opencodeClient.session.get({
+      sessionID: currentSession.id,
+      directory: currentSession.directory,
+    });
+
+    if (session) {
+      sessionTitle = session.title || sessionTitle;
+    }
+  } catch {
+    // Use cached title if fetch fails
+  }
+
+  // Get context info from pinned message manager
+  const contextInfo = pinnedMessageManager.getContextInfo(scopeKey);
+
+  // Format token count
+  const formatTokens = (count: number): string => {
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+    if (count >= 1000) return `${Math.round(count / 1000)}K`;
+    return count.toString();
+  };
+
+  let message = t("sessions.summary.header", { title: sessionTitle });
+  message += `\n${t("sessions.summary.id", { id: currentSession.id.slice(0, 8) })}`;
+  if (contextInfo) {
+    message += `\n${t("sessions.summary.tokens", { used: formatTokens(contextInfo.tokensUsed), limit: formatTokens(contextInfo.tokensLimit) })}`;
+  }
+  message += `\n${t("sessions.summary.directory", { dir: currentSession.directory })}`;
+
+  // Build keyboard with hide and close buttons
+  const keyboard = new InlineKeyboard()
+    .text(t("sessions.button.hide_message"), SESSION_HIDE_MESSAGE_CALLBACK)
+    .row()
+    .text(t("sessions.button.close_session"), SESSION_CLOSE_SESSION_CALLBACK);
+
+  await ctx.reply(message, {
+    reply_markup: keyboard,
+    ...getThreadSendOptions(scope?.threadId ?? null),
+  });
 }
 
 export async function handleSessionSelect(ctx: Context): Promise<boolean> {
@@ -624,4 +684,68 @@ async function sendSessionPreview(
   } catch (err) {
     logger.error("[Sessions] Failed to send session preview message:", err);
   }
+}
+
+export async function handleSessionActionCallback(ctx: Context): Promise<boolean> {
+  const callbackQuery = ctx.callbackQuery;
+  if (!callbackQuery?.data) {
+    return false;
+  }
+
+  const scopeKey = getScopeKeyFromContext(ctx);
+  const scope = getScopeFromContext(ctx);
+
+  if (callbackQuery.data === SESSION_HIDE_MESSAGE_CALLBACK) {
+    try {
+      await ctx.deleteMessage();
+      await ctx.answerCallbackQuery({ text: t("sessions.message_hidden") });
+      return true;
+    } catch (err) {
+      logger.debug("[Sessions] Failed to hide message:", err);
+      await ctx.answerCallbackQuery({ text: t("sessions.hide_error") });
+      return true;
+    }
+  }
+
+  if (callbackQuery.data === SESSION_CLOSE_SESSION_CALLBACK) {
+    const currentSession = getCurrentSession(scopeKey);
+    if (!currentSession) {
+      await ctx.answerCallbackQuery({ text: t("sessions.no_active_session") });
+      return true;
+    }
+
+    try {
+      await opencodeClient.session.delete({
+        sessionID: currentSession.id,
+        directory: currentSession.directory,
+      });
+
+      setCurrentSession(
+        { id: "", title: "", directory: "" },
+        scopeKey,
+      );
+
+      const binding = getTopicBindingBySessionId(currentSession.id);
+      if (binding) {
+        const { updateTopicBindingStatus } = await import("../../topic/manager.js");
+        updateTopicBindingStatus(binding.chatId, binding.threadId, TOPIC_SESSION_STATUS.CLOSED);
+      }
+
+      await ctx.answerCallbackQuery({ text: t("sessions.session_closed") });
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
+      await ctx.reply(
+        t("sessions.closed_notification", { title: currentSession.title }),
+        getThreadSendOptions(scope?.threadId ?? null),
+      );
+
+      logger.info(`[Sessions] Session closed: ${currentSession.id}`);
+      return true;
+    } catch (err) {
+      logger.error("[Sessions] Failed to close session:", err);
+      await ctx.answerCallbackQuery({ text: t("sessions.close_error") });
+      return true;
+    }
+  }
+
+  return false;
 }
