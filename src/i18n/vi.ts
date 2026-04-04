@@ -416,6 +416,9 @@ export const vi = {
   "keyboard.agent_mode": "{emoji} Chế độ {name}",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 Điều khiển",
+  "keyboard.sessions": "📋 Sessions",
+  "keyboard.projects": "🏗 Projects",
+  "keyboard.thinking": "🧠 Thinking",
   "keyboard.general_defaults": "Mặc định phiên mới:",
   "keyboard.general_defaults_info":
     "Các mặc định này áp dụng cho phiên mới được tạo trong nhóm này:\n• Agent\n• Mô hình\n• Biến thể",

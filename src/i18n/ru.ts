@@ -401,6 +401,9 @@ export const ru: I18nDictionary = {
   "keyboard.agent_mode": "{emoji} {name} Mode",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 Управление",
+  "keyboard.sessions": "📋 Сессии",
+  "keyboard.projects": "🏗 Проекты",
+  "keyboard.thinking": "🧠 Thinking",
   "keyboard.general_defaults": "Параметры новой сессии:",
   "keyboard.general_defaults_info":
     "Эти значения будут применяться к новым сессиям, созданным в этой группе:\n• Агент\n• Модель\n• Вариант",

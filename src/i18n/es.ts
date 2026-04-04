@@ -410,6 +410,9 @@ export const es: I18nDictionary = {
   "keyboard.agent_mode": "{emoji} Modo {name}",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 Controles",
+  "keyboard.sessions": "📋 Sesiones",
+  "keyboard.projects": "🏗 Proyectos",
+  "keyboard.thinking": "🧠 Thinking",
   "keyboard.general_defaults": "Valores por defecto de sesión:",
   "keyboard.general_defaults_info":
     "Estos valores se aplican a las sesiones nuevas creadas en este grupo:\n• Agente\n• Modelo\n• Variante",

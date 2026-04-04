@@ -362,6 +362,9 @@ export const zh: I18nDictionary = {
   "keyboard.agent_mode": "{emoji} {name} 模式",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 控制面板",
+  "keyboard.sessions": "📋 会话",
+  "keyboard.projects": "🏗 项目",
+  "keyboard.thinking": "🧠 思考",
   "keyboard.general_defaults": "新会话默认项：",
   "keyboard.general_defaults_info":
     "你在此群组中设置的这些默认项会应用到新创建的会话：\n• Agent\n• Model\n• Variant",

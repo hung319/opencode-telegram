@@ -12,7 +12,6 @@ export const BOT_COMMAND = {
   TASKLIST: "tasklist",
   RENAME: "rename",
   COMMANDS: "commands",
-  DELETE: "delete",
   SHARE: "share",
   CONFIG: "config",
   FORK: "fork",

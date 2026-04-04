@@ -54,13 +54,29 @@ export async function renameForumTopic(options: TopicActionOptions, suffix: stri
 export async function handleSessionTopicCleanup(options: TopicActionOptions): Promise<void> {
   if (config.bot.deleteTopicOnSessionDelete) {
     if (options.sessionTitle) {
-      await renameForumTopic(options, "[deleted]");
+      await renameForumTopicPrefix(options, "[deleted]");
     }
     await deleteForumTopic(options);
   } else {
     if (options.sessionTitle) {
-      await renameForumTopic(options, "[closed]");
+      await renameForumTopicPrefix(options, "[closed]");
     }
     await closeForumTopic(options);
+  }
+}
+
+export async function renameForumTopicPrefix(options: TopicActionOptions, prefix: string): Promise<void> {
+  const { api, chatId, threadId, sessionTitle } = options;
+
+  if (!sessionTitle) {
+    return;
+  }
+
+  try {
+    const newName = `${prefix} ${sessionTitle}`;
+    await api.editForumTopic(chatId, threadId, { name: newName });
+    logger.info(`[TopicAction] Renamed topic: chat=${chatId}, thread=${threadId} → "${newName}"`);
+  } catch (error) {
+    logger.warn(`[TopicAction] Failed to rename topic: chat=${chatId}, thread=${threadId}`, error);
   }
 }

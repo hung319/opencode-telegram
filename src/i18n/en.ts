@@ -420,6 +420,9 @@ export const en = {
   "keyboard.agent_mode": "{emoji} {name} Mode",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 Controls",
+  "keyboard.sessions": "📋 Sessions",
+  "keyboard.projects": "🏗 Projects",
+  "keyboard.thinking": "🧠 Thinking",
   "keyboard.general_defaults": "New Session Defaults:",
   "keyboard.general_defaults_info":
     "These defaults apply to newly created sessions in this group:\n• Agent\n• Model\n• Variant",

@@ -412,6 +412,9 @@ export const de: I18nDictionary = {
   "keyboard.agent_mode": "{emoji} {name} Modus",
   "keyboard.context": "📊 {used} / {limit} ({percent}%)",
   "keyboard.context_empty": "📊 Steuerung",
+  "keyboard.sessions": "📋 Sitzungen",
+  "keyboard.projects": "🏗 Projekte",
+  "keyboard.thinking": "🧠 Thinking",
   "keyboard.general_defaults": "Neue Sitzungs-Standards:",
   "keyboard.general_defaults_info":
     "Diese Standardwerte gelten für neu erstellte Sitzungen in dieser Gruppe:\n• Agent\n• Modell\n• Variante",

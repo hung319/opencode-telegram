@@ -33,7 +33,6 @@ const COMMAND_DEFINITIONS: BotCommandI18nDefinition[] = [
   { command: BOT_COMMAND.TASKLIST, descriptionKey: "cmd.description.tasklist" },
   { command: BOT_COMMAND.RENAME, descriptionKey: "cmd.description.rename" },
   { command: BOT_COMMAND.COMMANDS, descriptionKey: "cmd.description.commands" },
-  { command: BOT_COMMAND.DELETE, descriptionKey: "cmd.description.delete" },
   { command: BOT_COMMAND.SHARE, descriptionKey: "cmd.description.share" },
   { command: BOT_COMMAND.CONFIG, descriptionKey: "cmd.description.config" },
   { command: BOT_COMMAND.FORK, descriptionKey: "cmd.description.fork" },
