@@ -80,7 +80,6 @@ export async function handleConfigCallback(ctx: Context): Promise<boolean> {
 
   if (action === "raw") {
     await ctx.answerCallbackQuery();
-    const scope = getScopeFromContext(ctx);
     const scopeKey = getScopeKeyFromContext(ctx);
     const currentSession = getCurrentSession(scopeKey);
     const directory = currentSession?.directory;
