@@ -683,7 +683,7 @@ export class LiveStream {
       return;
     }
 
-    const maxIterations = Math.ceil(state.entries.length / 10) + 5;
+    const maxIterations = Math.max(state.entries.length * 2, 50);
     let iteration = 0;
 
     while (true) {

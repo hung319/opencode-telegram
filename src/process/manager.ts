@@ -314,6 +314,7 @@ class ProcessManager implements ProcessManagerInterface {
         }
       }
 
+      this.disableHealthCheck();
       this.cleanup();
       logger.info(`[ProcessManager] Process PID=${pid} stopped successfully`);
       return { success: true };

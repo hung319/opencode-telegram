@@ -744,11 +744,16 @@ async function ensureEventSubscription(directory: string): Promise<void> {
   summaryAggregator.setOnQuestionError(async () => {
     logger.info(`[Bot] Question tool failed, clearing active poll and deleting messages`);
 
+    if (!botInstance) {
+      logger.error("[Bot] Bot instance not available for question error cleanup");
+      return;
+    }
+
     const bindings = listAllTopicBindings();
     for (const binding of bindings) {
       const messageIds = questionManager.getMessageIds(binding.scopeKey);
       for (const messageId of messageIds) {
-        await botInstance?.api.deleteMessage(binding.chatId, messageId).catch((err) => {
+        await botInstance.api.deleteMessage(binding.chatId, messageId).catch((err) => {
           logger.error(`[Bot] Failed to delete question message ${messageId}:`, err);
         });
       }
@@ -901,7 +906,11 @@ async function ensureEventSubscription(directory: string): Promise<void> {
         await liveStream.flushSession(sessionId);
         const pendingCompletion = pendingAssistantCompletions.peek(sessionId);
         if (pendingCompletion) {
-          await deliverAssistantCompletion(sessionId, pendingCompletion);
+          try {
+            await deliverAssistantCompletion(sessionId, pendingCompletion);
+          } catch (err) {
+            logger.error("[Bot] Error delivering assistant completion in session idle:", err);
+          }
           pendingAssistantCompletions.clear(sessionId);
           await liveStream.cleanupAfterFinalDelivery(sessionId);
         }
@@ -911,6 +920,8 @@ async function ensureEventSubscription(directory: string): Promise<void> {
           syncKeyboardContextFromPinnedState(target.scopeKey);
           await pinnedMessageManager.flush(target.scopeKey);
         }
+      } catch (err) {
+        logger.error("[Bot] Error in setOnSessionIdle handler:", err);
       } finally {
         summaryAggregator.stopTypingIndicator(sessionId);
         await liveStream.sealCurrentMessage(sessionId, true);
@@ -1630,10 +1641,7 @@ export function createBot(): Bot<Context> {
 
 async function notifyServerCrash(bot: Bot<Context>): Promise<void> {
   try {
-    const message =
-      "🔴 **OpenCode Server Crashed**\n\n" +
-      "Máy chủ OpenCode đã dừng bất ngờ.\n" +
-      "Dùng `/status` để kiểm tra hoặc `/opencode_start` để khởi động lại.";
+    const message = t("bot.server_crash");
 
     const userId = config.telegram.allowedUserId;
     if (userId) {

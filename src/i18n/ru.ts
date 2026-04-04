@@ -731,4 +731,6 @@ export const ru: I18nDictionary = {
   "worktree.error": "❌ Ошибка управления worktree: {message}",
   "worktree.switching": "Переключение на ветку: {branch}",
   "worktree.switched": "✅ Переключено на ветку: {branch}",
+
+  "bot.server_crash": "🔴 **OpenCode Server упал**\n\nСервер OpenCode остановился неожиданно.\nИспользуйте `/status` для проверки или `/opencode_start` для перезапуска.",
 };

@@ -742,4 +742,6 @@ export const es: I18nDictionary = {
   "worktree.error": "❌ Error gestionando worktree: {message}",
   "worktree.switching": "Cambiando a rama: {branch}",
   "worktree.switched": "✅ Cambiado a rama: {branch}",
+
+  "bot.server_crash": "🔴 **OpenCode Server se bloqueó**\n\nEl servidor OpenCode se detuvo inesperadamente.\nUsa `/status` para verificar o `/opencode_start` para reiniciar.",
 };

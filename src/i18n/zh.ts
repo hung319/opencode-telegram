@@ -681,4 +681,6 @@ export const zh: I18nDictionary = {
   "worktree.error": "❌ 管理 worktree 失败: {message}",
   "worktree.switching": "正在切换到分支: {branch}",
   "worktree.switched": "✅ 已切换到分支: {branch}",
+
+  "bot.server_crash": "🔴 **OpenCode 服务器崩溃**\n\nOpenCode 服务器意外停止。\n使用 `/status` 检查或 `/opencode_start` 重启。",
 };

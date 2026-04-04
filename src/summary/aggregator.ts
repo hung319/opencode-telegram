@@ -493,6 +493,13 @@ class SummaryAggregator {
     this.trackedSessionParents.delete(sessionId);
     this.stopTypingIndicator(sessionId);
 
+    // Clean up processed tool states for this session to prevent memory leak
+    for (const key of Array.from(this.processedToolStates)) {
+      if (key.startsWith(`${sessionId}:`)) {
+        this.processedToolStates.delete(key);
+      }
+    }
+
     for (const [messageKey, message] of this.messages.entries()) {
       if (message.sessionId !== sessionId) {
         continue;

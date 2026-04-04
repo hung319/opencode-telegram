@@ -700,6 +700,8 @@ export const en = {
   "ssh.removed_success": "✅ SSH mapping removed for {user}@{host}",
   "ssh.remove_error": "❌ Error removing SSH mapping: {message}",
 
+  "bot.server_crash": "🔴 **OpenCode Server Crashed**\n\nThe OpenCode server stopped unexpectedly.\nUse `/status` to check or `/opencode_start` to restart.",
+
   "clone.usage": "🔧 Clone a Git repository\n\nUsage: /clone <git-url>\nExample: /clone git@github.com:user/repo.git",
   "clone.invalid_url": "❌ Invalid Git URL. Use SSH (git@github.com:user/repo.git) or HTTPS format.",
   "clone.cloning": "🔄 Cloning {repo}...",

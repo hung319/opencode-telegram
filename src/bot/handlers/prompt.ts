@@ -435,16 +435,21 @@ export async function processUserPrompt(
     return false;
   }
 
+  if (!ctx.chat) {
+    logger.warn("[PromptHandler] Received message without chat context");
+    return false;
+  }
+
   botInstance = bot;
-  chatIdInstance = ctx.chat!.id;
+  chatIdInstance = ctx.chat.id;
 
   // Initialize pinned message manager if not already
   if (usePinned && !pinnedMessageManager.isInitialized(scopeKey)) {
-    pinnedMessageManager.initialize(bot.api, ctx.chat!.id, scopeKey, scope?.threadId ?? null);
+    pinnedMessageManager.initialize(bot.api, ctx.chat.id, scopeKey, scope?.threadId ?? null);
   }
 
   // Initialize keyboard manager if not already
-  keyboardManager.initialize(bot.api, ctx.chat!.id, scopeKey);
+  keyboardManager.initialize(bot.api, ctx.chat.id, scopeKey);
 
   let currentSession = getCurrentSession(scopeKey);
 
