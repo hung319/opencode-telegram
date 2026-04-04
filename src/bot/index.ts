@@ -26,7 +26,7 @@ import { opencodeStartCommand } from "./commands/opencode-start.js";
 import { opencodeStopCommand } from "./commands/opencode-stop.js";
 import { renameCommand, handleRenameCancel, handleRenameTextAnswer } from "./commands/rename.js";
 import { shareCommand, handleShareCallback } from "./commands/share.js";
-import { configCommand } from "./commands/config.js";
+import { configCommand, handleConfigCallback } from "./commands/config.js";
 import { forkCommand } from "./commands/fork.js";
 import { todoCommand } from "./commands/todo.js";
 import { filesCommand, handleFilesCallback } from "./commands/files.js";
@@ -1281,17 +1281,19 @@ export function createBot(): Bot<Context> {
       const handledFiles = await handleFilesCallback(ctx);
       const handledMcp = await handleMcpCallback(ctx);
       const handledManage = await handleManageCallback(ctx);
+      const handledConfig = await handleConfigCallback(ctx);
       const handledMessages = await handleMessagesCallback(ctx);
       const handledCommands = await handleCommandsCallback(ctx, { ensureEventSubscription });
 
       logger.debug(
-        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, sessionAction=${handledSessionAction}, ls=${handledLs}, worktree=${handledWorktree}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
+        `[Bot] Callback handled: inlineCancel=${handledInlineCancel}, session=${handledSession}, sessionAction=${handledSessionAction}, config=${handledConfig}, ls=${handledLs}, worktree=${handledWorktree}, project=${handledProject}, taskList=${handledTaskList}, question=${handledQuestion}, permission=${handledPermission}, agent=${handledAgent}, model=${handledModel}, variant=${handledVariant}, compactConfirm=${handledCompactConfirm}, rename=${handledRenameCancel}, commands=${handledCommands}`,
       );
 
       if (
         !handledInlineCancel &&
         !handledSession &&
         !handledSessionAction &&
+        !handledConfig &&
         !handledLs &&
         !handledWorktree &&
         !handledProject &&

@@ -419,6 +419,7 @@ export const vi = {
   "keyboard.sessions": "📋 Sessions",
   "keyboard.projects": "🏗 Projects",
   "keyboard.thinking": "🧠 Thinking",
+  "keyboard.config": "⚙️ Config",
   "keyboard.general_defaults": "Mặc định phiên mới:",
   "keyboard.general_defaults_info":
     "Các mặc định này áp dụng cho phiên mới được tạo trong nhóm này:\n• Agent\n• Mô hình\n• Biến thể",
@@ -547,6 +548,15 @@ export const vi = {
   "config.no_changes": "⚠️ Không có thay đổi nào.",
   "config.button.view": "📋 Xem toàn bộ cấu hình",
   "config.button.edit": "✏️ Chỉnh sửa cấu hình",
+  "config.menu": "⚙️ **Cấu hình**\n\nChọn tùy chọn:",
+  "config.btn.model": "🤖 Model",
+  "config.btn.agent": "🛠️ Agent",
+  "config.btn.variant": "💡 Variant",
+  "config.btn.thinking": "🧠 Thinking",
+  "config.btn.context": "📊 Context",
+  "config.btn.view_raw": "📋 Raw Config",
+  "config.use_slash": "Dùng {cmd} để cấu hình",
+  "config.raw_display": "📋 **Raw Config:**\n\n<pre>{config}</pre>",
 
   "fork.no_session": "⚠️ Không có phiên hoạt động. Tạo hoặc chọn phiên trước.",
   "fork.created": "✅ Đã fork phiên: {title}",

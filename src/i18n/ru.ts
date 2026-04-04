@@ -404,6 +404,7 @@ export const ru: I18nDictionary = {
   "keyboard.sessions": "📋 Сессии",
   "keyboard.projects": "🏗 Проекты",
   "keyboard.thinking": "🧠 Thinking",
+  "keyboard.config": "⚙️ Config",
   "keyboard.general_defaults": "Параметры новой сессии:",
   "keyboard.general_defaults_info":
     "Эти значения будут применяться к новым сессиям, созданным в этой группе:\n• Агент\n• Модель\n• Вариант",
@@ -594,6 +595,15 @@ export const ru: I18nDictionary = {
   "config.no_changes": "⚠️ No changes detected.",
   "config.button.view": "📋 View full config",
   "config.button.edit": "✏️ Edit config",
+  "config.menu": "⚙️ **Конфигурация**\n\nВыберите опцию:",
+  "config.btn.model": "🤖 Model",
+  "config.btn.agent": "🛠️ Agent",
+  "config.btn.variant": "💡 Variant",
+  "config.btn.thinking": "🧠 Thinking",
+  "config.btn.context": "📊 Context",
+  "config.btn.view_raw": "📋 Raw Config",
+  "config.use_slash": "Используйте {cmd} для настройки",
+  "config.raw_display": "📋 **Raw Config:**\n\n<pre>{config}</pre>",
 
   "fork.no_session": "⚠️ No active session. Create or select a session first.",
   "fork.created": "✅ Forked session: {title}",

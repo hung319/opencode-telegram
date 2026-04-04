@@ -365,6 +365,7 @@ export const zh: I18nDictionary = {
   "keyboard.sessions": "📋 会话",
   "keyboard.projects": "🏗 项目",
   "keyboard.thinking": "🧠 思考",
+  "keyboard.config": "⚙️ 配置",
   "keyboard.general_defaults": "新会话默认项：",
   "keyboard.general_defaults_info":
     "你在此群组中设置的这些默认项会应用到新创建的会话：\n• Agent\n• Model\n• Variant",
@@ -544,6 +545,15 @@ export const zh: I18nDictionary = {
   "config.no_changes": "⚠️ No changes detected.",
   "config.button.view": "📋 View full config",
   "config.button.edit": "✏️ Edit config",
+  "config.menu": "⚙️ **配置**\n\n选择选项:",
+  "config.btn.model": "🤖 Model",
+  "config.btn.agent": "🛠️ Agent",
+  "config.btn.variant": "💡 Variant",
+  "config.btn.thinking": "🧠 Thinking",
+  "config.btn.context": "📊 Context",
+  "config.btn.view_raw": "📋 Raw Config",
+  "config.use_slash": "使用 {cmd} 进行配置",
+  "config.raw_display": "📋 **Raw Config:**\n\n<pre>{config}</pre>",
 
   "fork.no_session": "⚠️ No active session. Create or select a session first.",
   "fork.created": "✅ Forked session: {title}",

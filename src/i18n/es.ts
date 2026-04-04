@@ -413,6 +413,7 @@ export const es: I18nDictionary = {
   "keyboard.sessions": "📋 Sesiones",
   "keyboard.projects": "🏗 Proyectos",
   "keyboard.thinking": "🧠 Thinking",
+  "keyboard.config": "⚙️ Config",
   "keyboard.general_defaults": "Valores por defecto de sesión:",
   "keyboard.general_defaults_info":
     "Estos valores se aplican a las sesiones nuevas creadas en este grupo:\n• Agente\n• Modelo\n• Variante",
@@ -605,6 +606,15 @@ export const es: I18nDictionary = {
   "config.no_changes": "⚠️ No changes detected.",
   "config.button.view": "📋 View full config",
   "config.button.edit": "✏️ Edit config",
+  "config.menu": "⚙️ **Configuración**\n\nElige una opción:",
+  "config.btn.model": "🤖 Model",
+  "config.btn.agent": "🛠️ Agent",
+  "config.btn.variant": "💡 Variante",
+  "config.btn.thinking": "🧠 Thinking",
+  "config.btn.context": "📊 Contexto",
+  "config.btn.view_raw": "📋 Config Raw",
+  "config.use_slash": "Usa {cmd} para configurar",
+  "config.raw_display": "📋 **Config Raw:**\n\n<pre>{config}</pre>",
 
   "fork.no_session": "⚠️ No active session. Create or select a session first.",
   "fork.created": "✅ Forked session: {title}",

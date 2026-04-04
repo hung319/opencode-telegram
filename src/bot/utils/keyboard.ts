@@ -61,7 +61,7 @@ export function createMainKeyboard(
   keyboard.text(contextText).text(agentText).row();
   keyboard.text(modelText).text(variantText).row();
   keyboard.text(t("keyboard.sessions")).text(t("keyboard.projects")).row();
-  keyboard.text(t("keyboard.thinking")).row();
+  keyboard.text(t("keyboard.thinking")).text(t("keyboard.config")).row();
 
   return keyboard.resized().persistent();
 }

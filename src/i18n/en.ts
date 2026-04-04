@@ -423,6 +423,7 @@ export const en = {
   "keyboard.sessions": "📋 Sessions",
   "keyboard.projects": "🏗 Projects",
   "keyboard.thinking": "🧠 Thinking",
+  "keyboard.config": "⚙️ Config",
   "keyboard.general_defaults": "New Session Defaults:",
   "keyboard.general_defaults_info":
     "These defaults apply to newly created sessions in this group:\n• Agent\n• Model\n• Variant",
@@ -564,6 +565,15 @@ export const en = {
   "config.no_changes": "⚠️ No changes detected.",
   "config.button.view": "📋 View full config",
   "config.button.edit": "✏️ Edit config",
+  "config.menu": "⚙️ **Configuration**\n\nChoose an option:",
+  "config.btn.model": "🤖 Model",
+  "config.btn.agent": "🛠️ Agent",
+  "config.btn.variant": "💡 Variant",
+  "config.btn.thinking": "🧠 Thinking",
+  "config.btn.context": "📊 Context",
+  "config.btn.view_raw": "📋 Raw Config",
+  "config.use_slash": "Use {cmd} to configure",
+  "config.raw_display": "📋 **Raw Config:**\n\n<pre>{config}</pre>",
 
   "fork.no_session": "⚠️ No active session. Create or select a session first.",
   "fork.created": "✅ Forked session: {title}",
