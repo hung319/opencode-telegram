@@ -1,24 +1,50 @@
 import { CommandContext, Context, InlineKeyboard } from "grammy";
 import { opencodeClient } from "../../opencode/client.js";
 import { getCurrentSession } from "../../session/manager.js";
+import { interactionManager } from "../../interaction/manager.js";
+import { INTERACTION_CLEAR_REASON } from "../../interaction/constants.js";
+import { manageCommand } from "./manage.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
+import { splitLongMessage } from "../utils/message-splitter.js";
 
 const CONFIG_CALLBACK_PREFIX = "config:";
 
 export async function configCommand(ctx: CommandContext<Context>): Promise<void> {
   try {
     const scope = getScopeFromContext(ctx);
-    const keyboard = buildConfigKeyboard();
+    const scopeKey = getScopeKeyFromContext(ctx);
 
-    await ctx.reply(
+    const keyboard = new InlineKeyboard()
+      .text("🔌 MCP / Plugins / Providers", `${CONFIG_CALLBACK_PREFIX}manage`)
+      .row()
+      .text("📋 View Raw Config", `${CONFIG_CALLBACK_PREFIX}raw`)
+      .row()
+      .text("❌ Close", `${CONFIG_CALLBACK_PREFIX}close`)
+      .row();
+
+    const message = await ctx.reply(
       t("config.menu"),
       {
         reply_markup: keyboard,
         ...getThreadSendOptions(scope?.threadId ?? null),
       },
     );
+
+    interactionManager.start(
+      {
+        kind: "inline",
+        expectedInput: "callback",
+        metadata: {
+          menuKind: "config",
+          messageId: message.message_id,
+        },
+      },
+      scopeKey,
+    );
+
+    logger.info("[ConfigCommand] Config menu opened");
   } catch (error) {
     logger.error("[ConfigCommand] Error:", error);
     await ctx.reply(
@@ -28,63 +54,42 @@ export async function configCommand(ctx: CommandContext<Context>): Promise<void>
   }
 }
 
-function buildConfigKeyboard(): InlineKeyboard {
-  const keyboard = new InlineKeyboard();
-
-  keyboard
-    .text(t("config.btn.model"), `${CONFIG_CALLBACK_PREFIX}model`)
-    .text(t("config.btn.agent"), `${CONFIG_CALLBACK_PREFIX}agent`)
-    .row()
-    .text(t("config.btn.variant"), `${CONFIG_CALLBACK_PREFIX}variant`)
-    .text(t("config.btn.thinking"), `${CONFIG_CALLBACK_PREFIX}thinking`)
-    .row()
-    .text(t("config.btn.context"), `${CONFIG_CALLBACK_PREFIX}context`)
-    .text(t("config.btn.view_raw"), `${CONFIG_CALLBACK_PREFIX}raw`)
-    .row();
-
-  return keyboard;
-}
-
 export async function handleConfigCallback(ctx: Context): Promise<boolean> {
   const data = ctx.callbackQuery?.data;
   if (!data || !data.startsWith(CONFIG_CALLBACK_PREFIX)) {
     return false;
   }
 
+  const scopeKey = getScopeKeyFromContext(ctx);
+  const interactionState = interactionManager.getSnapshot(scopeKey);
+
+  // Allow config interactions even if not strictly in "config" state (e.g. if user clicks fast)
+  // but generally we check state.
+  
   const action = data.slice(CONFIG_CALLBACK_PREFIX.length);
 
-  if (action === "model") {
-    await ctx.answerCallbackQuery({ text: t("config.use_slash", { cmd: "/model" }) });
-    return true;
-  }
+  await ctx.answerCallbackQuery();
 
-  if (action === "agent") {
-    await ctx.answerCallbackQuery({ text: t("config.use_slash", { cmd: "/agent" }) });
-    return true;
-  }
+  try {
+    if (action === "close") {
+      interactionManager.clear(INTERACTION_CLEAR_REASON.MANUAL, scopeKey);
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
+      return true;
+    }
 
-  if (action === "variant") {
-    await ctx.answerCallbackQuery({ text: t("config.use_slash", { cmd: "/variant" }) });
-    return true;
-  }
+    // Redirect to the full management menu (MCP/Plugins/Providers)
+    if (action === "manage") {
+      await ctx.deleteMessage().catch((err) => logger.debug("Silent operation failed:", err));
+      // Cast to CommandContext as manageCommand expects it, though it mostly uses Context methods
+      await manageCommand(ctx as CommandContext<Context>);
+      return true;
+    }
 
-  if (action === "thinking") {
-    await ctx.answerCallbackQuery({ text: t("config.use_slash", { cmd: "/thinking" }) });
-    return true;
-  }
+    // Show raw JSON config
+    if (action === "raw") {
+      const currentSession = getCurrentSession(scopeKey);
+      const directory = currentSession?.directory;
 
-  if (action === "context") {
-    await ctx.answerCallbackQuery({ text: t("config.use_slash", { cmd: "/context" }) });
-    return true;
-  }
-
-  if (action === "raw") {
-    await ctx.answerCallbackQuery();
-    const scopeKey = getScopeKeyFromContext(ctx);
-    const currentSession = getCurrentSession(scopeKey);
-    const directory = currentSession?.directory;
-
-    try {
       const { data: config, error } = await opencodeClient.config.get({
         directory,
       });
@@ -103,11 +108,11 @@ export async function handleConfigCallback(ctx: Context): Promise<boolean> {
         parse_mode: "HTML",
       });
       return true;
-    } catch {
-      await ctx.editMessageText(t("config.fetch_error"));
-      return true;
     }
+  } catch (error) {
+    logger.error("[ConfigCallback] Error:", error);
+    await ctx.answerCallbackQuery({ text: t("config.error"), show_alert: true });
   }
 
-  return false;
+  return true;
 }
