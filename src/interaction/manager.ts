@@ -9,6 +9,40 @@ import { logger } from "../utils/logger.js";
 
 export const DEFAULT_ALLOWED_INTERACTION_COMMANDS = ["/help", "/status", "/abort"] as const;
 
+export const NAVIGATION_COMMANDS = [
+  "/model",
+  "/agent",
+  "/variant",
+  "/context",
+  "/sessions",
+  "/projects",
+  "/config",
+  "/manage",
+  "/tasklist",
+  "/task",
+  "/clone",
+  "/ls",
+  "/open",
+  "/worktree",
+  "/ssh",
+  "/cleanup",
+  "/newproject",
+  "/addproject",
+  "/opencode_start",
+  "/opencode_stop",
+  "/rename",
+  "/delete",
+  "/share",
+  "/commands",
+  "/todo",
+  "/files",
+  "/mcp",
+  "/revert",
+  "/unrevert",
+  "/messages",
+  "/fork",
+] as const;
+
 function normalizeCommand(command: string): string | null {
   const trimmed = command.trim().toLowerCase();
   if (!trimmed) {

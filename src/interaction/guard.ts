@@ -1,5 +1,5 @@
 import type { Context } from "grammy";
-import { interactionManager } from "./manager.js";
+import { interactionManager, NAVIGATION_COMMANDS } from "./manager.js";
 import { getScopeKeyFromContext } from "../bot/scope.js";
 import type {
   BlockReason,
@@ -116,6 +116,11 @@ export function resolveInteractionGuardDecision(ctx: Context): GuardDecision {
 
   if (inputType === "command") {
     if (command === "/start") {
+      return createAllowDecision(inputType, state, command);
+    }
+
+    // Navigation commands should always work even during inline menus
+    if (command && (NAVIGATION_COMMANDS as readonly string[]).includes(command)) {
       return createAllowDecision(inputType, state, command);
     }
 
