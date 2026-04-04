@@ -5,6 +5,7 @@ import type { ScheduledTask, ScheduledTaskExecutionResult } from "./types.js";
 const SCHEDULED_TASK_AGENT = "build";
 const SCHEDULED_TASK_SESSION_TITLE = "Scheduled task run";
 const HEALTH_CHECK_TIMEOUT_MS = 5000;
+const PROMPT_TIMEOUT_MS = 300_000; // 5 minutes
 
 /**
  * Check if OpenCode server is healthy before running scheduled tasks.
@@ -105,8 +106,12 @@ export async function executeScheduledTask(
       promptOptions.variant = task.model.variant;
     }
 
-    const { data: response, error: promptError } =
-      await opencodeClient.session.prompt(promptOptions);
+    const { data: response, error: promptError } = await Promise.race([
+      opencodeClient.session.prompt(promptOptions),
+      new Promise<{ data: null; error: Error }>((resolve) =>
+        setTimeout(() => resolve({ data: null, error: new Error("Prompt execution timed out") }), PROMPT_TIMEOUT_MS),
+      ),
+    ]);
 
     if (promptError || !response) {
       throw promptError || new Error("Scheduled task prompt execution failed");

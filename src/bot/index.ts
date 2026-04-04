@@ -89,8 +89,7 @@ import {
 import { handleVoiceMessage } from "./handlers/voice.js";
 import { handleDocumentMessage } from "./handlers/document.js";
 import { downloadTelegramFile, toDataUri } from "./utils/file-download.js";
-import { sendBotText } from "./utils/telegram-text.js";
-import { editBotText } from "./utils/telegram-text.js";
+import { sendBotText, editBotText } from "./utils/telegram-text.js";
 import {
   getTelegramRetryAfterMs,
   isTelegramMessageNotModifiedError,
@@ -153,6 +152,10 @@ function enqueueSessionDelivery(sessionId: string, task: () => Promise<void>): v
     });
 
   sessionDeliveryTasks.set(sessionId, nextTask);
+}
+
+function clearSessionDeliveryTasks(sessionId: string): void {
+  sessionDeliveryTasks.delete(sessionId);
 }
 
 async function ensureGeneralTopicName(ctx: Context): Promise<void> {
@@ -926,6 +929,8 @@ async function ensureEventSubscription(directory: string): Promise<void> {
         summaryAggregator.stopTypingIndicator(sessionId);
         await liveStream.sealCurrentMessage(sessionId, true);
         await dispatchNextQueuedPrompt(sessionId);
+        // Clean up delivery task entry to prevent stale map growth
+        clearSessionDeliveryTasks(sessionId);
       }
     });
   });
@@ -1635,6 +1640,11 @@ export function createBot(): Bot<Context> {
   });
 
   processManager.enableHealthCheck();
+
+  // Periodically clean up stale LiveStream states (every 10 minutes)
+  setInterval(() => {
+    liveStream.cleanupStaleStates();
+  }, 10 * 60 * 1000);
 
   return bot;
 }

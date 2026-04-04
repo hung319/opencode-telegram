@@ -5,7 +5,8 @@ const getAuth = () => {
   if (!config.opencode.password) {
     return undefined;
   }
-  const credentials = `${config.opencode.username}:${config.opencode.password}`;
+  const username = config.opencode.username || "opencode";
+  const credentials = `${username}:${config.opencode.password}`;
   return `Basic ${Buffer.from(credentials).toString("base64")}`;
 };
 

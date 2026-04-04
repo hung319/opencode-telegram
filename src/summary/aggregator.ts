@@ -408,7 +408,7 @@ class SummaryAggregator {
     try {
       // Log all question-related events for debugging
       if (event.type.startsWith("question.")) {
-        logger.info(
+        logger.debug(
           `[Aggregator] Question event: ${event.type}`,
           JSON.stringify(event.properties, null, 2),
         );

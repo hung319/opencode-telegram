@@ -7,6 +7,7 @@ const DEFAULT_THROTTLE_MS = 1000;
 const TELEGRAM_MESSAGE_LIMIT = 4096;
 const THINKING_PREFIX = "__thinking__";
 const MAX_REPLACEABLE_SERVICE_LENGTH = 3500;
+const STATE_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
 interface LiveStreamOptions {
   sendText: (
@@ -205,7 +206,7 @@ export class LiveStream {
   private readonly editText;
   private readonly deleteText;
   private readonly throttleMs: number;
-  private readonly states = new Map<string, SessionState>();
+  private readonly states = new Map<string, SessionState & { lastAccessed: number }>();
   private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
   private readonly sessionTasks = new Map<string, Promise<void>>();
 
@@ -271,7 +272,11 @@ export class LiveStream {
         state.service.updates.push(normalizedText);
       }
 
-      state.entries.push({ kind: "service", text: normalizedText });
+      // Prevent duplicate service entries
+      const lastEntry = state.entries[state.entries.length - 1];
+      if (lastEntry?.kind !== "service" || lastEntry.text !== normalizedText) {
+        state.entries.push({ kind: "service", text: normalizedText });
+      }
     });
   }
 
@@ -479,9 +484,10 @@ export class LiveStream {
     }
   }
 
-  private getOrCreateState(sessionId: string): SessionState {
+  private getOrCreateState(sessionId: string): SessionState & { lastAccessed: number } {
     const existing = this.states.get(sessionId);
     if (existing) {
+      existing.lastAccessed = Date.now();
       return existing;
     }
 
@@ -500,8 +506,27 @@ export class LiveStream {
         updates: [],
       },
     };
-    this.states.set(sessionId, state);
-    return state;
+    this.states.set(sessionId, { ...state, lastAccessed: Date.now() });
+    return this.states.get(sessionId)!;
+  }
+
+  private touchState(sessionId: string): void {
+    const state = this.states.get(sessionId);
+    if (state) {
+      state.lastAccessed = Date.now();
+    }
+  }
+
+  cleanupStaleStates(): void {
+    const now = Date.now();
+    for (const [sessionId, state] of this.states.entries()) {
+      if (now - state.lastAccessed > STATE_TTL_MS) {
+        logger.info(`[LiveStream] Cleaning up stale state: session=${sessionId}, idle=${Math.round((now - state.lastAccessed) / 60000)}min`);
+        this.clearTimer(sessionId);
+        this.states.delete(sessionId);
+        this.sessionTasks.delete(sessionId);
+      }
+    }
   }
 
   private syncAssistantEntry(

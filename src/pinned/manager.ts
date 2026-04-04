@@ -18,7 +18,9 @@ import { getTelegramRetryAfterMs } from "../bot/utils/send-with-markdown-fallbac
 interface ScopeContext {
   api: Api | null;
   chatId: number | null;
+  threadId: number | null;
   state: PinnedMessageState;
+  recreateFailures: number;
   contextLimit: number | null;
   debounceTimer: ReturnType<typeof setTimeout> | null;
 }
@@ -73,11 +75,13 @@ class PinnedMessageManager {
     const context: ScopeContext = {
       api: null,
       chatId: null,
+      threadId: null,
       state: {
         ...this.createDefaultState(scopeKey),
         messageId: savedId ?? null,
       },
       contextLimit: null,
+      recreateFailures: 0,
       debounceTimer: null,
     };
     this.contexts.set(scopeKey, context);
@@ -477,9 +481,9 @@ class PinnedMessageManager {
 
     const statusIcon = state.status === "active" ? "🟢" : state.status === "closed" ? "🔴" : "⚪";
     const statusText = state.status === "active"
-      ? t("subagent.working")
+      ? t("pinned.status_active")
       : state.status === "closed"
-        ? t("subagent.completed")
+        ? t("pinned.status_completed")
         : state.status;
 
     const createdTime = state.createdAt > 0
@@ -581,6 +585,13 @@ class PinnedMessageManager {
       }
 
       if (err instanceof Error && err.message.includes("message to edit not found")) {
+        context.recreateFailures++;
+        if (context.recreateFailures > 3) {
+          logger.warn(
+            `[PinnedManager] Failed to recreate pinned message after ${context.recreateFailures} attempts, giving up for scope ${scopeKey}`,
+          );
+          return;
+        }
         context.state.messageId = null;
         this.clearPersistedPinnedId(scopeKey);
         await this.createPinnedMessage(scopeKey);

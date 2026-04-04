@@ -443,6 +443,8 @@ export const es: I18nDictionary = {
   "pinned.files.title": "Archivos ({count}):",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... y {count} más",
+  "pinned.status_active": "En progreso",
+  "pinned.status_completed": "Completado",
 
   "tool.todo.overflow": "*({count} tareas más)*",
   "tool.file_header.write":

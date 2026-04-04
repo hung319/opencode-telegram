@@ -445,6 +445,8 @@ export const de: I18nDictionary = {
   "pinned.files.title": "Dateien ({count}):",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... und {count} mehr",
+  "pinned.status_active": "In Arbeit",
+  "pinned.status_completed": "Abgeschlossen",
 
   "tool.todo.overflow": "*({count} weitere Aufgaben)*",
   "tool.file_header.write":

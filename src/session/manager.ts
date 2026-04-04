@@ -68,11 +68,6 @@ export function setCurrentSession(
   sessionsByScope.set(scopeKey, sessionInfo);
   scopeBySessionId.set(sessionInfo.id, scopeKey);
 
-  if (scopeKey === GLOBAL_SCOPE_KEY) {
-    setSettingsSession(sessionInfo, scopeKey);
-    return;
-  }
-
   setSettingsSession(sessionInfo, scopeKey);
 }
 
@@ -90,12 +85,6 @@ export function clearSession(scopeKey: string = GLOBAL_SCOPE_KEY): void {
   }
 
   sessionsByScope.delete(scopeKey);
-
-  if (scopeKey === GLOBAL_SCOPE_KEY) {
-    clearSettingsSession(scopeKey);
-    return;
-  }
-
   clearSettingsSession(scopeKey);
 }
 

@@ -26,7 +26,7 @@ export interface TopicBindingInput {
   threadId: number;
   sessionId: string;
   projectId: string;
-  projectWorktree?: string;
+  projectWorktree: string;
   topicName?: string;
   status?: TopicSessionStatus;
 }

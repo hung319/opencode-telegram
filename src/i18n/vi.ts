@@ -449,6 +449,8 @@ export const vi = {
   "pinned.files.title": "Tệp ({count}):",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... và {count} tệp khác",
+  "pinned.status_active": "Đang xử lý",
+  "pinned.status_completed": "Hoàn thành",
 
   "tool.todo.overflow": "*({count} tác vụ khác)*",
   "tool.file_header.write":

@@ -453,6 +453,8 @@ export const en = {
   "pinned.files.title": "Files ({count}):",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... and {count} more",
+  "pinned.status_active": "Working",
+  "pinned.status_completed": "Completed",
 
   "tool.todo.overflow": "*({count} more tasks)*",
   "tool.file_header.write":

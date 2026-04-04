@@ -176,7 +176,7 @@ function buildPromptRequest(
 
   parts.push(...fileParts);
 
-  if (parts.length === 0 || (parts.length > 0 && parts.every((part) => part.type === "file"))) {
+  if (parts.length === 0 || parts.every((part) => part.type === "file")) {
     if (fileParts.length > 0) {
       parts.unshift({ type: "text", text: "See attached file" });
     }

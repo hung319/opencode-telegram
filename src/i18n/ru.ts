@@ -434,6 +434,8 @@ export const ru: I18nDictionary = {
   "pinned.files.title": "Files ({count}):",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... and {count} more",
+  "pinned.status_active": "В работе",
+  "pinned.status_completed": "Завершено",
 
   "tool.todo.overflow": "*(ещё {count} задач)*",
   "tool.file_header.write":

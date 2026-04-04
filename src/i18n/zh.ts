@@ -395,6 +395,8 @@ export const zh: I18nDictionary = {
   "pinned.files.title": "文件（{count}）：",
   "pinned.files.item": "  {path}{diff}",
   "pinned.files.more": "  ... 还有 {count} 个",
+  "pinned.status_active": "处理中",
+  "pinned.status_completed": "已完成",
 
   "tool.todo.overflow": "*(还有 {count} 个任务)*",
   "tool.file_header.write":
