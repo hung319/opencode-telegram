@@ -7,7 +7,6 @@ import { manageCommand } from "./manage.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
-import { splitLongMessage } from "../utils/message-splitter.js";
 
 const CONFIG_CALLBACK_PREFIX = "config:";
 
@@ -61,11 +60,7 @@ export async function handleConfigCallback(ctx: Context): Promise<boolean> {
   }
 
   const scopeKey = getScopeKeyFromContext(ctx);
-  const interactionState = interactionManager.getSnapshot(scopeKey);
 
-  // Allow config interactions even if not strictly in "config" state (e.g. if user clicks fast)
-  // but generally we check state.
-  
   const action = data.slice(CONFIG_CALLBACK_PREFIX.length);
 
   await ctx.answerCallbackQuery();
