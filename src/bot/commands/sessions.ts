@@ -43,7 +43,8 @@ import {
   TELEGRAM_CHAT_FIELD,
   TELEGRAM_ERROR_MARKER,
 } from "../constants.js";
-import { getTopicBindingBySessionId, registerTopicSessionBinding, updateTopicBindingStatus } from "../../topic/manager.js";
+import { getTopicBindingBySessionId, registerTopicSessionBinding } from "../../topic/manager.js";
+import { handleSessionTopicCleanup } from "../../topic/actions.js";
 import { TOPIC_COLORS } from "../../topic/colors.js";
 import { formatTopicTitle } from "../../topic/title-format.js";
 import { buildTopicThreadLink } from "../utils/topic-link.js";
@@ -727,13 +728,12 @@ export async function handleSessionActionCallback(ctx: Context): Promise<boolean
 
       const binding = getTopicBindingBySessionId(currentSession.id);
       if (binding && binding.chatId) {
-        try {
-          await ctx.api.closeForumTopic(binding.chatId, binding.threadId);
-          updateTopicBindingStatus(binding.chatId, binding.threadId, TOPIC_SESSION_STATUS.CLOSED);
-          logger.info(`[Sessions] Closed topic for session: ${currentSession.id}`);
-        } catch (topicErr) {
-          logger.warn(`[Sessions] Failed to close topic for session ${currentSession.id}:`, topicErr);
-        }
+        await handleSessionTopicCleanup({
+          api: ctx.api,
+          chatId: binding.chatId,
+          threadId: binding.threadId,
+          sessionTitle: currentSession.title,
+        });
       }
 
       await ctx.answerCallbackQuery({ text: t("sessions.session_closed") });

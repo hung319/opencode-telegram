@@ -3,8 +3,8 @@ import { opencodeClient } from "../../opencode/client.js";
 import { getCurrentSession, setCurrentSession } from "../../session/manager.js";
 import { interactionManager } from "../../interaction/manager.js";
 import { INTERACTION_CLEAR_REASON } from "../../interaction/constants.js";
-import { getTopicBindingBySessionId, updateTopicBindingStatus } from "../../topic/manager.js";
-import { TOPIC_SESSION_STATUS } from "../../settings/manager.js";
+import { getTopicBindingBySessionId } from "../../topic/manager.js";
+import { handleSessionTopicCleanup } from "../../topic/actions.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
@@ -121,16 +121,15 @@ export async function handleDeleteCallback(ctx: Context): Promise<boolean> {
 
   await ctx.answerCallbackQuery();
 
-  // Close the Telegram topic FIRST before deleting from OpenCode
+  // Handle topic cleanup (rename + close or delete based on config)
   const binding = getTopicBindingBySessionId(sessionId);
   if (binding && binding.chatId && ctx.chat) {
-    try {
-      await ctx.api.closeForumTopic(binding.chatId, binding.threadId);
-      updateTopicBindingStatus(binding.chatId, binding.threadId, TOPIC_SESSION_STATUS.CLOSED);
-      logger.info(`[DeleteHandler] Closed topic ${binding.threadId} for session ${sessionId}`);
-    } catch (topicErr) {
-      logger.warn(`[DeleteHandler] Failed to close topic for session ${sessionId}:`, topicErr);
-    }
+    await handleSessionTopicCleanup({
+      api: ctx.api,
+      chatId: binding.chatId,
+      threadId: binding.threadId,
+      sessionTitle: binding.topicName,
+    });
   }
 
   try {

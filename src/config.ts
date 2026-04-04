@@ -130,6 +130,7 @@ export const config = {
     hideToolCallMessages: getOptionalBooleanEnvVar("HIDE_TOOL_CALL_MESSAGES", false),
     compactMode: getOptionalBooleanEnvVar("COMPACT_MODE", false),
     messageFormatMode: getOptionalMessageFormatModeEnvVar("MESSAGE_FORMAT_MODE", "markdown"),
+    deleteTopicOnSessionDelete: getOptionalBooleanEnvVar("DELETE_TOPIC_ON_SESSION_DELETE", false),
   },
   files: {
     maxFileSizeKb: parseInt(getEnvVar("CODE_FILE_MAX_SIZE_KB", false) || "100", 10),
