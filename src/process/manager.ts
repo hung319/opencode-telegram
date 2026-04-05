@@ -25,6 +25,7 @@ class ProcessManager implements ProcessManagerInterface {
   private crashCallbacks: Array<(code: number | null, signal: string | null) => void> = [];
   private healthCheckInterval: ReturnType<typeof setInterval> | null = null;
   private healthCheckEnabled = false;
+  private intentionallyStopped = false;
   private readonly HEALTH_CHECK_INTERVAL_MS = 30_000;
 
   onCrash(callback: (code: number | null, signal: string | null) => void): void {
@@ -191,9 +192,13 @@ class ProcessManager implements ProcessManagerInterface {
       childProcess.on("exit", (code, signal) => {
         logger.info(`[ProcessManager] Process exited: code=${code}, signal=${signal}`);
         this.cleanup();
-        for (const cb of this.crashCallbacks) {
-          cb(code, signal);
+        // Don't notify crash if we intentionally stopped it
+        if (!this.intentionallyStopped) {
+          for (const cb of this.crashCallbacks) {
+            cb(code, signal);
+          }
         }
+        this.intentionallyStopped = false;
       });
 
       // Log stdout/stderr
@@ -314,6 +319,7 @@ class ProcessManager implements ProcessManagerInterface {
         }
       }
 
+      this.intentionallyStopped = true;
       this.disableHealthCheck();
       this.cleanup();
       logger.info(`[ProcessManager] Process PID=${pid} stopped successfully`);
@@ -410,6 +416,7 @@ class ProcessManager implements ProcessManagerInterface {
    * Clean up state and settings
    */
   private cleanup(): void {
+    this.disableHealthCheck();
     this.state = {
       process: null,
       pid: null,
