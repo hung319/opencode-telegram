@@ -272,3 +272,45 @@ export async function handleInlineMenuCancel(ctx: Context): Promise<boolean> {
 
   return true;
 }
+
+interface UpdateInlineMenuOptions {
+  text: string;
+  keyboard: InlineKeyboard;
+  parseMode?: "Markdown" | "HTML";
+}
+
+export async function updateInlineMenuMessage(
+  ctx: Context,
+  options: UpdateInlineMenuOptions,
+): Promise<void> {
+  const scope = getScopeFromContext(ctx);
+  const messageId = getCallbackMessageId(ctx);
+
+  if (!messageId) {
+    logger.warn("[InlineMenu] Cannot update message: no message ID found");
+    return;
+  }
+
+  const keyboard = appendInlineMenuCancelButton(options.keyboard, "model");
+  const replyOptions: {
+    reply_markup: InlineKeyboard;
+    parse_mode?: "Markdown" | "HTML";
+    message_thread_id?: number;
+  } = {
+    reply_markup: keyboard,
+    ...getThreadSendOptions(scope?.threadId ?? null),
+  };
+
+  if (options.parseMode) {
+    replyOptions.parse_mode = options.parseMode;
+  }
+
+  const chatId = ctx.chat?.id;
+  if (!chatId) {
+    logger.warn("[InlineMenu] Cannot update message: no chat ID found");
+    return;
+  }
+
+  await ctx.api.editMessageText(chatId, messageId, options.text, replyOptions);
+  logger.debug(`[InlineMenu] Updated menu message: messageId=${messageId}`);
+}

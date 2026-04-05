@@ -411,12 +411,18 @@ function ensureInteractiveTty(): void {
 async function validateExistingEnv(envFilePath: string): Promise<EnvValidationResult> {
   const content = await readEnvFileIfExists(envFilePath);
 
-  if (content === null) {
+  if (content === null && !process.env.TELEGRAM_BOT_TOKEN) {
     return { isValid: false, reason: "Missing .env" };
   }
 
-  const parsed = dotenv.parse(content);
-  return validateRuntimeEnvValues(parsed);
+  const parsed = content ? dotenv.parse(content) : {};
+  const mergedEnv: Record<string, string> = { ...parsed };
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value !== undefined) {
+      mergedEnv[key] = value;
+    }
+  }
+  return validateRuntimeEnvValues(mergedEnv);
 }
 
 async function runWizardAndPersist(runtimePaths: RuntimePaths): Promise<void> {

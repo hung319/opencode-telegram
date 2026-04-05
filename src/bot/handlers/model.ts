@@ -12,6 +12,7 @@ import {
   clearActiveInlineMenu,
   ensureActiveInlineMenu,
   replyWithInlineMenu,
+  updateInlineMenuMessage,
 } from "./inline-menu.js";
 import { t } from "../../i18n/index.js";
 import {
@@ -21,6 +22,8 @@ import {
   getScopeKeyFromContext,
   getThreadSendOptions,
 } from "../scope.js";
+
+const MODELS_PER_PAGE = 15;
 
 function buildModelSelectionMenuText(modelLists: ModelSelectionLists, hasCatalog: boolean): string {
   const lines = [t("model.menu.select"), ""];
@@ -43,6 +46,128 @@ function buildModelSelectionMenuText(modelLists: ModelSelectionLists, hasCatalog
   }
 
   return lines.join("\n");
+}
+
+function buildCatalogPageKeyboard(
+  catalogModels: FavoriteModel[],
+  currentPage: number,
+  totalPages: number,
+  currentModel?: ModelInfo,
+): InlineKeyboard {
+  const keyboard = new InlineKeyboard();
+  const start = currentPage * MODELS_PER_PAGE;
+  const end = Math.min(start + MODELS_PER_PAGE, catalogModels.length);
+  const pageModels = catalogModels.slice(start, end);
+
+  keyboard.text("📋 --- Page " + (currentPage + 1) + "/" + totalPages + " ---").row();
+
+  pageModels.forEach((model) => {
+    const isActive =
+      currentModel &&
+      model.providerID === currentModel.providerID &&
+      model.modelID === currentModel.modelID;
+    const label = `${isActive ? "✅ " : ""}📎 ${model.providerID}/${model.modelID}`;
+    keyboard.text(label, `model:${model.providerID}:${model.modelID}`).row();
+  });
+
+  const navRow: Array<{ label: string; data: string }> = [];
+  if (currentPage > 0) {
+    navRow.push({ label: "◀️ Prev", data: `model_page:${currentPage - 1}` });
+  }
+  if (currentPage < totalPages - 1) {
+    navRow.push({ label: "Next ▶️", data: `model_page:${currentPage + 1}` });
+  }
+  if (navRow.length > 0) {
+    for (const btn of navRow) {
+      keyboard.text(btn.label, btn.data);
+    }
+    keyboard.row();
+  }
+
+  keyboard.text("⬆️ Back to Main", "model_main");
+  return keyboard;
+}
+
+export async function handleModelPageNavigation(ctx: Context): Promise<boolean> {
+  const callbackQuery = ctx.callbackQuery;
+  if (!callbackQuery?.data || !callbackQuery.data.startsWith("model_page:")) {
+    return false;
+  }
+
+  const isActiveMenu = await ensureActiveInlineMenu(ctx, "model");
+  if (!isActiveMenu) {
+    return true;
+  }
+
+  const scopeKey = getScopeKeyFromContext(ctx);
+  const page = parseInt(callbackQuery.data.split(":")[1], 10);
+  if (isNaN(page) || page < 0) {
+    return true;
+  }
+
+  try {
+    const lists = await getModelSelectionLists();
+    const catalog = await getFullModelCatalog();
+    const currentModel = fetchCurrentModel(scopeKey);
+
+    const existingKeys = new Set<string>();
+    [...lists.favorites, ...lists.recent].forEach((m) => existingKeys.add(`${m.providerID}/${m.modelID}`));
+
+    const catalogModels: FavoriteModel[] = [];
+    if (catalog) {
+      for (const provider of catalog.providers) {
+        for (const modelID of Object.keys(provider.models)) {
+          const key = `${provider.id}/${modelID}`;
+          if (!existingKeys.has(key)) {
+            catalogModels.push({ providerID: provider.id, modelID });
+          }
+        }
+      }
+    }
+
+    const totalPages = Math.ceil(catalogModels.length / MODELS_PER_PAGE);
+    const safePage = Math.min(page, totalPages - 1);
+
+    const keyboard = buildCatalogPageKeyboard(catalogModels, safePage, totalPages, currentModel);
+    const text = t("model.menu.select") + "\n\n📋 All Models (" + catalogModels.length + " total)";
+
+    await ctx.answerCallbackQuery();
+    await updateInlineMenuMessage(ctx, { text, keyboard });
+
+    return true;
+  } catch (err) {
+    logger.error("[ModelHandler] Error handling model page navigation:", err);
+    return false;
+  }
+}
+
+export async function handleModelMainMenu(ctx: Context): Promise<boolean> {
+  const callbackQuery = ctx.callbackQuery;
+  if (!callbackQuery?.data || callbackQuery.data !== "model_main") {
+    return false;
+  }
+
+  const isActiveMenu = await ensureActiveInlineMenu(ctx, "model");
+  if (!isActiveMenu) {
+    return true;
+  }
+
+  try {
+    const scopeKey = getScopeKeyFromContext(ctx);
+    const currentModel = fetchCurrentModel(scopeKey);
+    const modelLists = await getModelSelectionLists();
+    const catalog = await getFullModelCatalog();
+    const keyboard = await buildModelSelectionMenu(currentModel, modelLists);
+    const text = buildModelSelectionMenuText(modelLists, !!catalog);
+
+    await ctx.answerCallbackQuery();
+    await updateInlineMenuMessage(ctx, { text, keyboard });
+
+    return true;
+  } catch (err) {
+    logger.error("[ModelHandler] Error handling model main menu:", err);
+    return false;
+  }
 }
 
 /**
@@ -186,19 +311,26 @@ export async function buildModelSelectionMenu(
   const catalog = await getFullModelCatalog();
   if (catalog && catalog.providers.length > 0) {
     keyboard.text("📋 --- All Models ---").row();
-    
-    const existingKeys = new Set<string>();
-    [...favorites, ...recent].forEach(m => existingKeys.add(`${m.providerID}/${m.modelID}`));
 
+    const existingKeys = new Set<string>();
+    [...favorites, ...recent].forEach((m) => existingKeys.add(`${m.providerID}/${m.modelID}`));
+
+    const catalogModels: FavoriteModel[] = [];
     for (const provider of catalog.providers) {
       const modelIDs = Object.keys(provider.models);
       for (const modelID of modelIDs) {
         const key = `${provider.id}/${modelID}`;
         if (!existingKeys.has(key)) {
-          const model: FavoriteModel = { providerID: provider.id, modelID };
-          addButton(model, "📎");
+          catalogModels.push({ providerID: provider.id, modelID });
         }
       }
+    }
+
+    const totalPages = Math.ceil(catalogModels.length / MODELS_PER_PAGE);
+    if (catalogModels.length > MODELS_PER_PAGE) {
+      keyboard.text(`📋 Browse All (${catalogModels.length} models, ${totalPages} pages)`, "model_page:0").row();
+    } else {
+      catalogModels.forEach((model) => addButton(model, "📎"));
     }
   }
 

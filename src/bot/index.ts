@@ -63,7 +63,7 @@ import {
 } from "./handlers/question.js";
 import { handlePermissionCallback, showPermissionRequest } from "./handlers/permission.js";
 import { handleAgentSelect, showAgentSelectionMenu } from "./handlers/agent.js";
-import { handleModelSelect, showModelSelectionMenu } from "./handlers/model.js";
+import { handleModelSelect, handleModelPageNavigation, handleModelMainMenu, showModelSelectionMenu } from "./handlers/model.js";
 import { handleVariantSelect, showVariantSelectionMenu } from "./handlers/variant.js";
 import { handleContextButtonPress, handleCompactConfirm } from "./handlers/context.js";
 import { handleInlineMenuCancel } from "./handlers/inline-menu.js";
@@ -1274,6 +1274,8 @@ export function createBot(): Bot<Context> {
       const handledPermission = await handlePermissionCallback(ctx);
       const handledAgent = await handleAgentSelect(ctx);
       const handledModel = await handleModelSelect(ctx);
+      const handledModelPage = await handleModelPageNavigation(ctx);
+      const handledModelMain = await handleModelMainMenu(ctx);
       const handledVariant = await handleVariantSelect(ctx);
       const handledCompactConfirm = await handleCompactConfirm(ctx);
       const handledRenameCancel = await handleRenameCancel(ctx);
@@ -1300,6 +1302,8 @@ export function createBot(): Bot<Context> {
         !handledPermission &&
         !handledAgent &&
         !handledModel &&
+        !handledModelPage &&
+        !handledModelMain &&
         !handledVariant &&
         !handledCompactConfirm &&
         !handledRenameCancel &&
