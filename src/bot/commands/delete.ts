@@ -121,14 +121,31 @@ export async function handleDeleteCallback(ctx: Context): Promise<boolean> {
 
   await ctx.answerCallbackQuery();
 
-  // Handle topic cleanup (rename + close or delete based on config)
+  // Fetch current session title from OpenCode before deleting
+  let sessionTitle: string | undefined;
   const binding = getTopicBindingBySessionId(sessionId);
+  if (directory) {
+    try {
+      const { data: session } = await opencodeClient.session.get({
+        sessionID: sessionId,
+        directory,
+      });
+      if (session?.title) {
+        sessionTitle = session.title;
+      }
+    } catch {
+      // Use cached title if fetch fails
+    }
+  }
+  sessionTitle = sessionTitle || binding?.topicName;
+
+  // Handle topic cleanup (rename + close or delete based on config)
   if (binding && binding.chatId && ctx.chat) {
     await handleSessionTopicCleanup({
       api: ctx.api,
       chatId: binding.chatId,
       threadId: binding.threadId,
-      sessionTitle: binding.topicName,
+      sessionTitle,
     });
   }
 

@@ -1649,6 +1649,12 @@ export function createBot(): Bot<Context> {
   });
 
   processManager.onCrash(async (_code, signal) => {
+    // Don't restart if we intentionally stopped the process
+    if (processManager.wasIntentionallyStopped()) {
+      logger.info("[Bot] OpenCode server was intentionally stopped, not restarting");
+      return;
+    }
+
     logger.error(`[Bot] OpenCode server crashed (signal: ${signal}). Restarting...`);
     clearAllPendingPrompts();
 

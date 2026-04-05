@@ -52,6 +52,7 @@ class ProcessManager implements ProcessManagerInterface {
 
   private async runHealthCheck(): Promise<void> {
     if (!this.state.isRunning || !this.state.pid) return;
+    if (this.intentionallyStopped) return;
 
     if (!this.isProcessAlive(this.state.pid)) {
       logger.warn("[ProcessManager] Health check detected dead process, restarting...");
@@ -257,6 +258,9 @@ class ProcessManager implements ProcessManagerInterface {
       const pid = this.state.pid;
       logger.info(`[ProcessManager] Stopping process PID=${pid}...`);
 
+      // Set flag BEFORE killing so the on('exit') handler knows it's intentional
+      this.intentionallyStopped = true;
+
       // On Windows, use taskkill to kill the entire process tree
       // This is necessary because cmd.exe spawns child processes
       if (process.platform === "win32") {
@@ -348,6 +352,13 @@ class ProcessManager implements ProcessManagerInterface {
     }
 
     return true;
+  }
+
+  /**
+   * Check if the process was intentionally stopped (not a crash)
+   */
+  wasIntentionallyStopped(): boolean {
+    return this.intentionallyStopped;
   }
 
   /**

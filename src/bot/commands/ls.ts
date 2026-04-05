@@ -1,13 +1,10 @@
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { CommandContext, Context, InlineKeyboard } from "grammy";
 import { getCurrentProject } from "../../settings/manager.js";
 import { logger } from "../../utils/logger.js";
 import { t } from "../../i18n/index.js";
 import { getScopeFromContext, getScopeKeyFromContext, getThreadSendOptions } from "../scope.js";
-
-const execAsync = promisify(exec);
 
 const MAX_FILES = 50;
 
@@ -21,32 +18,26 @@ async function listDirectory(dirPath: string, subPath: string = ""): Promise<{ f
   const fullPath = subPath ? path.join(dirPath, subPath) : dirPath;
 
   try {
-    const entries = await Promise.all(
-      (await execAsync(`ls -la "${fullPath}"`)).stdout
-        .trim()
-        .split("\n")
-        .slice(1)
-        .slice(0, MAX_FILES)
-        .map(async (line) => {
-          const parts = line.trim().split(/\s+/);
-          const isDir = parts[0].startsWith("d");
-          const name = parts.slice(8).join(" ");
-          const size = parseInt(parts[4], 10) || 0;
+    const entries = await fs.readdir(fullPath, { withFileTypes: true });
+    const files: FileEntry[] = [];
 
-          if (name === "." || name === "..") {
-            return null;
-          }
+    for (const entry of entries) {
+      if (files.length >= MAX_FILES) break;
 
-          return {
-            name,
-            type: isDir ? "directory" as const : "file" as const,
-            size,
-          };
-        })
-        .filter(Boolean) as Promise<FileEntry>[],
-    );
+      if (entry.name === "." || entry.name === "..") continue;
 
-    return { files: entries.filter(Boolean) as FileEntry[], currentPath: subPath };
+      const stat = entry.isDirectory()
+        ? { isDirectory: () => true, size: 0 }
+        : await fs.stat(path.join(fullPath, entry.name));
+
+      files.push({
+        name: entry.name,
+        type: entry.isDirectory() ? "directory" : "file",
+        size: stat.size,
+      });
+    }
+
+    return { files, currentPath: subPath };
   } catch {
     return { files: [], currentPath: subPath };
   }
@@ -142,7 +133,8 @@ export async function handleLsCallback(ctx: Context): Promise<boolean> {
     return true;
   }
 
-  const [, action, targetPath] = callbackQuery.data.split(":");
+  const [, action, ...pathParts] = callbackQuery.data.split(":");
+  const targetPath = pathParts.join(":");
 
   try {
     let navigatePath = targetPath || "";
