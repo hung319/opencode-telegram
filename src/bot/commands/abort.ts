@@ -77,6 +77,15 @@ export async function abortCurrentOperation(
   const currentSession = getCurrentSession(scopeKey);
   const activeInteraction = interactionManager.getSnapshot(scopeKey);
 
+  // If there's an active inline menu but no session to abort, just clear the interaction
+  if (activeInteraction && !currentSession) {
+    interactionManager.clear(INTERACTION_CLEAR_REASON.STOP_COMMAND, scopeKey);
+    if (options.notifyUser !== false) {
+      await ctx.reply(t("stop.cancelled_interaction"));
+    }
+    return;
+  }
+
   if (!currentSession) {
     stopLocalStreaming(scopeKey);
     if (options.notifyUser !== false) {

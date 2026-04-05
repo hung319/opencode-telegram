@@ -18,18 +18,18 @@ export async function manageCommand(ctx: CommandContext<Context>): Promise<void>
     const directory = currentSession?.directory;
 
     const keyboard = new InlineKeyboard()
-      .text("MCP Servers", `${MANAGE_CALLBACK_PREFIX}mcp_status`)
+      .text(t("manage.btn.mcp"), `${MANAGE_CALLBACK_PREFIX}mcp_status`)
       .row()
-      .text("Plugins", `${MANAGE_CALLBACK_PREFIX}plugins_list`)
+      .text(t("manage.btn.plugins"), `${MANAGE_CALLBACK_PREFIX}plugins_list`)
       .row()
-      .text("Providers", `${MANAGE_CALLBACK_PREFIX}providers_list`)
+      .text(t("manage.btn.providers"), `${MANAGE_CALLBACK_PREFIX}providers_list`)
       .row()
-      .text("Config", `${MANAGE_CALLBACK_PREFIX}config_view`)
+      .text(t("manage.btn.config"), `${MANAGE_CALLBACK_PREFIX}config_view`)
       .row()
-      .text("Close", `${MANAGE_CALLBACK_PREFIX}close`);
+      .text(t("manage.btn.close"), `${MANAGE_CALLBACK_PREFIX}close`);
 
     const message = await ctx.reply(
-      "Manage OpenCode\n\nChoose a section:",
+      t("manage.menu"),
       {
         reply_markup: keyboard,
         ...getThreadSendOptions(scope?.threadId ?? null),
@@ -206,18 +206,18 @@ export async function handleManageTextAnswer(ctx: Context): Promise<boolean> {
 
 async function showMainMenu(ctx: Context, _scopeKey: string): Promise<void> {
   const keyboard = new InlineKeyboard()
-    .text("MCP Servers", `${MANAGE_CALLBACK_PREFIX}mcp_status`)
+    .text(t("manage.btn.mcp"), `${MANAGE_CALLBACK_PREFIX}mcp_status`)
     .row()
-    .text("Plugins", `${MANAGE_CALLBACK_PREFIX}plugins_list`)
+    .text(t("manage.btn.plugins"), `${MANAGE_CALLBACK_PREFIX}plugins_list`)
     .row()
-    .text("Providers", `${MANAGE_CALLBACK_PREFIX}providers_list`)
+    .text(t("manage.btn.providers"), `${MANAGE_CALLBACK_PREFIX}providers_list`)
     .row()
-    .text("Config", `${MANAGE_CALLBACK_PREFIX}config_view`)
+    .text(t("manage.btn.config"), `${MANAGE_CALLBACK_PREFIX}config_view`)
     .row()
-    .text("Close", `${MANAGE_CALLBACK_PREFIX}close`);
+    .text(t("manage.btn.close"), `${MANAGE_CALLBACK_PREFIX}close`);
 
   await ctx.editMessageText(
-    "Manage OpenCode\n\nChoose a section:",
+    t("manage.menu"),
     { reply_markup: keyboard },
   );
 }

@@ -16,11 +16,11 @@ export async function configCommand(ctx: CommandContext<Context>): Promise<void>
     const scopeKey = getScopeKeyFromContext(ctx);
 
     const keyboard = new InlineKeyboard()
-      .text("🔌 MCP / Plugins / Providers", `${CONFIG_CALLBACK_PREFIX}manage`)
+      .text(t("config.btn.manage"), `${CONFIG_CALLBACK_PREFIX}manage`)
       .row()
-      .text("📋 View Raw Config", `${CONFIG_CALLBACK_PREFIX}raw`)
+      .text(t("config.btn.raw"), `${CONFIG_CALLBACK_PREFIX}raw`)
       .row()
-      .text("❌ Close", `${CONFIG_CALLBACK_PREFIX}close`)
+      .text(t("config.btn.close"), `${CONFIG_CALLBACK_PREFIX}close`)
       .row();
 
     const message = await ctx.reply(
