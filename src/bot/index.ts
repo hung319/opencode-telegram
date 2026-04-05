@@ -1648,10 +1648,20 @@ export function createBot(): Bot<Context> {
     }
   });
 
-  processManager.onCrash((_code, signal) => {
-    logger.error(`[Bot] OpenCode server crashed (signal: ${signal}). Sending notification...`);
+  processManager.onCrash(async (_code, signal) => {
+    logger.error(`[Bot] OpenCode server crashed (signal: ${signal}). Restarting...`);
     clearAllPendingPrompts();
-    void notifyServerCrash(bot);
+
+    // Try to restart the server via process manager
+    const result = await processManager.start();
+    if (result.success) {
+      const pid = processManager.getPID();
+      logger.info(`[Bot] OpenCode server restarted successfully, PID=${pid}`);
+      void notifyServerRestarted(bot);
+    } else {
+      logger.error(`[Bot] Failed to restart OpenCode server: ${result.error}`);
+      void notifyServerCrash(bot);
+    }
   });
 
   processManager.enableHealthCheck();
@@ -1674,5 +1684,18 @@ async function notifyServerCrash(bot: Bot<Context>): Promise<void> {
     }
   } catch (err) {
     logger.error("[Bot] Failed to send server crash notification:", err);
+  }
+}
+
+async function notifyServerRestarted(bot: Bot<Context>): Promise<void> {
+  try {
+    const message = t("bot.server_restarted");
+
+    const userId = config.telegram.allowedUserId;
+    if (userId) {
+      await bot.api.sendMessage(userId, message, { parse_mode: "Markdown" });
+    }
+  } catch (err) {
+    logger.error("[Bot] Failed to send server restart notification:", err);
   }
 }

@@ -750,4 +750,5 @@ export const ru: I18nDictionary = {
   "worktree.switched": "✅ Переключено на ветку: {branch}",
 
   "bot.server_crash": "🔴 **OpenCode Server упал**\n\nСервер OpenCode остановился неожиданно.\nИспользуйте `/status` для проверки или `/opencode_start` для перезапуска.",
+  "bot.server_restarted": "🔄 **OpenCode Server перезапущен**\n\nСервер упал, но был автоматически перезапущен ботом.",
 };

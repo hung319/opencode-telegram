@@ -748,4 +748,5 @@ export const vi = {
   "worktree.switched": "✅ Đã chuyển sang branch: {branch}",
 
   "bot.server_crash": "🔴 **Máy chủ OpenCode bị crash**\n\nMáy chủ OpenCode đã dừng bất ngờ.\nDùng `/status` để kiểm tra hoặc `/opencode_start` để khởi động lại.",
+  "bot.server_restarted": "🔄 **Máy chủ OpenCode đã khởi động lại**\n\nMáy chủ bị crash nhưng đã được bot tự động khởi động lại.",
 } as const;

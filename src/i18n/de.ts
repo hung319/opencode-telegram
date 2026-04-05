@@ -762,4 +762,5 @@ export const de: I18nDictionary = {
   "worktree.switched": "✅ Gewechselt zu Branch: {branch}",
 
   "bot.server_crash": "🔴 **OpenCode Server abgestürzt**\n\nDer OpenCode-Server wurde unerwartet beendet.\nNutze `/status` zum Prüfen oder `/opencode_start` zum Neustarten.",
+  "bot.server_restarted": "🔄 **OpenCode Server neu gestartet**\n\nDer Server ist abgestürzt, wurde aber automatisch vom Bot neu gestartet.",
 };
