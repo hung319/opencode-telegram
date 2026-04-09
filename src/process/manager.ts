@@ -82,7 +82,10 @@ class ProcessManager implements ProcessManagerInterface {
       const { data, error } = await Promise.race([
         opencodeClient.global.health(),
         new Promise<{ data: null; error: Error }>((resolve) =>
-          setTimeout(() => resolve({ data: null, error: new Error("Health check timeout") }), HEALTH_CHECK_TIMEOUT_MS),
+          setTimeout(
+            () => resolve({ data: null, error: new Error("Health check timeout") }),
+            HEALTH_CHECK_TIMEOUT_MS,
+          ),
         ),
       ]);
 
@@ -96,14 +99,14 @@ class ProcessManager implements ProcessManagerInterface {
     if (this.state.process) {
       try {
         this.state.process.kill("SIGKILL");
-      } catch {
-        // Process might already be dead
+      } catch (err) {
+        logger.debug("[ProcessManager] Process already dead (process.kill):", err);
       }
     } else if (this.state.pid) {
       try {
         process.kill(this.state.pid, "SIGKILL");
-      } catch {
-        // Process might already be dead
+      } catch (err) {
+        logger.debug("[ProcessManager] Process already dead (process.kill pid):", err);
       }
     }
   }
