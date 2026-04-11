@@ -410,18 +410,24 @@ function ensureInteractiveTty(): void {
 
 async function validateExistingEnv(envFilePath: string): Promise<EnvValidationResult> {
   const content = await readEnvFileIfExists(envFilePath);
-
-  if (content === null && !process.env.TELEGRAM_BOT_TOKEN) {
-    return { isValid: false, reason: "Missing .env" };
-  }
-
   const parsed = content ? dotenv.parse(content) : {};
-  const mergedEnv: Record<string, string> = { ...parsed };
+
+  const mergedEnv: Record<string, string> = {};
   for (const [key, value] of Object.entries(process.env)) {
     if (value !== undefined) {
       mergedEnv[key] = value;
     }
   }
+  for (const [key, value] of Object.entries(parsed)) {
+    if (value !== undefined && !mergedEnv[key]) {
+      mergedEnv[key] = value;
+    }
+  }
+
+  if (!mergedEnv.TELEGRAM_BOT_TOKEN) {
+    return { isValid: false, reason: "Missing .env" };
+  }
+
   return validateRuntimeEnvValues(mergedEnv);
 }
 
@@ -472,6 +478,10 @@ export async function ensureRuntimeConfigForStart(): Promise<void> {
   if (validationResult.isValid) {
     await ensureSettingsFile(runtimePaths.settingsFilePath);
     return;
+  }
+
+  if (!process.stdin.isTTY || !process.stdout.isTTY || !process.env.TELEGRAM_BOT_TOKEN) {
+    throw new Error(t("runtime.wizard.tty_required"));
   }
 
   process.stdout.write(t("runtime.wizard.not_configured_starting"));
