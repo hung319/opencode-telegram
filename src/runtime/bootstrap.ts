@@ -63,23 +63,29 @@ function isValidHttpUrl(value: string): boolean {
 }
 
 export function validateRuntimeEnvValues(values: Record<string, string>): EnvValidationResult {
-  if (!values.TELEGRAM_BOT_TOKEN || values.TELEGRAM_BOT_TOKEN.trim().length === 0) {
+  const token = values.TELEGRAM_BOT_TOKEN?.trim() || process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const userId = values.TELEGRAM_ALLOWED_USER_ID || process.env.TELEGRAM_ALLOWED_USER_ID;
+  const provider =
+    values.OPENCODE_MODEL_PROVIDER?.trim() || process.env.OPENCODE_MODEL_PROVIDER?.trim();
+  const modelId = values.OPENCODE_MODEL_ID?.trim() || process.env.OPENCODE_MODEL_ID?.trim();
+
+  if (!token) {
     return { isValid: false, reason: "Missing TELEGRAM_BOT_TOKEN" };
   }
 
-  if (!isPositiveInteger(values.TELEGRAM_ALLOWED_USER_ID || "")) {
+  if (!isPositiveInteger(userId || "")) {
     return { isValid: false, reason: "Invalid TELEGRAM_ALLOWED_USER_ID" };
   }
 
-  if (!values.OPENCODE_MODEL_PROVIDER || values.OPENCODE_MODEL_PROVIDER.trim().length === 0) {
+  if (!provider) {
     return { isValid: false, reason: "Missing OPENCODE_MODEL_PROVIDER" };
   }
 
-  if (!values.OPENCODE_MODEL_ID || values.OPENCODE_MODEL_ID.trim().length === 0) {
+  if (!modelId) {
     return { isValid: false, reason: "Missing OPENCODE_MODEL_ID" };
   }
 
-  const apiUrl = values.OPENCODE_API_URL?.trim();
+  const apiUrl = values.OPENCODE_API_URL?.trim() || process.env.OPENCODE_API_URL?.trim();
   if (apiUrl && !isValidHttpUrl(apiUrl)) {
     return { isValid: false, reason: "Invalid OPENCODE_API_URL" };
   }

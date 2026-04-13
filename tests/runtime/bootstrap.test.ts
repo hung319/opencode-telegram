@@ -1,7 +1,15 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import { buildEnvFileContent, validateRuntimeEnvValues } from "../../src/runtime/bootstrap.js";
 
 describe("runtime/bootstrap", () => {
+  beforeEach(() => {
+    delete process.env.TELEGRAM_BOT_TOKEN;
+    delete process.env.TELEGRAM_ALLOWED_USER_ID;
+    delete process.env.OPENCODE_MODEL_PROVIDER;
+    delete process.env.OPENCODE_MODEL_ID;
+    delete process.env.OPENCODE_API_URL;
+  });
+
   it("validates required runtime env values", () => {
     const result = validateRuntimeEnvValues({
       TELEGRAM_BOT_TOKEN: "123456:abcdef",
