@@ -434,7 +434,14 @@ async function validateExistingEnv(envFilePath: string): Promise<EnvValidationRe
     return { isValid: false, reason: "Missing .env" };
   }
 
-  return validateRuntimeEnvValues(mergedEnv);
+  const envForValidation: Record<string, string> = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value !== undefined) {
+      envForValidation[key] = value;
+    }
+  }
+
+  return validateRuntimeEnvValues(envForValidation);
 }
 
 async function runWizardAndPersist(runtimePaths: RuntimePaths): Promise<void> {
