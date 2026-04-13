@@ -5,6 +5,7 @@ import { createInterface } from "node:readline/promises";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import { getRuntimePaths, type RuntimePaths } from "./paths.js";
+import { getRuntimeMode } from "./mode.js";
 import {
   getLocale,
   getLocaleOptions,
@@ -415,33 +416,19 @@ function ensureInteractiveTty(): void {
 }
 
 async function validateExistingEnv(envFilePath: string): Promise<EnvValidationResult> {
-  const content = await readEnvFileIfExists(envFilePath);
-  const parsed = content ? dotenv.parse(content) : {};
+  console.log("[DEBUG] validateExistingEnv called");
+  console.log("[DEBUG] TELEGRAM_BOT_TOKEN:", process.env.TELEGRAM_BOT_TOKEN ? "SET" : "NOT SET");
+  console.log("[DEBUG] TELEGRAM_ALLOWED_USER_ID:", process.env.TELEGRAM_ALLOWED_USER_ID);
+  console.log("[DEBUG] OPENCODE_MODEL_PROVIDER:", process.env.OPENCODE_MODEL_PROVIDER);
+  console.log("[DEBUG] OPENCODE_MODEL_ID:", process.env.OPENCODE_MODEL_ID);
+  console.log("[DEBUG] Runtime mode:", getRuntimeMode());
+  console.log("[DEBUG] App home:", getRuntimePaths().appHome);
 
-  const mergedEnv: Record<string, string> = {};
-  for (const [key, value] of Object.entries(process.env)) {
-    if (value !== undefined) {
-      mergedEnv[key] = value;
-    }
-  }
-  for (const [key, value] of Object.entries(parsed)) {
-    if (value !== undefined && !mergedEnv[key]) {
-      mergedEnv[key] = value;
-    }
-  }
-
-  if (!mergedEnv.TELEGRAM_BOT_TOKEN) {
+  if (!process.env.TELEGRAM_BOT_TOKEN) {
     return { isValid: false, reason: "Missing .env" };
   }
 
-  const envForValidation: Record<string, string> = {};
-  for (const [key, value] of Object.entries(process.env)) {
-    if (value !== undefined) {
-      envForValidation[key] = value;
-    }
-  }
-
-  return validateRuntimeEnvValues(envForValidation);
+  return validateRuntimeEnvValues({});
 }
 
 async function runWizardAndPersist(runtimePaths: RuntimePaths): Promise<void> {
