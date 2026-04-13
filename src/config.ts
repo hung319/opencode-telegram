@@ -106,8 +106,8 @@ export const config = {
     password: getEnvVar("OPENCODE_SERVER_PASSWORD", false),
     autoStart: getOptionalBooleanEnvVar("OPENCODE_AUTO_START", false),
     model: {
-      provider: getEnvVar("OPENCODE_MODEL_PROVIDER", true), // Required
-      modelId: getEnvVar("OPENCODE_MODEL_ID", true), // Required
+      provider: getEnvVar("OPENCODE_MODEL_PROVIDER", false) || "opencode",
+      modelId: getEnvVar("OPENCODE_MODEL_ID", false) || "big-pickle",
     },
   },
   server: {

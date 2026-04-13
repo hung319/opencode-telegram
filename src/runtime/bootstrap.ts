@@ -65,9 +65,6 @@ function isValidHttpUrl(value: string): boolean {
 export function validateRuntimeEnvValues(values: Record<string, string>): EnvValidationResult {
   const token = values.TELEGRAM_BOT_TOKEN?.trim() || process.env.TELEGRAM_BOT_TOKEN?.trim();
   const userId = values.TELEGRAM_ALLOWED_USER_ID || process.env.TELEGRAM_ALLOWED_USER_ID;
-  const provider =
-    values.OPENCODE_MODEL_PROVIDER?.trim() || process.env.OPENCODE_MODEL_PROVIDER?.trim();
-  const modelId = values.OPENCODE_MODEL_ID?.trim() || process.env.OPENCODE_MODEL_ID?.trim();
 
   if (!token) {
     return { isValid: false, reason: "Missing TELEGRAM_BOT_TOKEN" };
@@ -75,14 +72,6 @@ export function validateRuntimeEnvValues(values: Record<string, string>): EnvVal
 
   if (!isPositiveInteger(userId || "")) {
     return { isValid: false, reason: "Invalid TELEGRAM_ALLOWED_USER_ID" };
-  }
-
-  if (!provider) {
-    return { isValid: false, reason: "Missing OPENCODE_MODEL_PROVIDER" };
-  }
-
-  if (!modelId) {
-    return { isValid: false, reason: "Missing OPENCODE_MODEL_ID" };
   }
 
   const apiUrl = values.OPENCODE_API_URL?.trim() || process.env.OPENCODE_API_URL?.trim();
