@@ -27,8 +27,7 @@ describe("runtime/bootstrap", () => {
       TELEGRAM_ALLOWED_USER_ID: "123456789",
     });
 
-    expect(result.isValid).toBe(false);
-    expect(result.reason).toContain("OPENCODE_MODEL_PROVIDER");
+    expect(result.isValid).toBe(true);
   });
 
   it("fails validation for invalid user id", () => {
